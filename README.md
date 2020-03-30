@@ -46,6 +46,7 @@ ML Deployment | Planned
 ### Advisor
 
 - [Aaron Fraenkel](https://afraenkel.github.io/)
+- [Shivam Lakhotia](https://github.com/shivamlakhotia)
 
 <sup>Authors contributed equally to this project</sup>
 
