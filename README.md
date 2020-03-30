@@ -13,7 +13,7 @@ This project aimes to investigate contents from Reddit by detecting positive or 
 
 ## Detailed Overview
 
-[click for detailed overview](OVERVIEW.md)
+[Detailed Overview](OVERVIEW.md)
 
 ----
 
