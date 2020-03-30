@@ -1,6 +1,5 @@
 # HinReddit
 
-
 - [HinReddit](#hinreddit)
   - [1. Hateful Post Classification](#1-hateful-post-classification)
   - [2. Relation with HinDroid](#2-relation-with-hindroid)
@@ -11,8 +10,6 @@
       - [4.3. Classification Problem](#43-classification-problem)
   - [5. Weekly Schedule](#5-weekly-schedule)
   
-
-
 ## 1. Hateful Post Classification
 
 As countless social platforms are developed and become accessible nowadays, the existence of hateful users also become more and more common on them, which motivates large numbers of scholars to apply various techniques in order to detect hateful users, or hateful speech.
@@ -33,8 +30,8 @@ Specifically, in our HIN graph, we will have Reddit post nodes equivalent to App
 
 Studies regarding the detection of hateful speech, content, and user in Online Social Networks have been manifold. In the report Characterizing and Detecting Hateful Users on Twitter, the authors present an approach to characterize and detect hate on Twitter at a user-level granularity. Their methodology consists of obtaining a generic sample of Twitter’s retweet graph, finding potential hateful users who employed words in a lexicon of hate-related words and running a diffusion process to sample more hateful users who are closely related in the neighborhood to those potential ones. However, there are still limitations to their approach. Their characterization has behavioral considerations of users only on Twitter, which lacks generality to be applied to other Online Social Networks platforms. Also, with ethical concerns, instead of labeling hate on a user-level, we want to avoid tagging individuals and believe that detecting hate on a content-level will be more impartial.
 
-
 ## 4. Techniques
+
 The project has three main challenges: data ingestion, labeling training data for supervised learning, and finally our classification problem. 
 
 #### 4.1. Data Ingestion
@@ -51,7 +48,6 @@ Finally, with labeled training data In our project, we will use heterogeneous in
 
 ![relation table](relation_table.png)
 
-
 ## 5. Weekly Schedule
 
 **Week 1:**
@@ -59,6 +55,7 @@ Finally, with labeled training data In our project, we will use heterogeneous in
 Goal: Create necessary functions for data ingestion
 
 Tasks: 
+
 * Create functions to obtain information of a Reddit post given post id/link. Information includes text content, author id, repliers’ ids, and category.
 * Create functions to obtain information of a number of Reddit posts given subreddit name.
 * Create functions to obtain information of a user given id, including friends’ ids and following subreddits.
