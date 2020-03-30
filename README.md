@@ -3,7 +3,7 @@
 Project|build Status
 ---|---
 ETL | In Progress
-Lebeling | Planned
+Labeling | Planned
 Feature Extraction| Planned
 ML Deployment | Planned
 
