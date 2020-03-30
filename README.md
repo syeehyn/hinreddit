@@ -7,9 +7,28 @@ Lebeling | Planned
 Feature Extraction| Planned
 ML Deployment | Planned
 
+This project aimes to investigate contents from Reddit by detecting positive or negative comments with technique of Heterogeneous Information Network rather than traditional approach of test processing.
+
+----
+
+## Detailed Overview
+
+[click for detailed overview](OVERVIEW.md)
+
 ----
 
 ## Project Abstract
+
+- [Hinreddit](#hinreddit)
+  - [Detailed Overview](#detailed-overview)
+  - [Project Abstract](#project-abstract)
+  - [Getting Started](#getting-started)
+  - [Description of Contents](#description-of-contents)
+  - [Contribution](#contribution)
+    - [Authors](#authors)
+    - [Advisor](#advisor)
+  - [References](#references)
+  - [License](#license)
 
 ----
 
@@ -30,10 +49,6 @@ ML Deployment | Planned
 
 ----
 
-## References
-
-----
-
 ## Contribution
 
 ### Authors
@@ -49,6 +64,10 @@ ML Deployment | Planned
 - [Shivam Lakhotia](https://github.com/shivamlakhotia)
 
 <sup>Authors contributed equally to this project</sup>
+
+----
+
+## References
 
 ----
 
