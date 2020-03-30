@@ -21,6 +21,15 @@ ML Deployment | Planned
 
 ## Description of Contents
 
+``` bash
+├── LICENSE
+├── README.md
+├── config
+├── notebooks
+├── src
+└── tests
+```
+
 ----
 
 ## References
