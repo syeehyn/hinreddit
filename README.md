@@ -9,9 +9,7 @@ ML Deployment | Planned
 
 ----
 
-## Table of Contents
-
-### Overview of Hinreddit
+## Project Abstract
 
 ----
 
