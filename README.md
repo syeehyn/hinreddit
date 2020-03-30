@@ -61,7 +61,7 @@ This project aimes to investigate contents from Reddit by detecting positive or 
 
 ## References
 
-[HinDroid](https://www.cse.ust.hk/~yqsong/papers/2017-KDD-HINDROID.pdf)
+- [HinDroid](https://www.cse.ust.hk/~yqsong/papers/2017-KDD-HINDROID.pdf)
 paper on Malware detection.
 
 - Graph Techniques in Machine Learning
