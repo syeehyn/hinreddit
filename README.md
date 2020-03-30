@@ -13,12 +13,7 @@ This project aimes to investigate contents from Reddit by detecting positive or 
 
 [Detailed Overview](OVERVIEW.md)
 
-----
-
-## Project Abstract
-
 - [Hinreddit](#hinreddit)
-  - [Project Abstract](#project-abstract)
   - [Getting Started](#getting-started)
   - [Description of Contents](#description-of-contents)
   - [Contribution](#contribution)
