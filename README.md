@@ -18,7 +18,7 @@ This project aimes to investigate contents from Reddit by detecting positive or 
   - [Description of Contents](#description-of-contents)
   - [Contribution](#contribution)
     - [Authors](#authors)
-    - [Advisor](#advisor)
+    - [Advisors](#advisors)
   - [References](#references)
   - [License](#license)
 
@@ -50,7 +50,7 @@ This project aimes to investigate contents from Reddit by detecting positive or 
 - [Yanyu Tao](https://github.com/lilytaoyy)
 - [Shuibenyang Yuan](https://github.com/shy166)
 
-### Advisor
+### Advisors
 
 - [Aaron Fraenkel](https://afraenkel.github.io/)
 - [Shivam Lakhotia](https://github.com/shivamlakhotia)
@@ -60,6 +60,20 @@ This project aimes to investigate contents from Reddit by detecting positive or 
 ----
 
 ## References
+
+[HinDroid](https://www.cse.ust.hk/~yqsong/papers/2017-KDD-HINDROID.pdf)
+paper on Malware detection.
+
+- Graph Techniques in Machine Learning
+
+  - A (graduate) [survey course](http://web.eecs.umich.edu/~dkoutra/courses/W18_598/) at Michigan on Graph Mining.
+
+- Machine Learning on Source Code
+
+  - A [collection](https://github.com/src-d/awesome-machine-learning-on-source-code)
+  of papers and references exploring understanding source code with
+  machine learning
+
 
 ----
 
