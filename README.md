@@ -7,11 +7,11 @@ Labeling | Planned
 Feature Extraction| Planned
 ML Deployment | Planned
 
-[Develop Timeline](DEVTIMELINE.md)
+[Development Timeline](DEVTIMELINE.md)
 
 This project aimes to investigate contents from Reddit by detecting positive or negative comments with technique of Heterogeneous Information Network rather than traditional approach of test processing.
 
-[Detailed Overview](OVERVIEW.md)
+[Overview](OVERVIEW.md)
 
 - [Hinreddit](#hinreddit)
   - [Getting Started](#getting-started)
