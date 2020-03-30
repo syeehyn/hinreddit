@@ -1,5 +1,12 @@
 # Hinreddit
 
+Project|build Status
+---|---
+ETL | In Progress
+Lebeling | Planned
+Feature Extraction| Planned
+ML Deployment | Planned
+
 ----
 
 ## Table of Contents
