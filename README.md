@@ -7,6 +7,8 @@ Lebeling | Planned
 Feature Extraction| Planned
 ML Deployment | Planned
 
+[timeline](DEVTIMELINE.md)
+
 This project aimes to investigate contents from Reddit by detecting positive or negative comments with technique of Heterogeneous Information Network rather than traditional approach of test processing.
 
 ----
