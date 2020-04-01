@@ -1,1 +1,1 @@
-from .etl import fetch_posts, subreddits
+from .etl import fetch_posts, subreddits, fetch_post_detail
