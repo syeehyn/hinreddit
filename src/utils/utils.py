@@ -14,8 +14,9 @@ def get_submission(post_id):
 
 def postsdetail_writer(post_id, fp):
     if os.path.exists(os.path.join(fp, post_id + '.json')):
-        return
-    res = fetch_post_detail(get_submission(post_id))
-    with open(os.path.join(fp, post_id + '.json'), 'w') as fp:
-        json.dump(res, fp)
-    return
+        return 'done'
+    else:
+        res = fetch_post_detail(get_submission(post_id))
+        with open(os.path.join(fp, post_id + '.json'), 'w') as fp:
+            json.dump(res, fp)
+        return 'done'

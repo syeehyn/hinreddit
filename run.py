@@ -28,6 +28,8 @@ def main(targets):
         return 
     if 'comment-test' in targets:
         posts_id = pd.read_csv(os.path.join(TESTDIR, 'raw', 'posts.csv')).post_id
+        # for post in tqdm(posts_id):
+        #     postsdetail_writer(post, os.path.join(TESTDIR, 'raw', 'posts_detail'))
         Parallel(n_jobs = NUM_WORKER)(delayed(postsdetail_writer)(post, os.path.join(TESTDIR, 'raw', 'posts_detail')) for post in tqdm(posts_id))
         return
 
