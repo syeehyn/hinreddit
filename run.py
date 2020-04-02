@@ -7,6 +7,7 @@ from joblib import Parallel, delayed
 from tqdm import tqdm
 import pandas as pd
 import psutil
+from p_tqdm import p_map
 NUM_WORKER = psutil.cpu_count(logical = False)
 TESTDIR = json.load(open('config/test-params.json'))['dir']
 TESTNUM = json.load(open('config/test-params.json'))['num']
@@ -27,10 +28,11 @@ def main(targets):
         df.to_csv(os.path.join(TESTDIR, 'raw', 'posts.csv'), index = False)
         return 
     if 'comment-test' in targets:
-        posts_id = pd.read_csv(os.path.join(TESTDIR, 'raw', 'posts.csv')).post_id
+        posts_id = pd.read_csv(os.path.join(TESTDIR, 'raw', 'posts.csv')).post_id.tolist()
+        p_map(postsdetail_writer, posts_id, os.path.join(TESTDIR, 'raw', 'posts_detail'))
         # for post in tqdm(posts_id):
         #     postsdetail_writer(post, os.path.join(TESTDIR, 'raw', 'posts_detail'))
-        Parallel(n_jobs = NUM_WORKER)(delayed(postsdetail_writer)(post, os.path.join(TESTDIR, 'raw', 'posts_detail')) for post in tqdm(posts_id))
+        # Parallel(n_jobs = NUM_WORKER)(delayed(postsdetail_writer)(post, os.path.join(TESTDIR, 'raw', 'posts_detail')) for post in tqdm(posts_id))
         return
 
 

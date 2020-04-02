@@ -1,7 +1,6 @@
 import praw as pr
 import pandas as pd
 from src import *
-from joblib import Parallel, delayed
 reddit = pr.Reddit(client_id=CLIENTID, \
                    client_secret=CLIENTSECRET, \
                    user_agent=USERAGENT,
@@ -61,6 +60,6 @@ def fetch_post_detail(post):
             'upvote_ratio': post.upvote_ratio
             }
     comments = post.comments.list()
-    res['comments'] = Parallel(n_jobs=2)(delayed(_fetch_comment_detail)(comment) for comment in comments)
-    #[_fetch_comment_detail(comment) for comment in comments]
+    # res['comments'] = Parallel(n_jobs=2)(delayed(_fetch_comment_detail)(comment) for comment in comments)
+    res['comments'] = [_fetch_comment_detail(comment) for comment in comments]
     return res
