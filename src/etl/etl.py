@@ -112,7 +112,7 @@ def submission_detail(i):
                 return {'submission_id': i, 'comment_ids': []}
 def submissions_detail(filepath):
     subreddits_fp = glob(join(filepath, POST_DIR, '*.csv'))
-    subreddits = [i.split('/')[:-4] for i in subreddits_fp]
+    subreddits = [i.split('/')[-1][:-4] for i in subreddits_fp]
     n, N = 1, len(subreddits)
     for subreddit, fp in zip(subreddits,subreddits_fp):
         print('fetching {0} subreddit details, Progress: {1}/{2}'.format(subreddit, str(n), str(N)))
