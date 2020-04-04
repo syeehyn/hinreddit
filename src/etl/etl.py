@@ -38,6 +38,7 @@ def fetch_post(subreddit, sort_type, sort, size, before, meta):
             attemps += 1
             time.sleep(3 * attemps)
             r = requests.get(join(SUBMISSION, params))
+        try:
             data = pd.DataFrame(r.json()['data'])[meta]
             return data, str(data.created_utc.min())
         except KeyError:
