@@ -1,6 +1,6 @@
 import ujson as json
 import sys
-from src.etl import fetch_submissions
+from src.etl import fetch_submissions, submissions_detail
 import os
 from joblib import Parallel, delayed
 from tqdm import tqdm
@@ -24,16 +24,10 @@ def main(targets):
     if any(['test'in i for i in targets]):
         env_test()
     if 'post-test' in targets:
-        res = {'results': fetch_submissions(**TESTPARAMS)}
-        with open(os.path.join(TESTDIR, 'raw', 'posts', 'ingestion_results.json'), 'w') as fp:
-            json.dump(res, fp)
-        return 
+        fetch_submissions(**TESTPARAMS)
+        return 'Done'
     if 'comment-test' in targets:
-        # posts_id = pd.read_csv(os.path.join(TESTDIR, 'raw', 'posts.csv')).post_id.tolist()
-        # p_map(postsdetail_writer, posts_id, os.path.join(TESTDIR, 'raw', 'posts_detail'))
-        # for post in tqdm(posts_id):
-        #     postsdetail_writer(post, os.path.join(TESTDIR, 'raw', 'posts_detail'))
-        # Parallel(n_jobs = NUM_WORKER)(delayed(postsdetail_writer)(post, os.path.join(TESTDIR, 'raw', 'posts_detail')) for post in tqdm(posts_id))
+        submissions_detail(TESTDIR)
         return
 
 

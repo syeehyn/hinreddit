@@ -1,1 +1,1 @@
-from .etl import fetch_submissions
+from .etl import fetch_submissions, submissions_detail
