@@ -17,6 +17,7 @@ SUBMISSION = join(API, 'reddit/search/submission/')
 SUBMISSION_DETAIL = join(API, 'reddit/submission/comment_ids/')
 POST_DIR = 'raw/posts'
 POST_DETAIL_DIR = 'raw/posts_detail'
+COMMENT_DIR = 'raw/comments'
 def fetch_post(subreddit, sort_type, sort, size, before, meta):
     params = '?' + 'subreddit=' + subreddit + \
              '&' + 'sort_type=' + sort_type + \
@@ -24,6 +25,7 @@ def fetch_post(subreddit, sort_type, sort, size, before, meta):
              '&' + 'size=' + size + \
              '&' + 'before=' + before
     r = requests.get(join(SUBMISSION, params))
+    attemps = 0
     if r.status_code == 200:
         try:
             data = pd.DataFrame(r.json()['data'])[meta]
@@ -31,8 +33,21 @@ def fetch_post(subreddit, sort_type, sort, size, before, meta):
         except KeyError:
             data = pd.DataFrame(r.json()['data'])
             return data, False
+    elif r.status_code == 403:
+        while r.status_code == 403 & attemps < 5:
+            attemps += 1
+            time.sleep(3 * attemps)
+            r = requests.get(join(SUBMISSION, params))
+            data = pd.DataFrame(r.json()['data'])[meta]
+            return data, str(data.created_utc.min())
+        except KeyError:
+            try:
+                data = pd.DataFrame(r.json()['data'])
+                return data, False
+            except:
+                return None
     else:
-        time.sleep(2)
+        time.sleep(5)
         r = requests.get(join(SUBMISSION, params))
         if r.status_code == 200:
             try:
@@ -42,17 +57,7 @@ def fetch_post(subreddit, sort_type, sort, size, before, meta):
                 data = pd.DataFrame(r.json()['data'])
                 return data, False
         else:
-            time.sleep(5)
-            r = requests.get(join(SUBMISSION, params))
-            if r.status_code == 200:
-                try:
-                    data = pd.DataFrame(r.json()['data'])[meta]
-                    return data, str(data.created_utc.min())
-                except KeyError:
-                    data = pd.DataFrame(r.json()['data'])
-                    return data, False
-            else:
-                return None
+            return None
 def fetch_posts(subreddit, total, meta, filepath, sort_type, sort, size, start):
     num_epoch = -(-int(total) // int(size))
     start_time = start
@@ -96,20 +101,25 @@ def fetch_submissions(**kwargs):
 
 def submission_detail(i):
     r = requests.get(join(SUBMISSION_DETAIL, i))
+    attemps = 0
     if r.status_code == 200:
         return {'submission_id': i, 'comment_ids': r.json()['data']}
+    elif r.status_code == 403:
+        while r.status_code == 403 & attemps < 5:
+            attemps += 1
+            time.sleep(3 * attemps)
+            r = requests.get(join(SUBMISSION_DETAIL, i))
+        try: 
+            return {'submission_id': i, 'comment_ids': r.json()['data']}
+        except:
+            return {'submission_id': i, 'comment_ids': []}
     else:
-        time.sleep(2)
+        time.sleep(5)
         r = requests.get(join(SUBMISSION_DETAIL, i))
         if r.status_code == 200:
             return {'submission_id': i, 'comment_ids': r.json()['data']}
         else:
-            time.sleep(5)
-            r = requests.get(join(SUBMISSION_DETAIL, i))
-            if r.status_code == 200:
-                return {'submission_id': i, 'comment_ids': r.json()['data']}
-            else:
-                return {'submission_id': i, 'comment_ids': []}
+            return {'submission_id': i, 'comment_ids': []}
 def submissions_detail(filepath):
     subreddits_fp = glob(join(filepath, POST_DIR, '*.csv'))
     subreddits = [i.split('/')[-1][:-4] for i in subreddits_fp]
@@ -121,3 +131,45 @@ def submissions_detail(filepath):
         with open(join(filepath, POST_DETAIL_DIR, subreddit+'.json'), 'w') as fp:
             json.dump(rest, fp)
         n += 1
+def comment_detail(i, filepath, subreddit):
+    df = pd.DataFrame(json.load(open(i)))
+    lst = df.comment_ids.explode().dropna().unique().tolist()
+    lst = [lst[i: i+1000] for i in range(0, len(lst), 1000)]
+    res = []
+    for i in tqdm(lst):
+        attemps = 0
+        phrase = ','.join(i)
+        r = requests.get(join(COMMENT, '?ids='+phrase))
+        if r.status_code == 200:
+            res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
+                                'is_submitter', 'subreddit', 'link_id', 'send_replies']])
+        elif r.status_code == 403:
+            while r.status_code == 403 & attemps < 5:
+                attemps += 1
+                time.sleep(3 * attemps)
+                r = requests.get(join(COMMENT, '?ids='+phrase))
+            if r.status_code == 200:
+                res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
+                                'is_submitter', 'subreddit', 'link_id', 'send_replies']])
+            else:
+                continue
+        else:
+            time.sleep(5)
+            r = requests.get(join(COMMENT, '?ids='+phrase))
+            if r.status_code == 200:
+                res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
+                                'is_submitter', 'subreddit', 'link_id', 'send_replies']])
+            else:
+                continue
+    if len(res) == 0:
+        return {'subreddit': subreddit, 'result': 'unsuccess'}
+    else:
+        pd.concat(res, ignore_index = True).to_csv(join(filepath, COMMENT_DIR, subreddit + '.csv'), index = False)
+        return {'subreddit': subreddit, 'result': 'success'}
+def comments_detail(filepath):
+    subreddit_fp = glob(join(filepath, POST_DETAIL_DIR, '*.json'))
+    subreddits = [i.split('/')[-1][:-5] for i in subreddit_fp]
+    tolist = lambda x: [x for _ in range(len(subreddits))]
+    rest = p_umap(comment_detail, subreddit_fp, tolist(filepath), subreddits, num_cpus = 8)
+    with open(join(filepath, COMMENT_DIR, 'log.json'), 'w') as fp:
+        json.dump(rest, fp)

@@ -1,6 +1,6 @@
 import ujson as json
 import sys
-from src.etl import fetch_submissions, submissions_detail
+from src.etl import fetch_submissions, submissions_detail, comments_detail
 import os
 from joblib import Parallel, delayed
 from tqdm import tqdm
@@ -19,6 +19,8 @@ def env_test():
         os.mkdir(os.path.join(TESTDIR, 'raw', 'posts'))
     if not os.path.exists(os.path.join(TESTDIR, 'raw', 'posts_detail')):
         os.mkdir(os.path.join(TESTDIR, 'raw', 'posts_detail'))
+    if not os.path.exists(os.path.join(TESTDIR, 'raw', 'comments')):
+        os.mkdir(os.path.join(TESTDIR, 'raw', 'comments'))
     return
 def main(targets):
     if any(['test'in i for i in targets]):
@@ -28,6 +30,9 @@ def main(targets):
         return 'Done'
     if 'comment-test' in targets:
         submissions_detail(TESTDIR)
+        return
+    if 'comment-detail-test' in targets:
+        comments_detail(TESTDIR)
         return
 
 
