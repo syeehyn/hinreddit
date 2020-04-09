@@ -8,7 +8,7 @@ RUN conda install --yes \
 RUN pip --no-cache-dir install \
     multiprocess \
     beautifulsoup4 \
-    pip install praw \
+    praw \
     lxml \
     pyarrow \
     sqlalchemy \
