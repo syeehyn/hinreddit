@@ -127,11 +127,15 @@ def submissions_detail(filepath):
     n, N = 1, len(subreddits)
     for subreddit, fp in zip(subreddits,subreddits_fp):
         print('fetching {0} subreddit details, Progress: {1}/{2}'.format(subreddit, str(n), str(N)))
-        ids = pd.read_csv(fp).id.tolist()
-        rest = p_umap(submission_detail, ids, num_cpus = 8)
-        with open(join(filepath, POST_DETAIL_DIR, subreddit+'.json'), 'w') as fp:
-            json.dump(rest, fp)
-        n += 1
+        if os.path.exists(join(filepath, POST_DETAIL_DIR, subreddit+'.json')):
+            n += 1
+            continue
+        else:
+            ids = pd.read_csv(fp).id.tolist()
+            rest = p_umap(submission_detail, ids, num_cpus = 8)
+            with open(join(filepath, POST_DETAIL_DIR, subreddit+'.json'), 'w') as fp:
+                json.dump(rest, fp)
+            n += 1
 def comment_detail(i, filepath, subreddit):
     df = pd.DataFrame(json.load(open(i)))
     lst = df.comment_ids.explode().dropna().unique().tolist()
