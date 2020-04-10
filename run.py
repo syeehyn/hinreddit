@@ -32,15 +32,15 @@ def main(targets):
         print('post details fetched')
         comments_detail(TESTDIR)
         print('all fetched')
-    # if 'post-test' in targets:
-    #     fetch_submissions(**TESTPARAMS)
-    #     return 'Done'
-    # if 'comment-test' in targets:
-    #     submissions_detail(TESTDIR)
-    #     return 'Done'
-    # if 'comment-detail-test' in targets:
-    #     comments_detail(TESTDIR)
-    #     return  'Done'
+    if 'post-test' in targets:
+        fetch_submissions(**TESTPARAMS)
+        return 'Done'
+    if 'comment-test' in targets:
+        submissions_detail(TESTDIR)
+        return 'Done'
+    if 'comment-detail-test' in targets:
+        comments_detail(TESTDIR)
+        return  'Done'
 
 
 if __name__ == '__main__':
