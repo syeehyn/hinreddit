@@ -1,4 +1,4 @@
-import ujson as json
+import json
 import sys
 from src.etl import fetch_submissions, submissions_detail, comments_detail
 import os
