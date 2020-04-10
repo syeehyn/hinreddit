@@ -1,7 +1,7 @@
 # import praw as pr
 import pandas as pd
 from src import *
-import ujson as json
+import json
 import requests
 import pandas as pd
 import os
