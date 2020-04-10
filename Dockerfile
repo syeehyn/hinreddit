@@ -2,7 +2,7 @@ FROM ucsdets/scipy-ml-notebook
 
 USER root
 
-ENV CUDA cu100
+ARG CUDA=cu100
 
 RUN apt-get update && \
     apt-get upgrade -y && \
