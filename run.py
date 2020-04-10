@@ -25,15 +25,22 @@ def env_test():
 def main(targets):
     if any(['test'in i for i in targets]):
         env_test()
-    if 'post-test' in targets:
+    if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
-        return 'Done'
-    if 'comment-test' in targets:
+        print('post fetched')
         submissions_detail(TESTDIR)
-        return
-    if 'comment-detail-test' in targets:
+        print('post details fetched')
         comments_detail(TESTDIR)
-        return
+        print('all fetched')
+    # if 'post-test' in targets:
+    #     fetch_submissions(**TESTPARAMS)
+    #     return 'Done'
+    # if 'comment-test' in targets:
+    #     submissions_detail(TESTDIR)
+    #     return 'Done'
+    # if 'comment-detail-test' in targets:
+    #     comments_detail(TESTDIR)
+    #     return  'Done'
 
 
 if __name__ == '__main__':
