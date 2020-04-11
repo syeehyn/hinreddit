@@ -5,9 +5,8 @@ import os
 from joblib import Parallel, delayed
 from tqdm import tqdm
 import pandas as pd
-import psutil
 from p_tqdm import p_map
-NUM_WORKER = psutil.cpu_count(logical = False)
+
 TESTPARAMS = json.load(open('config/test-params.json'))
 TESTDIR = os.path.join('./tests')
 def env_test():
