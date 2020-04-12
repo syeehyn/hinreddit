@@ -6,7 +6,6 @@ from joblib import Parallel, delayed
 from tqdm import tqdm
 import pandas as pd
 from p_tqdm import p_map
-
 TESTPARAMS = json.load(open('config/test-params.json'))
 EDAPARAMS = json.load(open('config/eda-params.json'))
 DATAPARAMS = json.load(open('config/data-params.json'))
@@ -51,12 +50,12 @@ def env_data():
     return
 
 def main(targets):
-    if any(['test'in i for i in targets]):
-        env_test()
-    if any(['eda'in i for i in targets]):
-        env_eda()
-    if any(['real'in i for i in targets]):
-        env_data()
+    # if any(['test'in i for i in targets]):
+    #     env_test()
+    # if any(['eda'in i for i in targets]):
+    #     env_eda()
+    # if any(['real'in i for i in targets]):
+    #     env_data()
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
