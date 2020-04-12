@@ -3,3 +3,4 @@ beautifulsoup4
 lxml
 sqlalchemy
 p_tqdm
+fast-bert
