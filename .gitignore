@@ -10,7 +10,6 @@ __pycache__/
 .DS_Store
 .vscode
 .Python
-tests/
 data/
 build/
 develop-eggs/
@@ -131,3 +130,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+output.log
+nohup.out

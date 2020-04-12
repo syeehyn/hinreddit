@@ -1,7 +1,7 @@
-import praw as pr
+# import praw as pr
 import pandas as pd
 from src import *
-import ujson as json
+import json
 import requests
 import pandas as pd
 import os
@@ -92,7 +92,7 @@ def fetch_submissions(**kwargs):
                                         meta_args['meta'], meta_args['subreddits']
     sort_type, sort, size, start = post_args['sort_type'], post_args['sort'], post_args['size'], post_args['start']
     tolist = lambda x: [x for _ in range(len(subreddits))]
-    res = p_umap(fetch_posts, subreddits, tolist(total), tolist(meta), tolist(filepath), tolist(sort_type), tolist(sort), tolist(size), tolist(start), num_cpus = 8)
+    res = p_umap(fetch_posts, subreddits, tolist(total), tolist(meta), tolist(filepath), tolist(sort_type), tolist(sort), tolist(size), tolist(start), num_cpus = NUM_WORKER)
     # res = Parallel(n_jobs = 8)(delayed(fetch_posts)\
     #                     (subreddit, total, meta, filepath, sort_type, sort, size, start) \
     #                     for subreddit in tqdm(subreddits))
@@ -127,17 +127,23 @@ def submissions_detail(filepath):
     n, N = 1, len(subreddits)
     for subreddit, fp in zip(subreddits,subreddits_fp):
         print('fetching {0} subreddit details, Progress: {1}/{2}'.format(subreddit, str(n), str(N)))
-        ids = pd.read_csv(fp).id.tolist()
-        rest = p_umap(submission_detail, ids, num_cpus = 8)
-        with open(join(filepath, POST_DETAIL_DIR, subreddit+'.json'), 'w') as fp:
-            json.dump(rest, fp)
-        n += 1
+        if os.path.exists(join(filepath, POST_DETAIL_DIR, subreddit+'.json')):
+            n += 1
+            continue
+        else:
+            ids = pd.read_csv(fp).id.tolist()
+            rest = p_umap(submission_detail, ids, num_cpus = NUM_WORKER)
+            with open(join(filepath, POST_DETAIL_DIR, subreddit+'.json'), 'w') as f:
+                json.dump(rest, f)
+            n += 1
 def comment_detail(i, filepath, subreddit):
+    if os.path.exists(join(filepath, COMMENT_DIR, subreddit + '.csv')):
+        return {'subreddit': subreddit, 'result': 'success'}
     df = pd.DataFrame(json.load(open(i)))
     lst = df.comment_ids.explode().dropna().unique().tolist()
     lst = [lst[i: i+1000] for i in range(0, len(lst), 1000)]
     res = []
-    for i in tqdm(lst):
+    for i in lst:
         attemps = 0
         phrase = ','.join(i)
         r = requests.get(join(COMMENT, '?ids='+phrase))
@@ -171,6 +177,6 @@ def comments_detail(filepath):
     subreddit_fp = glob(join(filepath, POST_DETAIL_DIR, '*.json'))
     subreddits = [i.split('/')[-1][:-5] for i in subreddit_fp]
     tolist = lambda x: [x for _ in range(len(subreddits))]
-    rest = p_umap(comment_detail, subreddit_fp, tolist(filepath), subreddits, num_cpus = 8)
+    rest = p_umap(comment_detail, subreddit_fp, tolist(filepath), subreddits, num_cpus = NUM_WORKER)
     with open(join(filepath, COMMENT_DIR, 'log.json'), 'w') as fp:
         json.dump(rest, fp)

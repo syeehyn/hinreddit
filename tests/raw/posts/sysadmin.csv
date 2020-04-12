@@ -1,0 +1,131 @@
+id,author,title,selftext,num_comments,created_utc,full_link,subreddit,score
+fsodfv,IT_Unknown,Having a bit of a dilemma - Deploying HP Print Scout then updating the driver via Intune,"Hi all,
+
+&amp;#x200B;
+
+Have a bit of a difficult one here and I don't know what I'm doing. We've just switched over from Ricoh printers that get directly printed to, to HP Secure printing. 
+
+Problem is, the HP PrintScout software that we've been provided installs the PCL 6.7.0 drivers - fine for day to day printing, but it 1- lacks the configuration that our printers have (they have booklet makers, colour options, etc but the default settings have none of this and don't autoconfigure) and 2- causes text to be printed blank when printing spreadsheets that have text on a filled background.
+
+&amp;#x200B;
+
+I have been provided instructions on how to update the drivers post-PrintScout installation, which do work. I have installed the 6.9 PostScript driver on a server, configured it, then run a little app that turns that into an driver file, which, when you put it into the printscout directory on a machine with it installed, it updates the driver after you delete the secure printer and restart the printscout service. 
+
+&amp;#x200B;
+
+The problem is, I have now been asked to deploy this to all machines in our organisation via Intune. I am not sure how to have a machine install the print scout, then download a powershell script that Pharos (evidently HP's tech supplier) have said should download the driver from wherever I put it, and then replace the drivers automatically.
+
+&amp;#x200B;
+
+Does anyone know if it's possible to actually do this? Perhaps I can package the script and the existing PrintScout exe file into another EXE? It doesn't look like it's possible to get Intune to deploy and run powershell scripts with pre-requisites set like it is standard apps, and I don't know how to go about turning PS scripts into exe or MSI files.
+
+ It's all a bit beyond me, as there's no public documentation available on the application, and this goes far beyond what I think my current skills are in deskside support.
+
+The alternative I guess is to get HP to provide an updated version of the print scout that includes the new driver package - this was initially what we asked for, but they just gave me these instructions and have largely left us to it since.
+
+&amp;#x200B;
+
+Alternatively I was looking to see if there's some sort of decompiler for exe files, so I could maybe replace the driver package included in the current exe file myself, though that hasn't gotten me anywhere either.",0,1585698880,https://www.reddit.com/r/sysadmin/comments/fsodfv/having_a_bit_of_a_dilemma_deploying_hp_print/,sysadmin,2
+fsobop,PinnochioPro,Google Meet to Zoom conversion tool,"Hey everyone! 
+
+My org is currently moving to Zoom from Google Meets. About 98% of the org has meetings that they've pre scheduled with meets but we'd like to find/create a tool that will allow our users to convert their meetings from Google Meets to Zoom links. Anyone know if something like this exists already? 
+
+&amp;#x200B;
+
+If this doesn't exist, does anyone have suggestions on how we can create it?
+
+&amp;#x200B;
+
+Thanks!",2,1585698707,https://www.reddit.com/r/sysadmin/comments/fsobop/google_meet_to_zoom_conversion_tool/,sysadmin,0
+fsob6i,joyous_occlusion,Has anyone here been or will start to get hazard pay for having to go in as an essential worker?,"I've read a few posts today, one of them right here, where companies started paying their essential employees for working at the office bonus pay due to the COVID-19 pandemic. My colleagues and I are not and there's no talk of any COVID-19 related bonuses for anyone of the 400+ people that are required to clock in every day if they haven't been infected (documentation required, regardless of showing symptoms).
+
+I'm not asking out of spite or envy...I'm truly happy for those who are rightfully compensated for the additional day to day risk. I'd just like a ""show of hands"" on this subject.
+
+Stay safe and be well, all.
+
+EDIT: My apologies for the horrible title, just got home after 11 hours, typing on mobile, and cooking dinner for the family",1,1585698655,https://www.reddit.com/r/sysadmin/comments/fsob6i/has_anyone_here_been_or_will_start_to_get_hazard/,sysadmin,2
+fsoar7,dubnetworks,"I've been bored, I wrote an article about vendor lock-in in the cloud","This article is more for the guys running SaaS products, not for people running corporate offices or cots products with small ""development"" teams.
+
+Here's the article, but if you don't want to read it, I put the main take away below.
+
+http://blog.kwnetapps.com/vendor-lock-in-on-the-cloud/
+
+The main gist is this: Don't worry about vendor lock-in. 
+
+The main thing you can take away from the article is this:
+
+&gt; You are a race car team owner and manager. AWS cars and Microsoft cars run the same as normal cars, but they also support a few extra features not in normal cars. These features can make them faster, more convenient, and more reliable.
+
+&gt; You have some drivers, mechanics, pit crew, etc. and they are all experts with normal cars. So everything on AWS cars or Microsoft cars that makes the car work and function like a normal car is the same, and these guys can work on them and drive them. The extras they’ll learn as they continue to work on them, they’ll gain more expertise as time goes on.
+
+&gt; Now you need to decide.
+
+&gt; You can get AWS or Microsoft cars and stick with one brand. Then make sure your drivers and crew understand how to drive them and get the extra features out of them. Keeping up with the metaphor, let’s say those extra features are like automatic tire changes while driving, unlimited fuel, etc. Starting out you’ll do fine, driving the cars like normal cars, but as you learn the features you’ll start to blow your competition away.
+
+&gt; OR
+
+&gt; You can worry about AWS or Microsoft raising prices on your cars and parts. You decide to go with both to balance this risk and miss out on all those early wins in the series because your drivers and crew weren’t specialized. Hell, some of them were still putting the cars together when the races were starting, unless you decide to hire more crew. 
+
+I probably fucked the formatting up...",5,1585698616,https://www.reddit.com/r/sysadmin/comments/fsoar7/ive_been_bored_i_wrote_an_article_about_vendor/,sysadmin,1
+fsnr1u,Hoping_i_Get_poached,Disable Root Cert Updates? But Why!?,"Is there any valid reason to disable root cert updates at the system level? I just found this as the fix for an issue I've been banging my head against for some time. 
+
+HKLM\\SOFTWARE\\Policies\\Microsoft\\SystemCertificates\\AuthRoot\\DisableRootAutoUpdate = 1",7,1585696671,https://www.reddit.com/r/sysadmin/comments/fsnr1u/disable_root_cert_updates_but_why/,sysadmin,1
+fsnq0w,twisted636,Exchange CU upgrade question,"We already run Exchange and i'm going to be doing an CU upgrade for our servers. I'v never done a CU upgrade looks pretty straight forward in the upgrade process my question is about the preparation.
+
+
+I see people using the commands setup.exe /PrepareSchema and PrepareAD before starting the upgrade. Is this needed before starting every CU upgrade?
+
+
+If it is needed for every CU upgrade, do I need to run  this on each server before doing the upgrade we have 2 Exchange servers that need to be upgraded.
+
+Also would I run this directly from the Exchange server or do I need to run it from AD server or point it to the AD servers we use. We also have 2 AD servers.",10,1585696574,https://www.reddit.com/r/sysadmin/comments/fsnq0w/exchange_cu_upgrade_question/,sysadmin,2
+fsnpaq,IceColdSeltzer,"Azure AD connect Hybrid with SSO (on-prem AD) with existing O365 users - If I do not match on-prem username with O365, o365 user gets overwritten.","This is probably the expected behavior but I am hoping someone can confirm. 
+
+I have on-prem AD user joe@ad.local and O365 user [joe.moe@domain.com](mailto:joe.moe@domain.com).   I added the ""@domain"" UPN to AD but I did not change the user UPN, I just entered the proxyaddress in AD [joe.moe@domain.com](mailto:joe.moe@domain.com) it matches with O365 and takes over the O365 account but it changes the O365 login to [joe.moe@domain.com.onmicrosoft.com](mailto:joe.moe@domain.com.onmicrosoft.com) 
+
+The only way I can get it to sync properly is by changing the AD user login to [joe.moe@domain.com](mailto:joe.moe@domain.com) and then it syncs properly with O365.  
+
+Could someone confirm that this is the expected behavior, that some changes in AD need to be made first. 
+
+thanks",7,1585696504,https://www.reddit.com/r/sysadmin/comments/fsnpaq/azure_ad_connect_hybrid_with_sso_onprem_ad_with/,sysadmin,2
+fsnoqf,imfromthebay415,Grid view for Google Meet - and IT WORKS!,"Hello fellow sysadmins,
+
+As you know, Gsuite customers now get access to Google Meet for a limited amount of time (until July 1st). Google meet is pretty great, but it lacks some cool features that some of its biggest competitors *\*cough cough\** like Zoom *\*cough cough\** have... one of those being the **Grid-view mode**.
+
+Grid-view is when you see all of the participants webcam feeds on the screen all at once, and as more people join the tiles just get smaller to fit the amount of people in the meeting. Due to the mandatory WFH order issued at my workplace, we started getting **LOTS** of request for Zoom, specifically because people wanted that Grid-view feature, for better engagement during meetings!
+
+In comes in: [https://chrome.google.com/webstore/detail/google-meet-grid-view/bjkegbgpfgpikgkfidhcihhiflbjgfic?hl=en-US](https://chrome.google.com/webstore/detail/google-meet-grid-view/bjkegbgpfgpikgkfidhcihhiflbjgfic?hl=en-US)
+
+Install this extension, and you get a grid-view mode button added to your Google Meet conference calls!
+
+I can confirm that it's been working really well from the testing I've done today (during our newhire onboarding session) and everyone absolutely LOVED it!
+
+**All credits go to the developer, Ryan! Thank you so much for your amazing work!**
+
+From his website:
+
+&gt;No data is stored by the extension, it's a purely cosmetic script. No extra permissions are required except access to meet.google.com. You can view all source code on the public repository  
+&gt;  
+&gt;Please understand that I've created this for my school during a crisis, and can't reply to feature requests or support users in any meaningful way. If it's useful to you, however, I'm really glad!  
+&gt;  
+&gt;If you feel both grateful and generous, feel free to visit our school's donation page and make a gift. This is a very trying time for our school, and I'm proud to say we're doing the right thing, trying to make sure all hourly workers are paid and taken care of, even though they can't come into work and we don't have the revenue we typically would with which to do it. So every little bit helps!  
+&gt;  
+&gt;Please use the designation of ""Other: Tech Team Support of StG Community Fund""
+
+Links to his info:
+
+1. [https://github.com/Fugiman/google-meet-grid-view](https://github.com/Fugiman/google-meet-grid-view)
+2. [https://github.com/stgeorgesepiscopal/google-meet-grid-view-extension](https://github.com/stgeorgesepiscopal/google-meet-grid-view-extension)
+3. [https://www.stgnola.org/giving/make-a-donation](https://www.stgnola.org/giving/make-a-donation)",9,1585696448,https://www.reddit.com/r/sysadmin/comments/fsnoqf/grid_view_for_google_meet_and_it_works/,sysadmin,3
+fsnn0o,endlessknot,Force windows update after user disconnects from VPN.,"Hi all,
+
+We push patches via KACE and PDQ to our domain PCs. This was working fine 2 weeks ago.
+
+Fast forward to today, we have around 300 Domain Laptops connecting to our domain via VPN. We don’t want to patch them while they are connected during the day because it eats up our bandwidth.
+
+We are looking for a solution, i.e. a script which will force the Laptop to run windows update after user disconnects from VPN.
+
+Best regards,
+
+endlessknot",6,1585696277,https://www.reddit.com/r/sysadmin/comments/fsnn0o/force_windows_update_after_user_disconnects_from/,sysadmin,2
+fsn5au,jrmarshall512,Looking for Physical Access Control Badging System,My company is trying to find a way to log who has access using a badging system. Can you point me in the direction of which vendor offers this type of solution?,22,1585694596,https://www.reddit.com/r/sysadmin/comments/fsn5au/looking_for_physical_access_control_badging_system/,sysadmin,2

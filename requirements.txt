@@ -2,5 +2,5 @@ multiprocess
 beautifulsoup4
 lxml
 sqlalchemy
-praw
 p_tqdm
+fast-bert
