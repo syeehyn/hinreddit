@@ -24,7 +24,7 @@ def fetch_post(subreddit, sort_type, sort, size, before, meta):
              '&' + 'sort=' + sort + \
              '&' + 'size=' + size + \
              '&' + 'before=' + before
-    r = requests.get(join(SUBMISSION, params))
+    r = requests.get(join(SUBMISSION, params), verify=False)
     attemps = 0
     if r.status_code == 200:
         try:
@@ -37,7 +37,7 @@ def fetch_post(subreddit, sort_type, sort, size, before, meta):
         while r.status_code == 403 & attemps < 5:
             attemps += 1
             time.sleep(3 * attemps)
-            r = requests.get(join(SUBMISSION, params))
+            r = requests.get(join(SUBMISSION, params), verify=False)
         try:
             data = pd.DataFrame(r.json()['data'])[meta]
             return data, str(data.created_utc.min())
@@ -49,7 +49,7 @@ def fetch_post(subreddit, sort_type, sort, size, before, meta):
                 return None
     else:
         time.sleep(5)
-        r = requests.get(join(SUBMISSION, params))
+        r = requests.get(join(SUBMISSION, params), verify=False)
         if r.status_code == 200:
             try:
                 data = pd.DataFrame(r.json()['data'])[meta]
@@ -104,7 +104,7 @@ def fetch_submissions(**kwargs):
         return res
 
 def submission_detail(i):
-    r = requests.get(join(SUBMISSION_DETAIL, i))
+    r = requests.get(join(SUBMISSION_DETAIL, i), verify=False)
     attemps = 0
     if r.status_code == 200:
         return {'submission_id': i, 'comment_ids': r.json()['data']}
@@ -112,14 +112,14 @@ def submission_detail(i):
         while r.status_code == 403 & attemps < 5:
             attemps += 1
             time.sleep(3 * attemps)
-            r = requests.get(join(SUBMISSION_DETAIL, i))
+            r = requests.get(join(SUBMISSION_DETAIL, i), verify=False)
         try: 
             return {'submission_id': i, 'comment_ids': r.json()['data']}
         except:
             return {'submission_id': i, 'comment_ids': []}
     else:
         time.sleep(5)
-        r = requests.get(join(SUBMISSION_DETAIL, i))
+        r = requests.get(join(SUBMISSION_DETAIL, i), verify=False)
         if r.status_code == 200:
             return {'submission_id': i, 'comment_ids': r.json()['data']}
         else:
@@ -149,7 +149,7 @@ def comment_detail(i, filepath, subreddit):
     for i in lst:
         attemps = 0
         phrase = ','.join(i)
-        r = requests.get(join(COMMENT, '?ids='+phrase))
+        r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
         if r.status_code == 200:
             res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
                                 'is_submitter', 'subreddit', 'link_id', 'send_replies']])
@@ -157,7 +157,7 @@ def comment_detail(i, filepath, subreddit):
             while r.status_code == 403 & attemps < 5:
                 attemps += 1
                 time.sleep(3 * attemps)
-                r = requests.get(join(COMMENT, '?ids='+phrase))
+                r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
             if r.status_code == 200:
                 res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
                                 'is_submitter', 'subreddit', 'link_id', 'send_replies']])
@@ -165,7 +165,7 @@ def comment_detail(i, filepath, subreddit):
                 continue
         else:
             time.sleep(5)
-            r = requests.get(join(COMMENT, '?ids='+phrase))
+            r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
             if r.status_code == 200:
                 res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
                                 'is_submitter', 'subreddit', 'link_id', 'send_replies']])
