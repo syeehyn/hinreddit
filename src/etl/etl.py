@@ -91,14 +91,17 @@ def fetch_submissions(**kwargs):
     filepath, total, meta, subreddits = meta_args['filepath'], meta_args['total'], \
                                         meta_args['meta'], meta_args['subreddits']
     sort_type, sort, size, start = post_args['sort_type'], post_args['sort'], post_args['size'], post_args['start']
-    tolist = lambda x: [x for _ in range(len(subreddits))]
-    res = p_umap(fetch_posts, subreddits, tolist(total), tolist(meta), tolist(filepath), tolist(sort_type), tolist(sort), tolist(size), tolist(start), num_cpus = NUM_WORKER)
-    # res = Parallel(n_jobs = 8)(delayed(fetch_posts)\
-    #                     (subreddit, total, meta, filepath, sort_type, sort, size, start) \
-    #                     for subreddit in tqdm(subreddits))
-    with open(os.path.join(filepath, 'raw', 'posts', 'log.json'), 'w') as fp:
-            json.dump(res, fp)
-    return res
+    if os.path.exists(os.path.join(filepath, 'raw', 'posts', 'log.json')):
+        return json.load(open(os.path.join(filepath, 'raw', 'posts', 'log.json')))
+    else:
+        tolist = lambda x: [x for _ in range(len(subreddits))]
+        res = p_umap(fetch_posts, subreddits, tolist(total), tolist(meta), tolist(filepath), tolist(sort_type), tolist(sort), tolist(size), tolist(start), num_cpus = NUM_WORKER)
+        # res = Parallel(n_jobs = 8)(delayed(fetch_posts)\
+        #                     (subreddit, total, meta, filepath, sort_type, sort, size, start) \
+        #                     for subreddit in tqdm(subreddits))
+        with open(os.path.join(filepath, 'raw', 'posts', 'log.json'), 'w') as fp:
+                json.dump(res, fp)
+        return res
 
 def submission_detail(i):
     r = requests.get(join(SUBMISSION_DETAIL, i))
