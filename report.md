@@ -37,8 +37,6 @@ Tasks:
 
 
 
-<div class="pagebreak"></div>
-
 - [HinReddit](#hinreddit)
   - [1. Hateful Post Classification](#1-hateful-post-classification)
   - [2. Relation with HinDroid](#2-relation-with-hindroid)
