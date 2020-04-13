@@ -26,18 +26,22 @@ Tasks:
 - Yanyu
   * Consult past researches on hateful speech detection and sentimental analysis.
   * Revise proposal
-  * Write report (Relation with HinDroid, Related Works)
+  * Write report (Relation with HinDroid, Related Works, Data Ingestion: Legal Issues)
 <br>
 - Yu-Chun
   * Revise weekly schedules and create backlog
   * Research on the method for labeling our dataset, and find the methods and write code to implement those methods such as BERT and NLP.
-  * Write report (Datasets, Labeling)
+  * Write report (Datasets, Data Ingestion: Pipeline, Labeling)
+
+<br>
 
 
 
-
+<div class="pagebreak"></div>
 
 - [HinReddit](#hinreddit)
+  - [Group Member](#group-member)
+  - [CheckPoint Task List](#checkpoint-task-list)
   - [1. Hateful Post Classification](#1-hateful-post-classification)
   - [2. Relation with HinDroid](#2-relation-with-hindroid)
   - [3. Related Works](#3-related-works)
@@ -53,6 +57,8 @@ Tasks:
         - [triggered by `data-(read/eda/test)` in targets](#triggered-by-data-readedatest-in-targets)
     - [5.5 Applicability](#55-applicability)
   - [6. Labeling](#6-labeling)
+  - [7. Proposal Revision](#7-proposal-revision)
+  - [8. Backlog](#8-backlog)
 
 
 ## 1. Hateful Post Classification
@@ -183,6 +189,8 @@ The csv file contains the information of each specific post in a dataframe where
 
 - Access and obtain reddit posts, reorganize, and same them as detailed in [schema](#53-schema)
 
+
+
 ### 5.5 Applicability
 
 The above data ingestion pipeline can be used to obtain data as long as the data originates from Reddit. Our pipeline has limited applicability depending on data sources. Possible data sources include other online social platforms such as Twitter, Facebook, LinkedIn, and Instagram. Platforms have similar overall structure but differ in detailed construction and API calls, thus our pipeline may only be helpful for general data ingestion framework reference  when applying to other online social platforms. Also, it is important to check the policies and guidelines of each platform before employing our pipeline to avoid the raise of legal issues or privacy concerns. 
@@ -192,3 +200,20 @@ The above data ingestion pipeline can be used to obtain data as long as the data
 Since the original data obtained from Reddit is not labeled, we will be using a pretrained model BERT, through python library `fast-bert`, to label the Reddit posts before we use it for our project main analysis.
 
 By following [documentation](https://pypi.org/project/fast-bert/) of `fast-bert`, we will train a NLP model with kaggle labeled dataset of wikipedia comments detailed in [Datasets](#4-datasets). We will save this model in directory `interim`. This multi-label model then can be used to classify each Reddit post as "hateful" according to either our definition, which is any of `severe_toxic`, `threat`, `insult`, `identity_hate`, or user-defined "hatefulness" using any combination of the five labels. 
+
+## 7. Proposal Revision
+
+In the latest project proposal turned in last week, we intended to perform sentiment analysis instead of hateful post classification on the content of Reddit due to data labeling issue. This week, after a deeper investigation of BERT, we believe it is possible to label our data by categories of negative behaviors, which we discuss in detail in the labeling section. Thus, having a consistent definition of ‘hate’ within our team, we make it achievable to label hateful contents, and we agree on changing back to our original idea of hateful post detection. We also propose a solution to different definition of ‘hatefulness’ to expand the applicability of our model.
+
+## 8. Backlog
+
+* Combine data ingestion pipeline and labeling process to organize labels according to the data.
+* EDA.
+* Create functions for baseline model using extracted EDA data directly as features
+* Put functions together to create a baseline model pipeline.
+* Create functions to create matrix for each relation detailed above (will assign different relations to members)
+* Put functions together to create a matrix pipeline.
+* Report (Graphs, EDA, Baseline Model)
+* Create a function to combine the graphs
+* Finish creating the HIN given our training data
+* Create functions that take in an HIN graph to create vectors for each post node 
