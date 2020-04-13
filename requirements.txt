@@ -4,4 +4,3 @@ lxml
 sqlalchemy
 p_tqdm
 fast-bert
-torchvision
