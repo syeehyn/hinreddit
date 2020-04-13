@@ -11,9 +11,6 @@ COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt  && \
 	fix-permissions $CONDA_DIR
 
-RUN conda install -y -c pytorch \
-    torchvision=0.5.0=py36_cu100 \
-    && conda clean -ya
 # Install HDF5 Python bindings.
 RUN conda install -y h5py=2.8.0 \
     && conda clean -ya
