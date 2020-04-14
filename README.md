@@ -102,20 +102,35 @@ The project is mainly built upon following packages:
 
 ## References
 
-- [HinDroid](https://www.cse.ust.hk/~yqsong/papers/2017-KDD-HINDROID.pdf)
-paper on Malware detection.
-
-- Graph Techniques in Machine Learning
-
-  - A (graduate) [survey course](http://web.eecs.umich.edu/~dkoutra/courses/W18_598/) at Michigan on Graph Mining.
-
-  - A [paper](https://arxiv.org/abs/1903.02428) by Fey, Matthias and Lenssen, Jan E.
-
-- Machine Learning on Source Code
-
-  - A [collection](https://github.com/src-d/awesome-machine-learning-on-source-code)
-  of papers and references exploring understanding source code with
-  machine learning
+@paper{Hou/Ye/2017,
+  title={HinDroid: {An Intelligent Android Malware Detection System Based on Structured Heterogeneous Information Network}},
+  author={Hou, Ye, Song, Abdulhayoglu}
+  year={2017}
+}
+@inproceedings{Fey/Lenssen/2019,
+  title={Fast Graph Representation Learning with {PyTorch Geometric}},
+  author={Fey, Matthias and Lenssen, Jan E.},
+  booktitle={ICLR Workshop on Representation Learning on Graphs and Manifolds},
+  year={2019},
+}
+@article{turc2019,
+  title={Well-Read Students Learn Better: On the Importance of Pre-training Compact Models},
+  author={Turc, Iulia and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  journal={arXiv preprint arXiv:1908.08962v2 },
+  year={2019}
+}
+@course{Koutra/2018,
+  title={Mining Large-scale Graph Data},
+  author={Danai Koutra},
+  link={http://web.eecs.umich.edu/~dkoutra/courses/W18_598/},
+  year={2018}
+}
+@collection{src-d/2019,
+  title={Awesome Machine Learning On Source Code},
+  author={src-d},
+  link={https://github.com/src-d/awesome-machine-learning-on-source-code},
+  year={2019}
+}
 
 ----
 
