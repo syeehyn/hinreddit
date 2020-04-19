@@ -2,9 +2,9 @@
 
 Project|build Status
 ---|---
-ETL | In Progress
-Labeling | Planned
-Feature Extraction| Planned
+ETL | Finished
+Labeling | Finished
+Feature Extraction| In Progress
 ML Deployment | Planned
 
 [Development Timeline](./writeups/DEVTIMELINE.md)
