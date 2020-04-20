@@ -51,6 +51,6 @@ def construct_matrices(datapath):
                     (values, (A[:,0], A[:,1])), shape=(num_post, num_author)
         )
     A = (A > 0).astype(int)
-    sparse.save_npz(os.path.join(datapath, OUT_DIR), A)
+    sparse.save_npz(os.path.join(datapath, OUT_DIR, 'A'), A)
     del A
     print('finished constructing A')
