@@ -1,6 +1,7 @@
 import json
 import sys
 from src.etl import fetch_submissions, submissions_detail, comments_detail
+from src.embedding import construct_matrices
 import os
 from joblib import Parallel, delayed
 from tqdm import tqdm
@@ -23,18 +24,10 @@ def env_test():
         os.mkdir(os.path.join(TESTDIR, 'raw', 'posts_detail'))
     if not os.path.exists(os.path.join(TESTDIR, 'raw', 'comments')):
         os.mkdir(os.path.join(TESTDIR, 'raw', 'comments'))
-    return
-def env_eda():
-    if not os.path.exists(EDADIR):
-        os.mkdir(EDADIR)
-    if not os.path.exists(os.path.join(EDADIR, 'raw')):
-        os.mkdir(os.path.join(EDADIR, 'raw'))
-    if not os.path.exists(os.path.join(EDADIR, 'raw', 'posts')):
-        os.mkdir(os.path.join(EDADIR, 'raw', 'posts'))
-    if not os.path.exists(os.path.join(EDADIR, 'raw', 'posts_detail')):
-        os.mkdir(os.path.join(EDADIR, 'raw', 'posts_detail'))
-    if not os.path.exists(os.path.join(EDADIR, 'raw', 'comments')):
-        os.mkdir(os.path.join(EDADIR, 'raw', 'comments'))
+    if not os.path.exists(os.path.join(TESTDIR, 'interim')):
+        os.mkdir(os.path.join(TESTDIR, 'interim'))
+    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'hinembed')):
+        os.mkdir(os.path.join(TESTDIR, 'interim', 'hinembed'))
     return
 def env_data():
     if not os.path.exists(DATADIR):
@@ -47,27 +40,29 @@ def env_data():
         os.mkdir(os.path.join(DATADIR, 'raw', 'posts_detail'))
     if not os.path.exists(os.path.join(DATADIR, 'raw', 'comments')):
         os.mkdir(os.path.join(DATADIR, 'raw', 'comments'))
+    if not os.path.exists(os.path.join(DATADIR, 'interim')):
+        os.mkdir(os.path.join(DATADIR, 'interim'))
+    if not os.path.exists(os.path.join(DATADIR, 'interim', 'hinembed')):
+        os.mkdir(os.path.join(DATADIR, 'interim', 'hinembed'))
     return
 
 def main(targets):
-    # if any(['test'in i for i in targets]):
-    #     env_test()
-    # if any(['eda'in i for i in targets]):
-    #     env_eda()
-    # if any(['real'in i for i in targets]):
-    #     env_data()
+    if any(['test'in i for i in targets]):
+        env_test()
+    if any(['real'in i for i in targets]):
+        env_data()
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
         comments_detail(TESTDIR)
-    if 'data-eda' in targets:
-        fetch_submissions(**EDAPARAMS)
-        submissions_detail(EDADIR)
-        comments_detail(EDADIR)
     if 'data-real' in targets:
         fetch_submissions(**DATAPARAMS)
         submissions_detail(DATADIR)
         comments_detail(DATADIR)
+    if 'embedding-test' in targets:
+        construct_matrices(DATADIR)
+    if 'embedding-real' in targets:
+        construct_matrices(DATADIR)
 
 
 if __name__ == '__main__':

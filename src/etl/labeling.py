@@ -1,3 +1,4 @@
+import pandas as pd
 from fast_bert.data_cls import BertDataBunch
 from pathlib import Path
 from fast_bert.learner_cls import BertLearner
