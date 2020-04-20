@@ -1,0 +1,1 @@
+from .hinmodel import hinmodel

@@ -20,17 +20,17 @@ def create_databunch(datapath, labelpath, valfile = 'train.csv'):
         valfile - the file name of validation file, default to the training set if not specified
     """
     return BertDataBunch(datapath, labelpath,
-                          tokenizer='bert-base-uncased',
-                          train_file='train.csv',
-                          val_file=valfile,
-                          label_file='labels.csv',
-                          text_col='comment_text',
-                          label_col=['toxic','severe_toxic','obscene','threat','insult','identity_hate'],
-                          batch_size_per_gpu=16,
-                          max_seq_length=512,
-                          multi_gpu=True,
-                          multi_label=True,
-                          model_type='bert')
+                        tokenizer='bert-base-uncased',
+                        train_file='train.csv',
+                        val_file=valfile,
+                        label_file='labels.csv',
+                        text_col='comment_text',
+                        label_col=['toxic','severe_toxic','obscene','threat','insult','identity_hate'],
+                        batch_size_per_gpu=16,
+                        max_seq_length=512,
+                        multi_gpu=True,
+                        multi_label=True,
+                        model_type='bert')
 
 def create_learner(databunch, outputpath):
     """

@@ -2,6 +2,7 @@ import json
 import sys
 from src.etl import fetch_submissions, submissions_detail, comments_detail
 from src.embedding import construct_matrices
+from src.utils import evaluate
 import os
 from joblib import Parallel, delayed
 from tqdm import tqdm
@@ -63,6 +64,8 @@ def main(targets):
         construct_matrices(DATADIR)
     if 'embedding-real' in targets:
         construct_matrices(DATADIR)
+    if 'evaluate-real' in targets:
+        evaluate(.2, 'hinmodel', DATADIR)
 
 
 if __name__ == '__main__':
