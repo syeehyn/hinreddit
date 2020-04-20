@@ -65,7 +65,8 @@ def main(targets):
     if 'embedding-real' in targets:
         construct_matrices(DATADIR)
     if 'evaluate-real' in targets:
-        evaluate(.2, 'hinmodel', DATADIR)
+        res = evaluate(.2, 'hinmodel', DATADIR)
+        print(res)
 
 
 if __name__ == '__main__':
