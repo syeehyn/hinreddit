@@ -214,6 +214,7 @@ By using the data ingestion pipeline, we have successfully extracted 5,000 posts
 <br>
 
 We then look at the labels for the posts by each subreddit. Attached below shows the distribution of the labels. You may noticed that distribution of the labels is highly imbalanced as there are way more posts labeled as benign than posts labeled as hateful. We will need to think about a way to solve this problem in order to train the model. 
+<br>
 |  |deleted|benign|hateful|
 |--|-------|------|-------|
 |count|50|48|48|
@@ -222,6 +223,7 @@ We then look at the labels for the posts by each subreddit. Attached below shows
 |min|101|350|1|
 |max|2,341|4,796|144|
 We also looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits. 
+<br>
 subreddit|deleted|benign|hateful|
 |---------|-------------|-----------|---------------|
 |Jokes (r/jokes)|194,798|38|4,142|
