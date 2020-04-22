@@ -226,11 +226,21 @@ We also looked at the subreddit that has the most hateful posts. Below shows the
 <br>
 |subreddit|deleted|benign|hateful|
 |---------|-------|------|-------|
-|Jokes (r/jokes)|194,798|38|4,142|
-|For your Opinions that are Unpopular (r/unpopularopinion)|833|3,947|144|
-|Teenagers (r/teenagers)|2,205|2,435|118|
-|Today I Fucked Up (r/tifu)|654|1,957|114|
-|Escape From Tarkov (r/escapefromtarkov)|1,997|2,793|98|
+|Jokes (r/jokes)|833|3,947|144|
+|For your Opinions that are Unpopular (r/unpopularopinion)|2,205|2,435|118|
+|Teenagers (r/teenagers)|654|1,957|114|
+|Today I Fucked Up (r/tifu)|1,997|2,793|98|
+|Escape From Tarkov (r/escapefromtarkov)|368|2,252|76|
+<br>
+We then look at the labels at a higher level without group them into different subreddits. The table below shows the statistics of number of comments recieved for the posts classified in different labels. As we noticed the posts that are classifed hateful recieved in average a slightly higher number of comments than the posts that are classified as benign. 
+<br>
+
+|label|min|max|count|mean|
+|-----|---|---|-----|----|
+|deleted|0|3,718|34,688|2.23|
+|benign|0|15,348|135,290|13.5|
+|hateful|0|1,874|1,156|19.16|
+<br>
 We have also done some analysis on the posts that are labeled hateful. Below is a WordCloud and also a table that shows the top 20 popular words after removing stop words. 
 
 ![wordcloud](../writeups/wordcloud)
