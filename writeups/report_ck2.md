@@ -224,8 +224,8 @@ We then look at the labels for the posts by each subreddit. Attached below shows
 |max|2,341|4,796|144|
 We also looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits. 
 <br>
-subreddit|deleted|benign|hateful|
-|---------|-------------|-----------|---------------|
+|subreddit|deleted|benign|hateful|
+|---------|-------|------|-------|
 |Jokes (r/jokes)|194,798|38|4,142|
 |For your Opinions that are Unpopular (r/unpopularopinion)|833|3,947|144|
 |Teenagers (r/teenagers)|2,205|2,435|118|
