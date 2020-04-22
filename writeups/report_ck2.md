@@ -211,6 +211,8 @@ By using the data ingestion pipeline, we have successfully extracted 5,000 posts
 |WoW: Classic (r/classicwow)|148,426|29|1,585|
 |Two X Chromosomes (r/twoxchromosomes)|126,261|25|4,609|
 |5th Edition D&D (r/dndnext)|126,261|25|1,272|
+<br>
+
 We then look at the labels for the posts by each subreddit. Attached below shows the distribution of the labels. You may noticed that distribution of the labels is highly imbalanced as there are way more posts labeled as benign than posts labeled as hateful. We will need to think about a way to solve this problem in order to train the model. 
 |  |deleted|benign|hateful|
 |--|-------|------|-------|
