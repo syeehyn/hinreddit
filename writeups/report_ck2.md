@@ -222,6 +222,7 @@ We then look at the labels for the posts by each subreddit. Attached below shows
 |std|634|986|32|
 |min|101|350|1|
 |max|2,341|4,796|144|
+<br>
 We also looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits. 
 <br>
 |subreddit|deleted|benign|hateful|
