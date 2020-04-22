@@ -225,6 +225,7 @@ We then look at the labels for the posts by each subreddit. Attached below shows
 <br>
 We also looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits. 
 <br>
+
 |subreddit|deleted|benign|hateful|
 |---------|-------|------|-------|
 |Jokes (r/jokes)|833|3,947|144|
