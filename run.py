@@ -52,6 +52,8 @@ def main(targets):
         env_test()
     if any(['real'in i for i in targets]):
         env_data()
+    if 'comments' in targets:
+        comments_detail(TESTDIR)
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
