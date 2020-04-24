@@ -168,7 +168,7 @@ def comment_detail(i, filepath, subreddit):
             r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
             if r.status_code == 200:
                 res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                'is_submitter', 'subreddit', 'link_id', 'send_replies']])
+                                'is_submitter', 'subreddit', 'link_id', 'body', 'nest_level', 'parent_id']])
             else:
                 continue
     if len(res) == 0:
