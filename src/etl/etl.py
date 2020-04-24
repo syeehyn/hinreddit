@@ -11,6 +11,8 @@ import time
 from joblib import Parallel, delayed
 from p_tqdm import p_umap
 from glob import glob
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 API = 'https://api.pushshift.io/'
 COMMENT = join(API, 'reddit/search/comment/')
 SUBMISSION = join(API, 'reddit/search/submission/')
