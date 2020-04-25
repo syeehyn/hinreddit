@@ -182,6 +182,6 @@ def comments_detail(filepath):
     subreddit_fp = glob(join(filepath, POST_DETAIL_DIR, '*.json'))
     subreddits = [i.split('/')[-1][:-5] for i in subreddit_fp]
     tolist = lambda x: [x for _ in range(len(subreddits))]
-    rest = p_umap(comment_detail, subreddit_fp, tolist(filepath), subreddits, num_cpus = NUM_WORKER//2)
+    rest = p_umap(comment_detail, subreddit_fp, tolist(filepath), subreddits, num_cpus = NUM_WORKER)
     with open(join(filepath, COMMENT_DIR, 'log.json'), 'w') as fp:
         json.dump(rest, fp)
