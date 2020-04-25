@@ -146,7 +146,7 @@ def comment_detail(i, filepath, subreddit):
         return {'subreddit': subreddit, 'result': 'success'}
     df = pd.DataFrame(json.load(open(i)))
     lst = df.comment_ids.explode().dropna().unique().tolist()
-    lst = [lst[i: i+10] for i in range(0, len(lst), 10)]
+    lst = [lst[i: i+100] for i in range(0, len(lst), 100)]
     res = []
     for i in lst:
         attemps = 0
@@ -182,6 +182,6 @@ def comments_detail(filepath):
     subreddit_fp = glob(join(filepath, POST_DETAIL_DIR, '*.json'))
     subreddits = [i.split('/')[-1][:-5] for i in subreddit_fp]
     tolist = lambda x: [x for _ in range(len(subreddits))]
-    rest = p_umap(comment_detail, subreddit_fp, tolist(filepath), subreddits, num_cpus = NUM_WORKER)
+    rest = p_umap(comment_detail, subreddit_fp, tolist(filepath), subreddits, num_cpus = NUM_WORKER//2)
     with open(join(filepath, COMMENT_DIR, 'log.json'), 'w') as fp:
         json.dump(rest, fp)
