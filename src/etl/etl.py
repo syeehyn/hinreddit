@@ -146,7 +146,7 @@ def comment_detail(i, filepath, subreddit):
         return {'subreddit': subreddit, 'result': 'success'}
     df = pd.DataFrame(json.load(open(i)))
     lst = df.comment_ids.explode().dropna().unique().tolist()
-    lst = [lst[i: i+1000] for i in range(0, len(lst), 1000)]
+    lst = [lst[i: i+100] for i in range(0, len(lst), 100)]
     res = []
     for i in lst:
         attemps = 0
