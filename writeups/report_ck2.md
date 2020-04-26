@@ -233,6 +233,7 @@ We also looked at the subreddit that has the most hateful posts. Below shows the
 |Teenagers (r/teenagers)|654|1,957|114|
 |Today I Fucked Up (r/tifu)|1,997|2,793|98|
 |Escape From Tarkov (r/escapefromtarkov)|368|2,252|76|
+
 <br>
 We then look at the labels at a higher level without group them into different subreddits. The table below shows the statistics of number of comments recieved for the posts classified in different labels. As we noticed the posts that are classifed hateful recieved in average a slightly higher number of comments than the posts that are classified as benign. 
 <br>
