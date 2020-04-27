@@ -3,6 +3,7 @@ import sys
 from src.etl import fetch_submissions, submissions_detail, comments_detail
 from src.embedding import construct_matrices
 from src.utils import evaluate
+from src.models import *
 import os
 from joblib import Parallel, delayed
 from tqdm import tqdm
@@ -52,8 +53,6 @@ def main(targets):
         env_test()
     if any(['real'in i for i in targets]):
         env_data()
-    if 'comments' in targets:
-        comments_detail(DATADIR)
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
@@ -69,6 +68,20 @@ def main(targets):
     if 'evaluate-real' in targets:
         res = evaluate(.2, 'hinmodel', DATADIR)
         print(res)
+    if 'baseline' in targets:
+        post_path = os.path.join(DATADIR, 'raw/posts')
+        label_path = os.path.join(DATADIR, 'interim/labels')
+        posts = get_csvs(post_path)
+        labels = get_csvs(label_path)[['id','label']]
+        df = extract_feat(posts, labels)
+        baseline_model(df)
+    if 'baseline-test' in targets:
+        post_path = os.path.join(TESTDIR, 'raw/posts')
+        label_path = os.path.join(TESTDIR, 'interim/labels')
+        posts = get_csvs(post_path)
+        labels = get_csvs(label_path)[['id','label']]
+        df = extract_feat(posts, labels)
+        baseline_model(df)
 
 
 if __name__ == '__main__':
