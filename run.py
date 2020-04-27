@@ -53,7 +53,7 @@ def main(targets):
         env_test()
     else:
         env_data()
-    if 'data-test' in targets:
+    if 'test' in targets:
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
         comments_detail(TESTDIR)
