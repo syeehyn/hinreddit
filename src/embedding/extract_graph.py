@@ -45,29 +45,29 @@ def _get_dfs(spark, fp):
     return posts, comm, labels
 
 def _process_nodes(posts, comm):
-    stringIndexer = M.feature.StringIndexer(inputCol='subreddit', outputCol='subreddit_')
-    model_string = stringIndexer.setHandleInvalid("skip").fit(comm)
-    td = model_string.transform(comm)
-    onehot_comm = td.select('post_id', 'author', 'subreddit', 'subreddit_', 'is_submitter')
+    # stringIndexer = M.feature.StringIndexer(inputCol='subreddit', outputCol='subreddit_')
+    # model_string = stringIndexer.setHandleInvalid("skip").fit(comm)
+    # td = model_string.transform(comm)
+    onehot_comm = comm.select('post_id', 'author', 'subreddit', 'is_submitter')
     onehot_comm = onehot_comm.withColumn('is_post', F.lit(0))
-    td = model_string.transform(posts)
-    onehot_posts = td.select('post_id', 'author', 'subreddit', 'subreddit_')
+    # td = model_string.transform(posts)
+    onehot_posts = posts.select('post_id', 'author', 'subreddit')
     onehot_posts = onehot_comm.withColumn('is_submitter', F.lit(1))
     onehot_posts = onehot_posts.withColumn('is_post', F.lit(1))
     user_nodes_comm = onehot_comm.select(F.col('author').alias('node_name'),
                                 F.col('post_id').alias('post_id'),
                                 F.col('is_submitter').alias('user_feature'),
-                                F.col('subreddit_').alias('post_feature'),
+                                F.col('subreddit').alias('post_feature'),
                                     'is_post')
     user_nodes_post = onehot_comm.select(F.col('author').alias('node_name'),
                                     F.col('post_id').alias('post_id'),
                                     F.col('is_submitter').alias('user_feature'),
-                                    F.col('subreddit_').alias('post_feature'),
+                                    F.col('subreddit').alias('post_feature'),
                                         'is_post')
     user_nodes = user_nodes_comm.union(user_nodes_post)
     post_nodes = onehot_posts.select(F.col('post_id').alias('node_name'),
                                     F.col('is_submitter').alias('user_feature'),
-                                    F.col('subreddit_').alias('post_feature'),
+                                    F.col('subreddit').alias('post_feature'),
                                     'is_post')
     nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropna()
     stringIndexer = M.feature.StringIndexer(inputCol='node_name', outputCol='node_id')
