@@ -1,1 +1,1 @@
-from .hinembed import construct_matrices
+from .hinembed import create_graph
