@@ -11,6 +11,8 @@ import time
 from joblib import Parallel, delayed
 from p_tqdm import p_umap
 from glob import glob
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 API = 'https://api.pushshift.io/'
 COMMENT = join(API, 'reddit/search/comment/')
 SUBMISSION = join(API, 'reddit/search/submission/')
@@ -144,7 +146,7 @@ def comment_detail(i, filepath, subreddit):
         return {'subreddit': subreddit, 'result': 'success'}
     df = pd.DataFrame(json.load(open(i)))
     lst = df.comment_ids.explode().dropna().unique().tolist()
-    lst = [lst[i: i+1000] for i in range(0, len(lst), 1000)]
+    lst = [lst[i: i+100] for i in range(0, len(lst), 100)]
     res = []
     for i in lst:
         attemps = 0
@@ -168,7 +170,7 @@ def comment_detail(i, filepath, subreddit):
             r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
             if r.status_code == 200:
                 res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                'is_submitter', 'subreddit', 'link_id', 'send_replies']])
+                                'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id']])
             else:
                 continue
     if len(res) == 0:

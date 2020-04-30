@@ -5,33 +5,28 @@
 - Yanyu Tao
 - Shuibenyang Yuan
 
-## CheckPoint Task List
-**Week 1:**
+## 2nd CheckPoint Task List
 
-Goal: Create data ingestion pipeline to download reddit post content along with user information.
+Goal: Create data labeling pipeline and finish EDA as well as baseline model
 
 Tasks: 
 
 - Shuibenyang
-  * Create functions to obtain information of a Reddit post given post id/link, and save the information as a csv file. Information includes text content, post id, post title.
-  * Create functions to obtain all reply ids (flattened) given post ids, and save the information as a json file.
-  * Create functions to obtain information of a reply given its id, and save the information as a csv file. Information includes author id and post id of the reply.
-  * Put functions together and create a reddit post ingestion pipeline.
+  * Start working on creating functions and graphs from downloaded and labeled dataset
+  * Explore different possible approaches to embed graphs
 <br>
 - Chengyu
-  * Test the ingestion pipelines and check outputs on DSMLP server, debug if needed.
-  * Output the test data and data used for EDA 
-  * Write report (Datasets, Obtaining Data, Data Ingestion: Privacy Concerns, Schema, Pipeline)
+  * EDA 
+  * Write report (EDA)
 <br>  
 - Yanyu
-  * Consult past researches on hateful speech detection and sentimental analysis.
-  * Revise proposal
-  * Write report (Relation with HinDroid, Related Works, Data Ingestion: Legal Issues)
+  * Label validity check
+  * Write report (Baseline model and result)
 <br>
 - Yu-Chun
-  * Revise weekly schedules and create backlog
-  * Research on the method for labeling our dataset, and find the methods and write code to implement those methods such as BERT and NLP.
-  * Write report (Datasets, Data Ingestion: Pipeline, Labeling)
+  * Labeling pipeline.
+  * Baseline model and pipeline
+  * Write report (tasks, backlog)
 
 <br>
 
@@ -41,7 +36,7 @@ Tasks:
 
 - [HinReddit](#hinreddit)
   - [Group Member](#group-member)
-  - [CheckPoint Task List](#checkpoint-task-list)
+  - [2nd CheckPoint Task List](#2nd-checkpoint-task-list)
   - [1. Hateful Post Classification](#1-hateful-post-classification)
   - [2. Relation with HinDroid](#2-relation-with-hindroid)
   - [3. Related Works](#3-related-works)
@@ -55,11 +50,16 @@ Tasks:
         - [Third Layer: Comments](#third-layer-comments)
     - [5.4 Pipeline](#54-pipeline)
         - [triggered by `data-(read/eda/test)` in targets](#triggered-by-data-readedatest-in-targets)
-    - [5.5 Applicability](#55-applicability)
+        - [triggered by `label` in targets](#triggered-by-label-in-targets)
+        - [triggered by `baseline` in targets](#triggered-by-baseline-in-targets)
+    - [5.5 Data Cleaning](#55-data-cleaning)
+    - [5.6 Applicability](#56-applicability)
   - [6. Labeling](#6-labeling)
-  - [7. EDA](#7-EDA)
-  - [8. Proposal Revision](#8-proposal-revision)
-  - [9. Backlog](#9-backlog)
+  - [7. EDA](#7-eda)
+  - [8. Baseline Model](#8-baseline-model)
+  - [9. Proposal Revision](#9-proposal-revision)
+  - [10. Backlog](#10-backlog)
+  - [11. Checkpoint 3 Tasks](#11-checkpoint-3-tasks)
 
 
 ## 1. Hateful Post Classification
@@ -86,7 +86,7 @@ Studies regarding the detection of hateful speech, content, and user in Online S
 Our project includes two datasets:
    
 1. Main dataset used for our project analysis
-    This is a dataset we will obtain from Reddit through a couple APIs. We use the API called [PushShift](https://github.com/pushshift/api) to obtain Reddit post information, including post text, title, and user ids who reply to either the post itself or any of the reply below the post and the comments that it provided. We use `PushShift` because it offers a specific API to obtain the flattened list of repliers' ids and takes considerably less time than doing the same with [PRAW](https://praw.readthedocs.io/en/latest/). After a brief EDA on the most popular 124 subreddits, we select 50 subreddits in which the proportion of valid text posts of the posts are the highest and then sample a number of newest posts in each of the 50 subreddits. We want to eliminate image/meme posts and deleted posts so we can better apply NLP model.
+    This is a dataset we will obtain from Reddit through a couple APIs. We use the API called [PushShift](https://github.com/pushshift/api) to obtain Reddit post information, including post text, title, and user ids who reply to either the post itself or any of the reply below the post and the comments that it provided. We use `PushShift` because it offers a specific API to obtain the flattened list of repliers' ids and takes considerably less time than doing the same with [PRAW](https://praw.readthedocs.io/en/latest/). After a brief EDA on the most popular 124 subreddits, we select 50 subreddits in which the proportion of valid text posts of the posts are the highest and then sample a number of newest posts in each of the 50 subreddits. By doing this, our data will represent a population of newer posts in subreddits whose posts have higher text-proportion. We want to eliminate image/meme posts and deleted posts so we can better apply NLP model for our supervised learning.
 <br>
    - advantages: 
       - This dataset is obtained from the actual social platform, and thus we obtain real-world perspective when training.
@@ -190,17 +190,33 @@ The csv file contains the information of each specific post in a dataframe where
 
 - Access and obtain reddit posts, reorganize, and same them as detailed in [schema](#53-schema)
 
+##### triggered by `label` in targets
 
+- Train a multi-label classification model using `Keras` deep learning NLP model and kaggle dataset.
 
-### 5.5 Applicability
+- Use the model to label post csv files stored in post path.
+
+- Store the label csv files in label path.
+
+##### triggered by `baseline` in targets
+
+- Extract simple features detailed in [baseline](#8-baseline-model) section.
+
+- Use the features to train linear regression, random forest, and gradient boost classifiers.
+
+- Use the baseline models to predict labels and store the result in output directory.
+
+### 5.5 Data Cleaning
+Since we are directly using the Pushshift API, it has taken care most of the data cleaning parts. Since the output of the result is in .json format, thus the only transformation we have to make is to use pandas to output the result in .csv format. 
+### 5.6 Applicability
 
 The above data ingestion pipeline can be used to obtain data as long as the data originates from Reddit. Our pipeline has limited applicability depending on data sources. Possible data sources include other online social platforms such as Twitter, Facebook, LinkedIn, and Instagram. Platforms have similar overall structure but differ in detailed construction and API calls, thus our pipeline may only be helpful for general data ingestion framework reference  when applying to other online social platforms. Also, it is important to check the policies and guidelines of each platform before employing our pipeline to avoid the raise of legal issues or privacy concerns. 
 
 ## 6. Labeling
 
-Since the original data obtained from Reddit is not labeled, we will be using a pretrained model BERT, through python library `fast-bert`, to label the Reddit posts before we use it for our project main analysis.
+Since the original data obtained from Reddit is not labeled, we will be using a RNN and bidirectional layers, through python library `keras`, as well as pre-trained word representation vectors from GloVe, to label the Reddit posts before we use it for our project main analysis.
 
-By following [documentation](https://pypi.org/project/fast-bert/) of `fast-bert`, we will train a NLP model with kaggle labeled dataset of wikipedia comments detailed in [Datasets](#4-datasets). We will save this model in directory `interim`. This multi-label model then can be used to classify each Reddit post as "hateful" according to either our definition, which is any of `severe_toxic`, `threat`, `insult`, `identity_hate`, or user-defined "hatefulness" using any combination of the five labels. 
+By following a [tutorial](https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/) of using `keras` and the pretrained word vectors, we will train a multi-label NLP model with kaggle labeled dataset of wikipedia comments detailed in [Datasets](#4-datasets). We will save this model in directory `interim`. This multi-label model then can be used to classify each Reddit post as "hateful" according to either our definition, which is any of `severe_toxic`, `threat`, `insult`, `identity_hate`, or user-defined "hatefulness" using any combination of the five labels. 
 
 ## 7. EDA
 By using the data ingestion pipeline, we have successfully extracted 5,000 posts from each of the 50 subreddits which is 250,000 posts in total. For each of the subreddit we have calculated **total_comment**: the total number of comments recieved for the posts contained in that subreddit, **avg_comment**: average number of comments received for the posts contained in that subreddit, **top_num_comment**: the maximum number of comments recieved by a post in that subreddit. The statistics for the top 5 subreddits that have the most total comments are shown in the table below. From the table, we can observe that the subreddit with higher number of total_comments also has higher number of average_comment. 
@@ -222,32 +238,78 @@ We then look at the labels for the posts by each subreddit. Attached below shows
 |std|634|986|32|
 |min|101|350|1|
 |max|2,341|4,796|144|
+<br>
 We also looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits. 
 <br>
+
 |subreddit|deleted|benign|hateful|
 |---------|-------|------|-------|
-|Jokes (r/jokes)|194,798|38|4,142|
-|For your Opinions that are Unpopular (r/unpopularopinion)|833|3,947|144|
-|Teenagers (r/teenagers)|2,205|2,435|118|
-|Today I Fucked Up (r/tifu)|654|1,957|114|
-|Escape From Tarkov (r/escapefromtarkov)|1,997|2,793|98|
+|Jokes (r/jokes)|833|3,947|144|
+|For your Opinions that are Unpopular (r/unpopularopinion)|2,205|2,435|118|
+|Teenagers (r/teenagers)|654|1,957|114|
+|Today I Fucked Up (r/tifu)|1,997|2,793|98|
+|Escape From Tarkov (r/escapefromtarkov)|368|2,252|76|
+
+<br>
+We then look at the labels at a higher level without group them into different subreddits. The table below shows the statistics of number of comments recieved for the posts classified in different labels. As we noticed the posts that are classifed hateful recieved in average a slightly higher number of comments than the posts that are classified as benign. 
+<br>
+
+|label|min|max|count|mean|
+|-----|---|---|-----|----|
+|deleted|0|3,718|34,688|2.23|
+|benign|0|15,348|135,290|13.5|
+|hateful|0|1,874|1,156|19.16|
+<br>
 We have also done some analysis on the posts that are labeled hateful. Below is a WordCloud and also a table that shows the top 20 popular words after removing stop words. 
 
 ![wordcloud](../writeups/wordcloud)
 ![wordfreq](../writeups/wordfreq.png)
-## 8. Proposal Revision
 
-In the latest project proposal turned in last week, we intended to perform sentiment analysis instead of hateful post classification on the content of Reddit due to data labeling issue. This week, after a deeper investigation of BERT, we believe it is possible to label our data by categories of negative behaviors, which we discuss in detail in the labeling section. Thus, having a consistent definition of ‘hate’ within our team, we make it achievable to label hateful contents, and we agree on changing back to our original idea of hateful post detection. We also propose a solution to different definition of ‘hatefulness’ to expand the applicability of our model.
+## 8. Baseline Model
+We use Logistic Regression, Random Forest, and Gradient Boost Classifier to train our models based on the features `['num_comments', 'subreddit', 'score', 'length', 'title_length']` and classify whether a post is hateful.
 
-## 9. Backlog
 
-* Combine data ingestion pipeline and labeling process to organize labels according to the data.
-* EDA.
-* Create functions for baseline model using extracted EDA data directly as features
-* Put functions together to create a baseline model pipeline.
-* Create functions to create matrix for each relation detailed above (will assign different relations to members)
-* Put functions together to create a matrix pipeline.
-* Report (Graphs, EDA, Baseline Model)
-* Create a function to combine the graphs
-* Finish creating the HIN given our training data
-* Create functions that take in an HIN graph to create vectors for each post node 
+`num_comment`: number of comments for each post
+`subreddit`: the subreddit that the post belongs to
+`score`: the upvote score that the post receives
+`length`: the length of text body of the post
+`title_length`: the length of the title
+
+Our current dataset is splited into 70% training and 30% test.The resulting metrics for each classifier regarding the performance on the test set are listed in the table below.
+
+||tn|fp|fn|tp|acc|fnr|
+|-----|---|---|---|---|---|---|
+|Logistic Regression|40,593|0|341|0|0.991670|1.0|
+|Random Forest|40,593|0|341|0|0.991670|1.0|
+|Gradient Boost Classifier|40,580|13|341|0|0.991352|1.0|
+
+From the table above, we can observe that the performances of the three classifiers by accuracy scores are all around 0.99. Despite the high accuracy, the three classifiers are trained askew to negatively classify data due to the extreme imbalance of our dataset. In order to balance our negative and positive data, we come up with several possible solutions included in backlog.
+
+
+This change has not been sufficiently executed to our project, so it will be included in the next checkpoint. The current checkpoint only presents everything before the new data. 
+
+## 9. Proposal Revision
+
+Since the last checkpoint, due to the difficulty encountered during the implementation of BERT models, we switch to bidirectional RNN model that can be implemented through `keras` when it comes to training a model to label the post data we downloaded. The process closely follows instructions in the [link](https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/). We also use word vector representations, called Global Vectors for Word Representation that can be downloaded [here](https://nlp.stanford.edu/projects/glove/).
+<br>
+We have also add the data population of interest that we missed to include for checkpoint 1 in section 4.1.
+
+## 10. Backlog
+
+* Besides using post body text to identify hateful ones, also use comments. In other words, label the post as hateful if the comments have higher proportion of hatefulness.
+* Manually search for controversial subreddits and ingest data from such to include more potential hateful data
+* Reingest data from our current sampled subreddits and obtain comments under each post; post will be labelled as hateful based on the contents of the post itself as well as the comments and conversations going on under the post
+* If the above changes cannot effectively solve the problem, we will consider making adjustment to our data ingestion pipeline and change our data structure from post level to thread level, which will also help to lower the dimension of our meta path in the HIN process. 
+* Include parameters to make more space for the definition of hatefulness.
+* Update pipeline so the labeling part can directly saves uses the saved model to label data.
+
+## 11. Checkpoint 3 Tasks
+**week 5**
+- Determine approaches for graph embeddings.
+- Different group member will work on creating functions and graphs for each approach.
+- Finish tasks left in backlog.
+
+**week 6**
+- Train and test the embedded graphs on downloaded data.
+- Finish up cleaning the pipeline and the targets.
+- Compare result to that of the baseline model and discuss how possible hateful posts where pretained model fail to identify can affect our project output.
