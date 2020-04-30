@@ -77,7 +77,6 @@ def _process_nodes(posts, comm):
     user_nodes = user_nodes.select(F.col('tmp').alias('node_id'),
                                 F.col('node_name').alias('post_id'),
                                 F.col('user_feature'),
-                                F.col('post_id'),
                                 F.col('is_post'),
                                 F.col('node_id').alias('parent_id'))
     return model, post_nodes, user_nodes
