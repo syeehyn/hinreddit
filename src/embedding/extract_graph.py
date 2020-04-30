@@ -46,7 +46,7 @@ def _get_dfs(spark, fp):
 
 def _process_nodes(posts, comm):
     stringIndexer = M.feature.StringIndexer(inputCol='subreddit', outputCol='subreddit_')
-    model_string = stringIndexer.setHandleInvalid("keep").fit(comm)
+    model_string = stringIndexer.setHandleInvalid("skip").fit(comm)
     td = model_string.transform(comm)
     onehot_comm = td.select('post_id', 'author', 'subreddit', 'subreddit_', 'is_submitter')
     onehot_comm = onehot_comm.withColumn('is_post', F.lit(0))
@@ -71,7 +71,7 @@ def _process_nodes(posts, comm):
                                     'is_post')
     nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropna()
     stringIndexer = M.feature.StringIndexer(inputCol='node_name', outputCol='node_id')
-    model = stringIndexer.setHandleInvalid("keep").fit(nodes)
+    model = stringIndexer.setHandleInvalid("skip").fit(nodes)
     user_nodes = model.transform(user_nodes)
     post_nodes = model.transform(post_nodes)
     post_nodes = post_nodes.select('node_id', 'user_feature', 'post_feature', 'is_post')
