@@ -30,6 +30,8 @@ def env_test():
         os.mkdir(os.path.join(TESTDIR, 'interim'))
     if not os.path.exists(os.path.join(TESTDIR, 'interim', 'graph_table')):
         os.mkdir(os.path.join(TESTDIR, 'interim', 'graph_table'))
+    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'embedding')):
+        os.mkdir(os.path.join(TESTDIR, 'interim', 'embedding'))
     return
 def env_data():
     if not os.path.exists(DATADIR):
@@ -46,6 +48,8 @@ def env_data():
         os.mkdir(os.path.join(DATADIR, 'interim'))
     if not os.path.exists(os.path.join(DATADIR, 'interim', 'graph_table')):
         os.mkdir(os.path.join(DATADIR, 'interim', 'graph_table'))
+    if not os.path.exists(os.path.join(DATADIR, 'interim', 'embedding')):
+        os.mkdir(os.path.join(DATADIR, 'interim', 'embedding'))
     return
 
 def main(targets):
@@ -96,8 +100,10 @@ def main(targets):
     # if 'evaluate-real' in targets:
     #     res = evaluate(.2, 'hinmodel', DATADIR)
     #     print(res)
-    if 'embedding' in targets:
+    if 'graph' in targets:
         create_graph(DATADIR)
+    if 'embedding' in targets:
+        embedding(DATADIR)
 
 
 if __name__ == '__main__':
