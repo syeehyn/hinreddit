@@ -44,10 +44,10 @@ def _get_dfs(spark, fp):
     comm = comm.where(F.col('author') != 'automoderator')
     return posts, comm, labels
 
-def _process_nodes(posts, comm):
+def _process_nodes(posts, comm, labels):
     df_comm = comm.select('post_id', 'author', 'is_submitter')
     df_comm = df_comm.withColumn('is_post', F.lit(0))
-    df_posts = posts.select('post_id', 'author')
+    df_posts = posts.select('post_id', 'author', 'subreddit')
     df_posts = df_posts.withColumn('is_submitter', F.lit(1))
     df_posts = df_posts.withColumn('is_post', F.lit(1))
     user_nodes_comm = df_comm.select(F.col('author').alias('node_name'),
@@ -79,13 +79,15 @@ def _process_nodes(posts, comm):
                                 F.col('is_submitter'),
                                 F.col('is_post'),
                                 F.col('node_id').alias('parent_id'))
-    return model, post_nodes, user_nodes
+    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post')\
+            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post')).dropDuplicates(['node_id'])
+    nodes = nodes.join(df_posts.select('post_id', 'subreddit'), on = ['post_id'], how = 'inner')
+    nodes = nodes.join(labels, on = ['post_id'], how = 'inner')
+    return model, nodes, user_nodes
 
 def create_graph(fp):
     spark = _sparkSession()
     posts, comm, labels = _get_dfs(spark, fp)
-    map_model, post_nodes, user_nodes = _process_nodes(posts, comm) #todo: labels
-    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post')\
-            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post')).dropDuplicates(['node_id'])
+    map_model, nodes, user_nodes = _process_nodes(posts, comm, labels)
     nodes.write.csv(os.path.join(fp, OUT_DIR, 'nodes.csv'))
     user_nodes.select('node_id', 'parent_id').distinct().write.csv(os.path.join(fp, OUT_DIR, 'edges.csv'))
