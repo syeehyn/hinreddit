@@ -20,9 +20,9 @@ def Data(fp):
     test_mask[test_mask] = 1
     train_mask, test_mask = torch.from_numpy(train_mask), torch.from_numpy(test_mask)
     data = Data(x = x, 
-            edge_index = edge_index,  
-            y = y, 
-            train_mask = train_mask, 
-            test_mask = test_mask,
-            post_mask = post_mask)
+                edge_index = edge_index,  
+                y = y, 
+                train_mask = train_mask, 
+                test_mask = test_mask,
+                post_mask = post_mask)
     return data
