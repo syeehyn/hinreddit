@@ -5,7 +5,7 @@ import torch
 import numpy as np
 import scipy.sparse as sp
 from torch.utils.data import DataLoader
-from .utls import Data
+from .utils import Data
 from torch_geometric.nn import Node2Vec
 
 def embedding(fp):
