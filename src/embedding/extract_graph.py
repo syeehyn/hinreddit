@@ -89,5 +89,5 @@ def create_graph(fp):
     spark = _sparkSession()
     posts, comm, labels = _get_dfs(spark, fp)
     map_model, nodes, user_nodes = _process_nodes(posts, comm, labels)
-    nodes.write.csv(os.path.join(fp, OUT_DIR, 'nodes.csv'))
-    user_nodes.select('node_id', 'parent_id').distinct().write.csv(os.path.join(fp, OUT_DIR, 'edges.csv'))
+    nodes.write.csv(os.path.join(fp, OUT_DIR, 'nodes.csv'), header = True)
+    user_nodes.select('node_id', 'parent_id').distinct().write.csv(os.path.join(fp, OUT_DIR, 'edges.csv'), header = True)
