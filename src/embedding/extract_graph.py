@@ -91,9 +91,9 @@ def _process_nodes(posts, comm, labels):
                                 F.col('is_post'),
                                 F.col('node_id').alias('parent_id'),
                                 'subreddit',
-                                'label')
+                                'label').orderBy('node_id')
     nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post', 'subreddit', 'label')\
-            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post', 'subreddit', 'label')).dropDuplicates(['node_id'])
+            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post', 'subreddit', 'label')).dropDuplicates(['node_id']).orderBy('node_id')
     return model, nodes, user_nodes
 
 def create_graph(fp):
