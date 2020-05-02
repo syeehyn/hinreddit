@@ -7,7 +7,7 @@ import scipy.sparse as sp
 from torch.utils.data import DataLoader
 from .utils import Data
 from torch_geometric.nn import Node2Vec
-
+from tqdm import tqdm
 def embedding(fp):
     data = Data(fp)
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=128, shuffle=False)
@@ -19,7 +19,7 @@ def embedding(fp):
     def train():
         model.train()
         total_loss = 0
-        for subset in loader:
+        for subset in tqdm(loader):
             optimizer.zero_grad()
             loss = model.loss(data.edge_index, subset.to(device))
             loss.backward()
