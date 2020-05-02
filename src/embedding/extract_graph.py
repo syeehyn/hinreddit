@@ -45,38 +45,43 @@ def _get_dfs(spark, fp):
     return posts, comm, labels
 
 def _process_nodes(posts, comm):
-    onehot_comm = comm.select('post_id', 'author', 'subreddit', 'is_submitter')
-    onehot_comm = onehot_comm.withColumn('is_post', F.lit(0))
-    onehot_posts = posts.select('post_id', 'author', 'subreddit')
-    onehot_posts = onehot_comm.withColumn('is_submitter', F.lit(1))
-    onehot_posts = onehot_posts.withColumn('is_post', F.lit(1))
-    user_nodes_comm = onehot_comm.select(F.col('author').alias('node_name'),
+    df_comm = comm.select('post_id', 'author', 'subreddit', 'is_submitter')
+    df_comm = df_comm.withColumn('is_post', F.lit(0))
+    df_posts = posts.select('post_id', 'author', 'subreddit')
+    df_posts = df_posts.withColumn('is_submitter', F.lit(1))
+    df_posts = df_posts.withColumn('is_post', F.lit(1))
+    user_nodes_comm = df_comm.select(F.col('author').alias('node_name'),
                                 F.col('post_id').alias('post_id'),
-                                F.col('is_submitter').alias('user_feature'),
+                                F.col('is_submitter'),
+                                'subreddit',
                                     'is_post')
-    user_nodes_post = onehot_comm.select(F.col('author').alias('node_name'),
+    user_nodes_post = df_posts.select(F.col('author').alias('node_name'),
                                     F.col('post_id').alias('post_id'),
-                                    F.col('is_submitter').alias('user_feature'),
+                                    F.col('is_submitter'),
+                                    'subreddit',
                                         'is_post')
     user_nodes = user_nodes_comm.union(user_nodes_post)
-    post_nodes = onehot_posts.select(F.col('post_id').alias('node_name'),
+    post_nodes = df_posts.select(F.col('post_id').alias('node_name'),
                                     F.col('post_id').alias('post_id'),
-                                    F.col('is_submitter').alias('user_feature'),
+                                    F.col('is_submitter'),
+                                    'subreddit',
                                     'is_post')
     nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropna()
     stringIndexer = M.feature.StringIndexer(inputCol='node_name', outputCol='node_id')
     model = stringIndexer.setHandleInvalid("skip").fit(nodes)
     user_nodes = model.transform(user_nodes)
     post_nodes = model.transform(post_nodes)
-    post_nodes = post_nodes.select('node_id', 'post_id','user_feature', 'post_id', 'is_post')
+    post_nodes = post_nodes.select('node_id', 'post_id','is_submitter', 'subreddit', 'post_id', 'is_post')
     user_nodes = model.transform(user_nodes.select(F.col('node_id').alias('tmp'), 
                 F.col('post_id').alias('node_name'), 
-                F.col('user_feature'),
+                F.col('is_submitter'),
+                F.col('subreddit'),
                 F.col('post_id'),
                 F.col('is_post')))
     user_nodes = user_nodes.select(F.col('tmp').alias('node_id'),
                                 F.col('node_name').alias('post_id'),
-                                F.col('user_feature'),
+                                F.col('is_submitter'),
+                                F.col('subreddit'),
                                 F.col('is_post'),
                                 F.col('node_id').alias('parent_id'))
     return model, post_nodes, user_nodes
@@ -85,6 +90,7 @@ def create_graph(fp):
     spark = _sparkSession()
     posts, comm, labels = _get_dfs(spark, fp)
     map_model, post_nodes, user_nodes = _process_nodes(posts, comm) #todo: labels
-    nodes = user_nodes.select('node_id', 'post_id', 'user_feature', 'is_post').union(post_nodes.select('node_id', 'post_id', 'user_feature', 'is_post')).dropDuplicates(['node_id'])
+    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'subreddit', 'is_post')\
+            .union(post_nodes.select('node_id', 'post_id', 'is_submitter', 'subreddit','is_post')).dropDuplicates(['node_id'])
     nodes.write.csv(os.path.join(fp, OUT_DIR, 'nodes.csv'))
     user_nodes.select('node_id', 'parent_id').distinct().write.csv(os.path.join(fp, OUT_DIR, 'edges.csv'))
