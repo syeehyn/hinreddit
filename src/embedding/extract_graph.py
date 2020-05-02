@@ -72,7 +72,7 @@ def _process_nodes(posts, comm, labels):
                                     'subreddit',
                                     'is_post',
                                     'label')
-    nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropDuplicates(['node_id']).dropna()
+    nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropDuplicates(['node_name']).dropna()
     stringIndexer = M.feature.StringIndexer(inputCol='node_name', outputCol='node_id')
     model = stringIndexer.setHandleInvalid("skip").fit(nodes)
     user_nodes = model.transform(user_nodes)
