@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import torch
-from torch_geometric.data import Data
+from torch_geometric.data import InMemoryDataset, Data, download_url, extract_zip
 def Data(fp):
     nodes = pd.read_csv(os.path.join(fp, 'interim', 'graph_table', 'nodes.csv'))
     edges = pd.read_csv(os.path.join(fp, 'interim', 'graph_table', 'edges.csv'))
