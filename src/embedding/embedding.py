@@ -26,7 +26,7 @@ def embedding(fp):
             optimizer.step()
             total_loss += loss.item()
         return total_loss / len(loader)
-    print('batch size 128, embedding dim 245, walk_length 20, walks per node 10')
+    print('batch size 128, embedding dim 256, walk_length 20, walks per node 10')
     for epoch in range(1, 5):
         loss = train()
         print('Epoch: {:02d}, Loss: {:.4f}'.format(epoch, loss))
@@ -34,5 +34,5 @@ def embedding(fp):
     with torch.no_grad():
         z = model(torch.arange(data.num_nodes, device=device))
     torch.save(z, osp.join(fp, 'interim', 'embedding','embedding.pt'))
-    torch.save(z, osp.join(fp, 'interim', 'embedding', 'data.pt'))
+    torch.save(data, osp.join(fp, 'interim', 'embedding', 'data.pt'))
     return 'embedding created'
