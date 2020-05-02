@@ -51,8 +51,8 @@ def _process_nodes(posts, comm, labels):
     df_posts = df_posts.withColumn('is_submitter', F.lit(1))
     df_posts = df_posts.withColumn('is_post', F.lit(1))
     df_comm = df_comm.join(df_posts.select('post_id', 'subreddit'), on = ['post_id'], how = 'inner')
-    df_comm = df_comm.join(labels, on = ['post_id'], how = 'inner')
-    df_posts = df_posts.join(labels, on = ['post_id'], how = 'inner')
+    df_comm = df_comm.join(labels, on = ['post_id'], how = 'inner').na.drop(subset = 'label')
+    df_posts = df_posts.join(labels, on = ['post_id'], how = 'inner').na.drop(subset = 'label')
     user_nodes_comm = df_comm.select(F.col('author').alias('node_name'),
                                 F.col('post_id').alias('post_id'),
                                 F.col('is_submitter'),
