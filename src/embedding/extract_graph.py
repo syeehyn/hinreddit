@@ -50,39 +50,50 @@ def _process_nodes(posts, comm, labels):
     df_posts = posts.select('post_id', 'author', 'subreddit')
     df_posts = df_posts.withColumn('is_submitter', F.lit(1))
     df_posts = df_posts.withColumn('is_post', F.lit(1))
+    df_comm = df_comm.join(df_posts, on = ['post_id'], how = 'inner')
+    df_comm = df_comm.join(labels, on = ['post_id'], how = 'inner')
+    df_posts = df_posts.join(labels, on = ['post_id'], how = 'inner')
     user_nodes_comm = df_comm.select(F.col('author').alias('node_name'),
                                 F.col('post_id').alias('post_id'),
                                 F.col('is_submitter'),
-                                    'is_post')
+                                    'subreddit',
+                                    'is_post',
+                                    'label')
     user_nodes_post = df_posts.select(F.col('author').alias('node_name'),
                                     F.col('post_id').alias('post_id'),
                                     F.col('is_submitter'),
-                                        'is_post')
+                                        'subreddit',
+                                        'is_post',
+                                        'label')
     user_nodes = user_nodes_comm.union(user_nodes_post)
     post_nodes = df_posts.select(F.col('post_id').alias('node_name'),
                                     F.col('post_id').alias('post_id'),
                                     F.col('is_submitter'),
-                                    'is_post')
-    nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropna()
+                                    'subreddit',
+                                    'is_post',
+                                    'label')
+    nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropDuplicates(['node_id']).dropna()
     stringIndexer = M.feature.StringIndexer(inputCol='node_name', outputCol='node_id')
     model = stringIndexer.setHandleInvalid("skip").fit(nodes)
     user_nodes = model.transform(user_nodes)
     post_nodes = model.transform(post_nodes)
-    post_nodes = post_nodes.select('node_id', 'post_id','is_submitter', 'post_id', 'is_post')
+    post_nodes = post_nodes.select('node_id', 'post_id','is_submitter', 'post_id', 'is_post', 'subreddit', 'label')
     user_nodes = model.transform(user_nodes.select(F.col('node_id').alias('tmp'), 
                 F.col('post_id').alias('node_name'), 
                 F.col('is_submitter'),
                 F.col('post_id'),
-                F.col('is_post')))
+                F.col('is_post'),
+                'subreddit',
+                'label'))
     user_nodes = user_nodes.select(F.col('tmp').alias('node_id'),
                                 F.col('node_name').alias('post_id'),
                                 F.col('is_submitter'),
                                 F.col('is_post'),
-                                F.col('node_id').alias('parent_id'))
-    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post')\
-            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post')).dropDuplicates(['node_id'])
-    nodes = nodes.join(df_posts.select('post_id', 'subreddit'), on = ['post_id'], how = 'inner')
-    nodes = nodes.join(labels, on = ['post_id'], how = 'inner')
+                                F.col('node_id').alias('parent_id'),
+                                'subreddit',
+                                'label')
+    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post', 'subreddit', 'label')\
+            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post', 'subreddit', 'label')).dropDuplicates(['node_id'])
     return model, nodes, user_nodes
 
 def create_graph(fp):
