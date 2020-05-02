@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import torch
-from torch_geometric.data import InMemoryDataset, Data, download_url, extract_zip
-def Dataset(fp):
+from torch_geometric.data import Data as dt
+def Data(fp):
     nodes = pd.read_csv(os.path.join(fp, 'interim', 'graph_table', 'nodes.csv'))
     edges = pd.read_csv(os.path.join(fp, 'interim', 'graph_table', 'edges.csv'))
     onehot = OneHotEncoder()
@@ -19,7 +19,7 @@ def Dataset(fp):
     train_mask[mask_ind] = 0
     test_mask[test_mask] = 1
     train_mask, test_mask = torch.from_numpy(train_mask), torch.from_numpy(test_mask)
-    data = Data(x = x, 
+    data = dt(x = x, 
                 edge_index = edge_index,  
                 y = y, 
                 train_mask = train_mask, 
