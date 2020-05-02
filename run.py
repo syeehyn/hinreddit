@@ -1,7 +1,7 @@
 import json
 import sys
 from src.etl import *
-from src.embedding import create_graph
+from src.embedding import create_graph, embedding
 from src.utils import evaluate
 from src.models import *
 import os
