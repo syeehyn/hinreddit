@@ -154,7 +154,7 @@ def comment_detail(i, filepath, subreddit):
         r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
         if r.status_code == 200:
             res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                'is_submitter', 'subreddit', 'link_id', 'send_replies']])
+                                'is_submitter', 'subreddit', 'link_id']])
         elif r.status_code == 403:
             while r.status_code == 403 & attemps < 5:
                 attemps += 1
@@ -162,7 +162,7 @@ def comment_detail(i, filepath, subreddit):
                 r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
             if r.status_code == 200:
                 res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                'is_submitter', 'subreddit', 'link_id', 'send_replies']])
+                                'is_submitter', 'subreddit', 'link_id']])
             else:
                 continue
         else:
