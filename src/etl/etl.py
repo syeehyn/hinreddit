@@ -155,7 +155,7 @@ def comment_detail(i, filepath, subreddit):
         if r.status_code == 200:
             try:
                 res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id']])
+                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id', 'send_replies']])
             except KeyError:
                 continue
         elif r.status_code == 403:
@@ -166,7 +166,7 @@ def comment_detail(i, filepath, subreddit):
             if r.status_code == 200:
                 try:
                     res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id']])
+                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id', 'send_replies']])
                 except KeyError:
                     continue
             else:
@@ -177,7 +177,7 @@ def comment_detail(i, filepath, subreddit):
             if r.status_code == 200:
                 try:
                     res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id']])
+                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id', 'send_replies']])
                 except KeyError:
                     continue
             else:
