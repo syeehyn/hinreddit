@@ -4,8 +4,8 @@ Project|build Status
 ---|---
 ETL | Finished
 Labeling | Finished
-Feature Extraction| In Progress
-ML Deployment | Planned
+Feature Extraction| Finished
+ML Deployment | In Progress
 
 [Development Timeline](./writeups/DEVTIMELINE.md)
 
