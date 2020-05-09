@@ -82,10 +82,12 @@ def main(targets):
         fetch_submissions(**DATAPARAMS)
         submissions_detail(DATADIR)
         comments_detail(DATADIR)
-    if 'label' in targets:
+    if 'sentimental' in targets:
         model, tokenizer = load_nlp('config/nlp_model.zip', DATADIR)
         label_comments(DATADIR, model, tokenizer)
         label_posts(DATADIR, model, tokenizer)
+    if 'label' in targets:
+        labeling(DATADIR)
     if 'graph' in targets:
         create_graph(DATADIR)
     if 'embedding' in targets:
@@ -95,10 +97,12 @@ def main(targets):
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
         comments_detail(TESTDIR)
-    if 'label-test' in targets:
+    if 'sentimental-test' in targets:
         model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
         label_comments(TESTDIR, model, tokenizer)
         label_posts(TESTDIR, model, tokenizer)
+    if 'label-test' in targets:
+        labeling(TESTDIR)
     if 'graph-test' in targets:
         create_graph(TESTDIR)
     if 'embedding-test' in targets:
