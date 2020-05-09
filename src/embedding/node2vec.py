@@ -5,13 +5,14 @@ import torch
 import numpy as np
 import scipy.sparse as sp
 from torch.utils.data import DataLoader
-from .utils import Data
+from .utils import create_dataset
 from torch_geometric.nn import Node2Vec
 from tqdm import tqdm
 import json
 
 def node2vec(fp, PARAMS):
-    data = Data(fp)
+    dataset = create_dataset(fp)
+    data = dataset[0]
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
