@@ -14,15 +14,8 @@ def Data(fp):
     edge_index = torch.from_numpy(edges.values.T).long()
     post_mask = torch.from_numpy(nodes['is_post'].astype(bool).values)
     np.random.seed(0)
-    mask_ind = np.random.choice(range(nodes.shape[0]), int(nodes.shape[0] * .2), replace=False)
-    train_mask, test_mask = np.ones(nodes.shape[0], dtype = bool), np.zeros(nodes.shape[0], dtype = bool)
-    train_mask[mask_ind] = 0
-    test_mask[test_mask] = 1
-    train_mask, test_mask = torch.from_numpy(train_mask), torch.from_numpy(test_mask)
     data = dt(x = x, 
                 edge_index = edge_index,  
                 y = y, 
-                train_mask = train_mask, 
-                test_mask = test_mask,
                 post_mask = post_mask)
     return data
