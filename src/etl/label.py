@@ -91,8 +91,10 @@ def label_posts(path, model, tokenizer, thres = 0.5, maxlen = 200):
     post_path = os.path.join(path, 'raw', 'posts')
     outpath = os.path.join(path, 'interim', 'label', 'post')
     posts = get_csvs(post_path)[['id', 'selftext']]
-    valid_posts = posts[(posts.selftext.notnull())&(posts.selftext!='[deleted]') & (posts.selftext!= '[removed]')]
+    valid_posts = posts[(posts.selftext.notnull())&(posts.selftext!='[deleted]')&(posts.selftext!= '[removed]')]
+    print(valid_posts.shape)
     predictions = label(valid_posts.selftext.apply(preprocess_text), tokenizer, model, maxlen)
+    print(predictions.shape)
     valid_predictions = pd.DataFrame(predictions, columns=["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"])
     valid_predictions['post_id'] = valid_posts.id
     valid_predictions = valid_predictions[['post_id', "toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]]
