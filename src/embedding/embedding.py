@@ -8,14 +8,26 @@ from torch.utils.data import DataLoader
 from .utils import Data
 from torch_geometric.nn import Node2Vec
 from tqdm import tqdm
+import json
+
+PARAMS = {
+        'BATCH_SIZE': 128,
+        'EMBEDDING_DIM': 256,
+        'WALK_LENGTH': 20,
+        'CONTEXT_SIZE': 10,
+        'WALKS_PER_NODE': 10,
+        'LEARNING_RATE': 0.01,
+        'NUM_EPOCH': 4
+        }
+
 def embedding(fp):
     data = Data(fp)
-    loader = DataLoader(torch.arange(data.num_nodes), batch_size=128, shuffle=False)
+    loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = Node2Vec(data.num_nodes, embedding_dim=256, walk_length=20,
-                    context_size=10, walks_per_node=10)
+    model = Node2Vec(data.num_nodes, embedding_dim=PARAMS['EMBEDDING_DIM'], walk_length=PARAMS['WALK_LENGTH'],
+                    context_size=PARAMS['CONTEXT_SIZE'], walks_per_node=PARAMS['WALKS_PER_NODE'])
     model, data = model.to(device), data.to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
     def train():
         model.train()
         total_loss = 0
@@ -26,13 +38,18 @@ def embedding(fp):
             optimizer.step()
             total_loss += loss.item()
         return total_loss / len(loader)
-    print('batch size 128, embedding dim 256, walk_length 20, walks per node 10')
-    for epoch in range(1, 5):
+    print('Start Node2vec Embedding Process with Following Parameters:')
+    print(PARAMS)
+    losses = []
+    for epoch in range(1, PARAMS['NUM_EPOCH'] + 1):
         loss = train()
+        losses.append(loss)
         print('Epoch: {:02d}, Loss: {:.4f}'.format(epoch, loss))
     model.eval()
     with torch.no_grad():
         z = model(torch.arange(data.num_nodes, device=device))
+    with open(osp.join(fp, 'interim', 'embedding', 'log.json'), 'w') as fp:
+        json.dump({'loss', losses}, fp)
     torch.save(z, osp.join(fp, 'interim', 'embedding','embedding.pt'))
     torch.save(data, osp.join(fp, 'interim', 'embedding', 'data.pt'))
     return 'embedding created'
