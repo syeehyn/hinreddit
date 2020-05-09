@@ -1,3 +1,5 @@
+import os
+import tensorflow as tf
 import pandas as pd
 import re
 from tensorflow.keras.models import model_from_json
@@ -6,10 +8,10 @@ import pickle
 import numpy as np
 import glob
 import zipfile
-import os
 from tensorflow.python.client import device_lib
 from tqdm import tqdm
 import shutil
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 def load_nlp(source, path):
     print(device_lib.list_local_devices())
     with zipfile.ZipFile(source, 'r') as zip_ref:
