@@ -13,7 +13,7 @@ import json
 def embedding(fp, PARAMS):
     data = Data(fp)
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
-    if PARAMS['cuda']:
+    if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:
         device = 'cpu'
