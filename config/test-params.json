@@ -2,11 +2,11 @@
 "META_ARGS": {"filepath": "./tests", "total": "10", "meta": ["id", "author", "title", "selftext", "num_comments", "created_utc", "full_link", "subreddit", "score"], 
     "subreddits": ["buildapc", "techsupport", "relationship_advice", "sysadmin", "legaladvice"]},
 "EMBEDDING_ARGS": {
-    "BATCH_SIZE": 16,
+    "BATCH_SIZE": 4,
     "EMBEDDING_DIM": 12,
-    "WALK_LENGTH": 2,
-    "CONTEXT_SIZE": 2,
-    "WALKS_PER_NODE": 2,
+    "WALK_LENGTH": 1,
+    "CONTEXT_SIZE": 1,
+    "WALKS_PER_NODE": 1,
     "LEARNING_RATE": 1e-4,
     "NUM_EPOCH": 1,
     "CUDA":false
