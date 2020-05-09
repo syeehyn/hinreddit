@@ -153,24 +153,33 @@ def comment_detail(i, filepath, subreddit):
         phrase = ','.join(i)
         r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
         if r.status_code == 200:
-            res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                'is_submitter', 'subreddit', 'link_id']])
+            try:
+                res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
+                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id', 'send_replies']])
+            except KeyError:
+                continue
         elif r.status_code == 403:
             while r.status_code == 403 & attemps < 5:
                 attemps += 1
                 time.sleep(3 * attemps)
                 r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
             if r.status_code == 200:
-                res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                'is_submitter', 'subreddit', 'link_id']])
+                try:
+                    res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
+                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id', 'send_replies']])
+                except KeyError:
+                    continue
             else:
                 continue
         else:
             time.sleep(5)
             r = requests.get(join(COMMENT, '?ids='+phrase), verify=False)
             if r.status_code == 200:
-                res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
-                                'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id']])
+                try:
+                    res.append(pd.DataFrame(r.json()['data'])[['id', 'author', 'created_utc', \
+                                    'is_submitter', 'subreddit', 'link_id', 'body', 'parent_id', 'send_replies']])
+                except KeyError:
+                    continue
             else:
                 continue
     if len(res) == 0:

@@ -1,7 +1,7 @@
 import json
 import sys
 from src.etl import *
-from src.embedding import create_graph, embedding
+from src.embedding import create_graph, node2vec
 from src.utils import evaluate
 from src.models import *
 import os
@@ -15,6 +15,10 @@ DATAPARAMS = json.load(open('config/data-params.json'))
 TESTDIR = TESTPARAMS['META_ARGS']['filepath']
 EDADIR = EDAPARAMS['META_ARGS']['filepath']
 DATADIR = DATAPARAMS['META_ARGS']['filepath']
+MODELDIR = 'config/nlp_model.zip'
+DATA_EMBEDDINGPARAMS = DATAPARAMS['EMBEDDING_ARGS']
+TEST_EMBEDDINGPARAMS = TESTPARAMS['EMBEDDING_ARGS']
+
 def env_test():
     if not os.path.exists(TESTDIR):
         os.mkdir(TESTDIR)
@@ -28,6 +32,12 @@ def env_test():
         os.mkdir(os.path.join(TESTDIR, 'raw', 'comments'))
     if not os.path.exists(os.path.join(TESTDIR, 'interim')):
         os.mkdir(os.path.join(TESTDIR, 'interim'))
+    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'label')):
+        os.mkdir(os.path.join(TESTDIR, 'interim', 'label'))
+    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'label', 'post')):
+        os.mkdir(os.path.join(TESTDIR, 'interim', 'label', 'post'))
+    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'label', 'comment')):
+        os.mkdir(os.path.join(TESTDIR, 'interim', 'label', 'comment'))
     if not os.path.exists(os.path.join(TESTDIR, 'interim', 'graph_table')):
         os.mkdir(os.path.join(TESTDIR, 'interim', 'graph_table'))
     if not os.path.exists(os.path.join(TESTDIR, 'interim', 'embedding')):
@@ -46,6 +56,12 @@ def env_data():
         os.mkdir(os.path.join(DATADIR, 'raw', 'comments'))
     if not os.path.exists(os.path.join(DATADIR, 'interim')):
         os.mkdir(os.path.join(DATADIR, 'interim'))
+    if not os.path.exists(os.path.join(DATADIR, 'interim', 'label')):
+        os.mkdir(os.path.join(DATADIR, 'interim', 'label'))
+    if not os.path.exists(os.path.join(DATADIR, 'interim', 'label', 'post')):
+        os.mkdir(os.path.join(DATADIR, 'interim', 'label', 'post'))
+    if not os.path.exists(os.path.join(DATADIR, 'interim', 'label', 'comment')):
+        os.mkdir(os.path.join(DATADIR, 'interim', 'label', 'comment'))
     if not os.path.exists(os.path.join(DATADIR, 'interim', 'graph_table')):
         os.mkdir(os.path.join(DATADIR, 'interim', 'graph_table'))
     if not os.path.exists(os.path.join(DATADIR, 'interim', 'embedding')):
@@ -57,53 +73,40 @@ def main(targets):
         env_test()
     else:
         env_data()
-    if 'test' in targets:
-        fetch_submissions(**TESTPARAMS)
-        submissions_detail(TESTDIR)
-        comments_detail(TESTDIR)
+    # if 'test' in targets:
+    #     fetch_submissions(**TESTPARAMS)
+    #     submissions_detail(TESTDIR)
+    #     comments_detail(TESTDIR)
     if 'data' in targets:
         fetch_submissions(**DATAPARAMS)
         submissions_detail(DATADIR)
         comments_detail(DATADIR)
-    # if 'label' in targets:
-    #     post_path = os.path.join(DATADIR, 'raw/posts')
-    #     label_path = os.path.join(DATADIR, 'interim/labels')
-    #     train_path = params['train_data']
-    #     word_vector = params['word_vector']
-    #     tokenizer, model = train_model(train_path, word_vector)
-    #     label_posts(post_path, tokenizer, model, label_path)
-    # if 'label-test' in targets:
-    #     post_path = os.path.join(TESTDIR, 'raw/posts')
-    #     label_path = os.path.join(TESTDIR, 'interim/labels')
-    #     train_path = params['train_data']
-    #     word_vector = params['word_vector']
-    #     tokenizer, model = train_model(train_path)
-    #     label_posts(post_path, tokenizer, model)
-    # if 'baseline' in targets:
-    #     post_path = os.path.join(DATADIR, 'raw/posts')
-    #     label_path = os.path.join(DATADIR, 'interim/labels')
-    #     posts = get_csvs(post_path)
-    #     labels = get_csvs(label_path)[['id','label']]
-    #     df = extract_feat(posts, labels)
-    #     baseline_model(df)
-    # if 'baseline-test' in targets:
-    #     post_path = os.path.join(TESTDIR, 'raw/posts')
-    #     label_path = os.path.join(TESTDIR, 'interim/labels')
-    #     posts = get_csvs(post_path)
-    #     labels = get_csvs(label_path)[['id','label']]
-    #     df = extract_feat(posts, labels)
-    #     baseline_model(df)
-    # if 'embedding-test' in targets:
-    #     construct_matrices(DATADIR)
-    # if 'embedding-real' in targets:
-    #     construct_matrices(DATADIR)
-    # if 'evaluate-real' in targets:
-    #     res = evaluate(.2, 'hinmodel', DATADIR)
-    #     print(res)
+    if 'sentimental' in targets:
+        model, tokenizer = load_nlp('config/nlp_model.zip', DATADIR)
+        label_comments(DATADIR, model, tokenizer)
+        label_posts(DATADIR, model, tokenizer)
+    if 'label' in targets:
+        labeling(DATADIR)
     if 'graph' in targets:
         create_graph(DATADIR)
     if 'embedding' in targets:
-        embedding(DATADIR)
+        node2vec(DATADIR, DATA_EMBEDDINGPARAMS)
+#=================For test============================#
+    if 'data-test' in targets:
+        fetch_submissions(**TESTPARAMS)
+        submissions_detail(TESTDIR)
+        comments_detail(TESTDIR)
+    if 'sentimental-test' in targets:
+        model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
+        label_comments(TESTDIR, model, tokenizer)
+        label_posts(TESTDIR, model, tokenizer)
+    if 'label-test' in targets:
+        labeling(TESTDIR)
+    if 'graph-test' in targets:
+        create_graph(TESTDIR)
+    if 'embedding-test' in targets:
+        node2vec(TESTDIR, TEST_EMBEDDINGPARAMS)
+
 
 
 if __name__ == '__main__':

@@ -1,0 +1,121 @@
+
+body {
+	/* background: lightgoldenrodyellow; */
+	font-family:'PT Serif', serif;
+	/* background:url(https://static8.depositphotos.com/1280399/838/i/950/depositphotos_8388842-stock-photo-abstract-seamless-as-pattern-wire.jpg) */
+}
+.img-fluid {
+	max-width: 25%;
+} 
+body, html {
+    height: 100%;    
+}
+#main {
+    height: 100%;
+}
+#reference {
+    height: 100%;
+}
+#home {
+	padding: 0% 0%;
+	/* background-color:white; */
+	padding-left:3%;
+	padding-right:3%;}
+section {
+	/* background:white; */
+	padding: 13% 0;
+	/* padding-left: 1%; */
+	/* padding-right:1%; */
+	height: 100%;
+}
+#dot-nav{    
+	right: 10px;
+	top: 50%;
+	margin-top: -50px;
+	height: 100px;
+	z-index: 999;
+}
+
+#dot-nav ul {
+	list-style: none;
+	margin:0;
+	padding: 0;
+}
+#dot-nav li {
+	position: relative;
+	background-color: white;
+	border:2px solid #bdc3c7;
+	border-radius: 15px 15px 15px 15px;
+	cursor: pointer;
+	padding: 5px;
+	height: 10px;
+	margin: 10px 10px 0px 0px;
+	width: 10px;
+	vertical-align:bottom;
+}
+#dot-nav li.active, #dot-nav li:hover {
+	background-color: rgb(235, 40, 49);
+}
+
+#dot-nav a {
+	outline: 0;
+	vertical-align:top;
+	margin: 0px 0px 0px 25px;
+	position: relative;
+	top:-5px;
+}
+.awesome-tooltip + .tooltip > .tooltip-inner {
+    /*background-color: #8e44ad;*/ 
+    color: #f5f5f5; 
+    border: 1px solid rgb(235, 40, 49); 
+}
+.awesome-tooltip + .tooltip.left > .tooltip-arrow{
+    top:50%;
+    right:0;
+    margin-top:-5px;
+    border-top:5px solid transparent;
+    border-bottom:5px solid transparent;
+    border-left:5px solid rgb(235, 40, 49)
+}
+#introContainer {
+	/* background-color:rgb(256,216,177,0.5); */
+    width: 65%;
+    font-size: 21px;
+}
+#heading {
+    padding-top: 15%;
+}
+.chart {
+	padding-top: 5%;
+	margin: 0 auto;
+}
+.chart_map {
+	padding-top: 2%;
+}
+.text-muted {
+	font-size: .7em;
+}
+.highlight {
+	background-color: rgb(255,255,0,0.2)
+}
+
+.callout {
+	background-color:'yellow';
+	border-width:1px;
+	border-radius:5px;
+}
+#reference {
+	height: 110% !important
+}
+
+.callout {
+	color:black;
+	background-color: lightgoldenrodyellow;
+}
+footer {
+    position: absolute;
+    right: 5%;
+    color: #000;
+    text-align: right;
+    bottom: 10%;
+}
