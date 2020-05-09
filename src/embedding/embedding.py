@@ -10,17 +10,7 @@ from torch_geometric.nn import Node2Vec
 from tqdm import tqdm
 import json
 
-PARAMS = {
-        'BATCH_SIZE': 128,
-        'EMBEDDING_DIM': 256,
-        'WALK_LENGTH': 20,
-        'CONTEXT_SIZE': 10,
-        'WALKS_PER_NODE': 10,
-        'LEARNING_RATE': 0.01,
-        'NUM_EPOCH': 4
-        }
-
-def embedding(fp):
+def embedding(fp, PARAMS):
     data = Data(fp)
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'

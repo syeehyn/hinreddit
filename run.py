@@ -16,6 +16,8 @@ TESTDIR = TESTPARAMS['META_ARGS']['filepath']
 EDADIR = EDAPARAMS['META_ARGS']['filepath']
 DATADIR = DATAPARAMS['META_ARGS']['filepath']
 MODELDIR = 'config/nlp_model.zip'
+DATA_EMBEDDINGPARAMS = DATAPARAMS['EMBEDDING_ARGS']
+TEST_EMBEDDINGPARAMS = TESTDIR['EMBEDDING_ARGS']
 
 def env_test():
     if not os.path.exists(TESTDIR):
@@ -88,7 +90,7 @@ def main(targets):
     if 'graph' in targets:
         create_graph(DATADIR)
     if 'embedding' in targets:
-        embedding(DATADIR)
+        embedding(DATADIR, DATA_EMBEDDINGPARAMS)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
@@ -103,7 +105,7 @@ def main(targets):
     if 'graph-test' in targets:
         create_graph(TESTDIR)
     if 'embedding-test' in targets:
-        embedding(TESTDIR)
+        embedding(TESTDIR, TEST_EMBEDDINGPARAMS)
 
 
 
