@@ -13,7 +13,10 @@ import json
 def embedding(fp, PARAMS):
     data = Data(fp)
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    if PARAMS['cuda']:
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    else:
+        device = 'cpu'
     model = Node2Vec(data.num_nodes, embedding_dim=PARAMS['EMBEDDING_DIM'], walk_length=PARAMS['WALK_LENGTH'],
                     context_size=PARAMS['CONTEXT_SIZE'], walks_per_node=PARAMS['WALKS_PER_NODE'])
     model, data = model.to(device), data.to(device)

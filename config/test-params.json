@@ -8,5 +8,6 @@
     "CONTEXT_SIZE": 2,
     "WALKS_PER_NODE": 2,
     "LEARNING_RATE": 1e-4,
-    "NUM_EPOCH": 1
+    "NUM_EPOCH": 1,
+    "CUDA":false
     }}
