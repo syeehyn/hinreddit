@@ -34,12 +34,8 @@ class RedditData(InMemoryDataset):
         edges = pd.read_csv(os.path.join(self.root, 'edges.csv'))
         onehot = OneHotEncoder()
         subreddit_feature = onehot.fit_transform(nodes[['subreddit']].values)
-        X = np.hstack([nodes[['is_submitter']].values, subreddit_feature.todense()])
-        y = nodes['label'].values.astype(int)
-        X = X[y != -1]
-        y = y[y != -1]
-        x = torch.from_numpy(X).long()
-        y = torch.from_numpy(y)
+        x = torch.from_numpy(np.hstack([nodes[['is_submitter']].values, subreddit_feature.todense()])).long()
+        y = torch.from_numpy(nodes['label'].values.astype(int))
         edge_index = torch.from_numpy(edges.values.T).long()
         post_mask = torch.from_numpy(nodes['is_post'].astype(bool).values)
         data_list.append(dt(x = x, 

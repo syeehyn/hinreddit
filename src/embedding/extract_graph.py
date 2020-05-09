@@ -28,6 +28,7 @@ def _get_dfs(spark, fp):
     LABL, POST, COMM = os.path.join(fp, LABL_DIR), os.path.join(fp, POST_DIR), os.path.join(fp, COMM_DIR)
     labels = spark.read.format("csv").option("header", "true").load(LABL)
     labels = labels.select(F.col('post_id'), 'label')
+    labels = labels.where(F.col('label') != -1)
     posts = pd.concat([pd.read_csv(i) for i in glob(POST)], ignore_index = True)
     posts = posts[['id', 'author', 'subreddit']]
     posts.author = posts.author.str.lower()
