@@ -75,6 +75,9 @@ def main(targets):
     #     fetch_submissions(**TESTPARAMS)
     #     submissions_detail(TESTDIR)
     #     comments_detail(TESTDIR)
+    if 'tmp' in targets:
+        model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
+        label_posts(TESTDIR, model, tokenizer)
     if 'data' in targets:
         fetch_submissions(**DATAPARAMS)
         submissions_detail(DATADIR)
