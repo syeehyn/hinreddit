@@ -90,8 +90,8 @@ def main(targets):
         comments_detail(TESTDIR)
     if 'label-test' in targets:
         model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
-        label_posts(TESTDIR, model, tokenizer)
         label_comments(TESTDIR, model, tokenizer)
+        label_posts(TESTDIR, model, tokenizer)
     if 'graph-test' in targets:
         create_graph(TESTDIR)
     if 'embedding-test' in targets:

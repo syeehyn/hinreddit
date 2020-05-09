@@ -9,6 +9,7 @@ import zipfile
 import os
 from tensorflow.python.client import device_lib
 from tqdm import tqdm
+import shutil
 def load_nlp(source, path):
     print(device_lib.list_local_devices())
     with zipfile.ZipFile(source, 'r') as zip_ref:
@@ -97,3 +98,5 @@ def label_posts(path, model, tokenizer, thres = 0.5, maxlen = 200):
     df.label.index = posts.loc[~posts.selftext.isin(['[deleted]', '[removed]', np.nan])].index.values
     posts.loc[~posts.selftext.isin(['[deleted]', '[removed]', np.nan]),'label']=df.label
     posts[['id','label']].to_csv(os.path.join(outpath, 'post_label.csv'))
+    shutil.rmtree(os.path.join(path, 'interim', 'label', 'nlp_model'))
+
