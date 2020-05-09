@@ -52,53 +52,57 @@ def label(text, tokenizer, model, maxlen):
     predictions = model.predict(padded_posts, verbose = 0)
     return predictions
 
-def label_comment(c_path, model, tokenizer, outpath, thres, maxlen):
+def label_comment(c_path, model, tokenizer, outpath, maxlen):
     comments = pd.read_csv(c_path)
-    valid_comments = comments[~comments.body.isna()&(comments.body!='[deleted]')&(comments.body!='[removed]')][['id','body','link_id']]
+    valid_comments = comments[(comments.body.notnull())&(comments.body!='[deleted]')&(comments.body!='[removed]')][['id','body','link_id']]
     predictions = label(valid_comments.body, tokenizer, model, maxlen)
 
     valid_predictions = pd.DataFrame(predictions, columns=["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"])
     df = valid_predictions
-    df['label']=0
-    df.loc[(df.severe_toxic > thres)|(df.threat > thres)|(df.insult > thres)|(df.identity_hate > thres)|(df.toxic > thres), 'label']=1
     df['comment_id'] = valid_comments.reset_index().id
     df['post_id']=valid_comments.reset_index().link_id
     df['post_id']=df['post_id'].str[3:]
-    df.to_csv(os.path.join(outpath, c_path.split('/')[-1]))
+    df = df[['comment_id', 'post_id', "toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]]
+    deleted_comments = comments[(comments.body=='[deleted]')|(comments.body=='[removed]')][['id','link_id']]
+    deleted_comments.columns = ['comment_id', 'post_id']
+    deleted_comments['post_id']=deleted_comments['post_id'].str[3:]
+    for c in ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]:
+        deleted_comments[c] = -1
+    df = pd.concat([df, deleted_comments], ignore_index=True)
+    df.to_csv(os.path.join(outpath, c_path.split('/')[-1]), index = False)
 
-def label_comments(path, model, tokenizer, thres = 0.5, maxlen = 200, overlap = True):
+def label_comments(path, model, tokenizer, maxlen = 200, overlap = True):
     comment_path = os.path.join(path, 'raw', 'comments')
     outpath = os.path.join(path, 'interim', 'label', 'comment')
     comments_list = glob.glob(comment_path+'/*.csv')
     if overlap:
         print('labeling comments with overlapping')
         for c in tqdm(comments_list):
-            label_comment(c, model, tokenizer, outpath, thres, maxlen)
+            label_comment(c, model, tokenizer, outpath, maxlen)
     else:
         print('labeling comments without overlapping')
         out_list = [s.split('/')[-1] for s in glob.glob(outpath+'/*.csv')]
         for c in tqdm(comments_list):
             if c.split('/')[-1] not in out_list:
-                label_comment(c, model, tokenizer, outpath, thres, maxlen)
+                label_comment(c, model, tokenizer, outpath, maxlen)
 
 def label_posts(path, model, tokenizer, thres = 0.5, maxlen = 200):
     print('labeling posts')
     post_path = os.path.join(path, 'raw', 'posts')
     outpath = os.path.join(path, 'interim', 'label', 'post')
     posts = get_csvs(post_path)
-    valid_posts = posts.selftext.replace('[deleted]', np.nan).replace('[removed]', np.nan).dropna().apply(preprocess_text)
-    predictions = label(valid_posts, tokenizer, model, maxlen)
+    valid_posts = posts[(posts.selftext.notnull())&(posts.selftext!='[deleted]') & (posts.selftext!= '[removed]')]
+    predictions = label(valid_posts.selftext.apply(preprocess_text), tokenizer, model, maxlen)
     valid_predictions = pd.DataFrame(predictions, columns=["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"])
+    valid_predictions['post_id'] = valid_posts.id
+    valid_predictions = valid_predictions[['post_id', "toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]]
     #valid_predictions.hist(bins = 20)
+    deleted_posts = posts[(posts.selftext=='[deleted]')|(posts.selftext=='[removed]')][['id']]
+    deleted_posts.columns = ['post_id']
+    for c in ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]:
+        deleted_posts[c] = -1
 
-    posts['label'] = 0
-    posts.loc[posts.selftext.isin(['[deleted]', '[removed]']),'label'] = -1
-    posts.loc[posts.selftext.isna(),'label'] = np.nan
-    df = valid_predictions
-    df['label']=0
-    df.loc[(df.severe_toxic > thres)|(df.threat > thres)|(df.insult > thres)|(df.identity_hate > thres)|(df.toxic > thres), 'label']=1
-    df.label.index = posts.loc[~posts.selftext.isin(['[deleted]', '[removed]', np.nan])].index.values
-    posts.loc[~posts.selftext.isin(['[deleted]', '[removed]', np.nan]),'label']=df.label
-    posts[['id','label']].to_csv(os.path.join(outpath, 'post_label.csv'))
+    df = pd.concat([valid_predictions, deleted_posts], ignore_index= True)
+    df.to_csv(os.path.join(outpath, 'post_sentimental.csv'), index = False)
     shutil.rmtree(os.path.join(path, 'interim', 'label', 'nlp_model'))
 
