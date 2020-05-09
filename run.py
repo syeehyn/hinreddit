@@ -1,7 +1,7 @@
 import json
 import sys
 from src.etl import *
-from src.embedding import create_graph, embedding
+from src.embedding import create_graph, node2vec
 from src.utils import evaluate
 from src.models import *
 import os
@@ -90,7 +90,7 @@ def main(targets):
     if 'graph' in targets:
         create_graph(DATADIR)
     if 'embedding' in targets:
-        embedding(DATADIR, DATA_EMBEDDINGPARAMS)
+        node2vec(DATADIR, DATA_EMBEDDINGPARAMS)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
@@ -105,7 +105,7 @@ def main(targets):
     if 'graph-test' in targets:
         create_graph(TESTDIR)
     if 'embedding-test' in targets:
-        embedding(TESTDIR, TEST_EMBEDDINGPARAMS)
+        node2vec(TESTDIR, TEST_EMBEDDINGPARAMS)
 
 
 

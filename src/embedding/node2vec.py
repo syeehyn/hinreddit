@@ -10,7 +10,7 @@ from torch_geometric.nn import Node2Vec
 from tqdm import tqdm
 import json
 
-def embedding(fp, PARAMS):
+def node2vec(fp, PARAMS):
     data = Data(fp)
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
