@@ -79,6 +79,10 @@ def main(targets):
         fetch_submissions(**DATAPARAMS)
         submissions_detail(DATADIR)
         comments_detail(DATADIR)
+    if 'label' in targets:
+        model, tokenizer = load_nlp('config/nlp_model.zip', DATADIR)
+        label_comments(DATADIR, model, tokenizer)
+        label_posts(DATADIR, model, tokenizer)
     if 'graph' in targets:
         create_graph(DATADIR)
     if 'embedding' in targets:
