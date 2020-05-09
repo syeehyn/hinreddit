@@ -42,7 +42,7 @@ def embedding(fp, PARAMS):
     with torch.no_grad():
         z = model(torch.arange(data.num_nodes, device=device))
     with open(osp.join(fp, 'interim', 'embedding', 'log.json'), 'w') as f:
-        json.dump({'loss', losses}, f)
+        json.dump({'loss': losses}, f)
     torch.save(z, osp.join(fp, 'interim', 'embedding','embedding.pt'))
     torch.save(data, osp.join(fp, 'interim', 'embedding', 'data.pt'))
     return 'embedding created'
