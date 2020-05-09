@@ -30,7 +30,7 @@ def preprocess_text(sen):
     return sentence
 
 def get_csvs(path):
-    posts = glob.glob(path+'/*.csv')
+    posts = glob.glob(os.path.join(path, '*.csv'))
     return pd.concat([pd.read_csv(i) for i in posts], ignore_index = True)
 
 def load_tokenizer(path):
