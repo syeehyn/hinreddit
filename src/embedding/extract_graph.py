@@ -13,7 +13,7 @@ from glob import glob
 COMM_DIR = os.path.join('raw', 'comments', '*.csv')
 LABL_DIR = os.path.join('interim', 'label', '*.csv')
 POST_DIR = os.path.join('raw', 'posts', '*.csv')
-OUT_DIR = os.path.join('interim', 'graph_table')
+OUT_DIR = os.path.join('interim', 'graph')
 
 def _sparkSession():
     SparkContext.setSystemProperty('spark.executor.memory', '64g')

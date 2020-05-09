@@ -38,8 +38,8 @@ def env_test():
         os.mkdir(os.path.join(TESTDIR, 'interim', 'label', 'post'))
     if not os.path.exists(os.path.join(TESTDIR, 'interim', 'label', 'comment')):
         os.mkdir(os.path.join(TESTDIR, 'interim', 'label', 'comment'))
-    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'graph_table')):
-        os.mkdir(os.path.join(TESTDIR, 'interim', 'graph_table'))
+    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'graph')):
+        os.mkdir(os.path.join(TESTDIR, 'interim', 'graph'))
     if not os.path.exists(os.path.join(TESTDIR, 'interim', 'embedding')):
         os.mkdir(os.path.join(TESTDIR, 'interim', 'embedding'))
     return
@@ -62,8 +62,8 @@ def env_data():
         os.mkdir(os.path.join(DATADIR, 'interim', 'label', 'post'))
     if not os.path.exists(os.path.join(DATADIR, 'interim', 'label', 'comment')):
         os.mkdir(os.path.join(DATADIR, 'interim', 'label', 'comment'))
-    if not os.path.exists(os.path.join(DATADIR, 'interim', 'graph_table')):
-        os.mkdir(os.path.join(DATADIR, 'interim', 'graph_table'))
+    if not os.path.exists(os.path.join(DATADIR, 'interim', 'graph')):
+        os.mkdir(os.path.join(DATADIR, 'interim', 'graph'))
     if not os.path.exists(os.path.join(DATADIR, 'interim', 'embedding')):
         os.mkdir(os.path.join(DATADIR, 'interim', 'embedding'))
     return
