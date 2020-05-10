@@ -33,7 +33,7 @@ def _get_dfs(spark, fp):
     posts = posts[['id', 'author', 'subreddit', 'created_utc']]
     posts.author = posts.author.str.lower()
     posts.subreddit  = posts.subreddit.str.lower()
-    posts.columns = ['post_id', 'author', 'subreddit', 'created_utc']
+    posts.columns = ['post_id', 'author', 'subreddit']
     posts = spark.createDataFrame(posts)
     posts = posts.where(F.col('author') != 'automoderator')
     comm = spark.read.format("csv").option("header", "true").load(COMM)
