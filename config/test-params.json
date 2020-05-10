@@ -1,13 +1,3 @@
 {"POST_ARGS": {"sort_type": "created_utc", "sort": "dsc", "size": "10", "start": "1585699200"}, 
 "META_ARGS": {"filepath": "./tests", "total": "10", "meta": ["id", "author", "title", "selftext", "num_comments", "created_utc", "full_link", "subreddit", "score"], 
-    "subreddits": ["buildapc", "techsupport", "relationship_advice", "sysadmin", "legaladvice"]},
-"EMBEDDING_ARGS": {
-    "BATCH_SIZE": 4,
-    "EMBEDDING_DIM": 12,
-    "WALK_LENGTH": 1,
-    "CONTEXT_SIZE": 1,
-    "WALKS_PER_NODE": 1,
-    "LEARNING_RATE": 1e-4,
-    "NUM_EPOCH": 1,
-    "CUDA":false
-    }}
+    "subreddits": ["buildapc", "techsupport", "relationship_advice", "sysadmin", "legaladvice"]}}

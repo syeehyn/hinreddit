@@ -1,17 +1,18 @@
+import os
 import os.path as osp
 import sys
-import torch
 import torch
 import numpy as np
 import scipy.sparse as sp
 from torch.utils.data import DataLoader
-from .utils import Data
+from .utils import create_dataset
 from torch_geometric.nn import Node2Vec
 from tqdm import tqdm
 import json
 
 def node2vec(fp, PARAMS):
-    data = Data(fp)
+    dataset = create_dataset(fp)
+    data = dataset[0]
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -37,12 +38,14 @@ def node2vec(fp, PARAMS):
     for epoch in range(1, PARAMS['NUM_EPOCH'] + 1):
         loss = train()
         losses.append(loss)
-        print('Epoch: {:02d}, Loss: {:.4f}'.format(epoch, loss))
+        print('Epoch: {:02d}, Node2vec Loss: {:.4f}'.format(epoch, loss))
     model.eval()
     with torch.no_grad():
         z = model(torch.arange(data.num_nodes, device=device))
-    with open(osp.join(fp, 'interim', 'embedding', 'log.json'), 'w') as f:
+    if not os.path.exists(os.path.join(fp, 'interim', 'node2vec')):
+        os.mkdir(os.path.join(fp, 'interim', 'node2vec'))
+    with open(osp.join(fp, 'interim', 'node2vec', 'log.json'), 'w') as f:
         json.dump({'loss': losses}, f)
-    torch.save(z, osp.join(fp, 'interim', 'embedding','embedding.pt'))
-    torch.save(data, osp.join(fp, 'interim', 'embedding', 'data.pt'))
-    return 'embedding created'
+    torch.save(z, osp.join(fp, 'interim', 'node2vec','embedding.pt'))
+    torch.save(data, osp.join(fp, 'interim', 'node2vec', 'data.pt'))
+    return 'embedding node2vec created'

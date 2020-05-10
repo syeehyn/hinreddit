@@ -4,25 +4,47 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import torch
 from torch_geometric.data import Data as dt
-def Data(fp):
-    nodes = pd.read_csv(os.path.join(fp, 'interim', 'graph_table', 'nodes.csv'))
-    edges = pd.read_csv(os.path.join(fp, 'interim', 'graph_table', 'edges.csv'))
-    onehot = OneHotEncoder()
-    subreddit_feature = onehot.fit_transform(nodes[['subreddit']].values)
-    x = torch.from_numpy(np.hstack([nodes[['is_submitter']].values, subreddit_feature.todense()])).long()
-    y = torch.from_numpy(nodes['label'].values.astype(int))
-    edge_index = torch.from_numpy(edges.values.T).long()
-    post_mask = torch.from_numpy(nodes['is_post'].astype(bool).values)
-    np.random.seed(0)
-    mask_ind = np.random.choice(range(nodes.shape[0]), int(nodes.shape[0] * .2), replace=False)
-    train_mask, test_mask = np.ones(nodes.shape[0], dtype = bool), np.zeros(nodes.shape[0], dtype = bool)
-    train_mask[mask_ind] = 0
-    test_mask[test_mask] = 1
-    train_mask, test_mask = torch.from_numpy(train_mask), torch.from_numpy(test_mask)
-    data = dt(x = x, 
-                edge_index = edge_index,  
-                y = y, 
-                train_mask = train_mask, 
-                test_mask = test_mask,
-                post_mask = post_mask)
+from torch_geometric.data import InMemoryDataset
+class RedditData(InMemoryDataset):
+    def __init__(self, root, transform=None, pre_transform=None):
+        super(RedditData, self).__init__(root, transform, pre_transform)
+        self.root = root
+        self.data, self.slices = torch.load(self.processed_paths[0])
+
+    @property
+    def raw_file_names(self):
+        return ['nodes.csv', 'edges.csv']
+
+    @property
+    def processed_file_names(self):
+        return ['data.pt']
+
+    def download(self):
+        # Download to `self.raw_dir`.
+        pass
+    def process(self):
+        # Read data into huge `Data` list.
+        data_list = []
+        if self.pre_filter is not None:
+            data_list = [data for data in data_list if self.pre_filter(data)]
+
+        if self.pre_transform is not None:
+            data_list = [self.pre_transform(data) for data in data_list]
+        nodes = pd.read_csv(os.path.join(self.root, 'nodes.csv'))
+        edges = pd.read_csv(os.path.join(self.root, 'edges.csv'))
+        onehot = OneHotEncoder()
+        subreddit_feature = onehot.fit_transform(nodes[['subreddit']].values)
+        x = torch.from_numpy(np.hstack([nodes[['is_submitter']].values, subreddit_feature.todense()])).long()
+        y = torch.from_numpy(nodes['label'].values.astype(int))
+        edge_index = torch.from_numpy(edges.values.T).long()
+        post_mask = torch.from_numpy(nodes['is_post'].astype(bool).values)
+        data_list.append(dt(x = x, 
+                        edge_index = edge_index,  
+                        y = y, 
+                        post_mask = post_mask))
+        data, slices = self.collate(data_list)
+        torch.save((data, slices), self.processed_paths[0])
+
+def create_dataset(fp):
+    data = RedditData(root = os.path.join(fp, 'interim', 'graph'))
     return data
