@@ -2,7 +2,6 @@ import os
 import os.path as osp
 import sys
 import torch
-import torch
 import numpy as np
 import scipy.sparse as sp
 from torch.utils.data import DataLoader
@@ -49,4 +48,4 @@ def node2vec(fp, PARAMS):
         json.dump({'loss': losses}, f)
     torch.save(z, osp.join(fp, 'interim', 'node2vec','embedding.pt'))
     torch.save(data, osp.join(fp, 'interim', 'node2vec', 'data.pt'))
-    return 'embedding created'
+    return 'embedding node2vec created'

@@ -1,7 +1,7 @@
 import json
 import sys
 from src.etl import *
-from src.embedding import create_graph, node2vec
+from src.embedding import *
 from src.utils import evaluate
 from src.models import *
 import os
@@ -18,6 +18,7 @@ DATADIR = DATAPARAMS['META_ARGS']['filepath']
 MODELDIR = 'config/nlp_model.zip'
 DATA_NODE2VEC = json.load(open('config/embedding/node2vec.json'))
 TEST_NODE2VEC = json.load(open('config/embedding/test-node2vec.json'))
+DATA_INFOMAX = json.load(open('config/embedding/infomax.json'))
 
 def env_test():
     if not os.path.exists(TESTDIR):
@@ -87,6 +88,8 @@ def main(targets):
         create_graph(DATADIR)
     if 'node2vec' in targets:
         node2vec(DATADIR, DATA_NODE2VEC)
+    if 'infomax' in targets:
+        infomax(DATADIR, DATA_NODE2VEC)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
