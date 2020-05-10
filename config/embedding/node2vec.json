@@ -5,6 +5,8 @@
 "CONTEXT_SIZE": 10,
 "WALKS_PER_NODE": 10,
 "LEARNING_RATE": 0.001,
-"NUM_EPOCH": 10,
+"NUM_EPOCH": 1,
+"P": 1,
+"Q": 0.5,
 "CUDA": true
 }
