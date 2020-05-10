@@ -30,7 +30,7 @@ def _get_dfs(spark, fp):
     labels = labels.select(F.col('post_id'), 'label')
     labels = labels.where(F.col('label') != -1)
     posts = pd.concat([pd.read_csv(i) for i in glob(POST)], ignore_index = True)
-    posts = posts[['id', 'author', 'subreddit', 'created_utc']]
+    posts = posts[['id', 'author', 'subreddit']]
     posts.author = posts.author.str.lower()
     posts.subreddit  = posts.subreddit.str.lower()
     posts.columns = ['post_id', 'author', 'subreddit']
@@ -41,15 +41,14 @@ def _get_dfs(spark, fp):
                     F.lower(F.col('author')).alias('author'), \
                     comm.link_id.substr(4, 10).alias('post_id'), 
                     F.lower(F.col('subreddit')).alias('subreddit'),
-                    (F.col('is_submitter')==True).cast('int').alias('is_submitter'),
-                    F.col('created_utc'))
+                    (F.col('is_submitter')==True).cast('int').alias('is_submitter'))
     comm = comm.where(F.col('author') != 'automoderator')
     return posts, comm, labels
 
 def _process_nodes(posts, comm, labels):
-    df_comm = comm.select('post_id', 'author', 'is_submitter', 'created_utc')
+    df_comm = comm.select('post_id', 'author', 'is_submitter')
     df_comm = df_comm.withColumn('is_post', F.lit(0))
-    df_posts = posts.select('post_id', 'author', 'subreddit', 'created_utc')
+    df_posts = posts.select('post_id', 'author', 'subreddit')
     df_posts = df_posts.withColumn('is_submitter', F.lit(1))
     df_posts = df_posts.withColumn('is_post', F.lit(1))
     df_comm = df_comm.join(df_posts.select('post_id', 'subreddit'), on = ['post_id'], how = 'inner')
@@ -60,36 +59,32 @@ def _process_nodes(posts, comm, labels):
                                 F.col('is_submitter'),
                                     'subreddit',
                                     'is_post',
-                                    'label',
-                                    'created_utc')
+                                    'label')
     user_nodes_post = df_posts.select(F.col('author').alias('node_name'),
                                     F.col('post_id').alias('post_id'),
                                     F.col('is_submitter'),
                                         'subreddit',
                                         'is_post',
-                                        'label',
-                                    'created_utc')
+                                        'label')
     user_nodes = user_nodes_comm.union(user_nodes_post)
     post_nodes = df_posts.select(F.col('post_id').alias('node_name'),
                                     F.col('post_id').alias('post_id'),
                                     F.col('is_submitter'),
                                     'subreddit',
                                     'is_post',
-                                    'label',
-                                    'created_utc')
+                                    'label')
     nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropDuplicates(['node_name']).dropna()
     stringIndexer = M.feature.StringIndexer(inputCol='node_name', outputCol='node_id')
     model = stringIndexer.setHandleInvalid("skip").fit(nodes)
     user_nodes = model.transform(user_nodes)
     post_nodes = model.transform(post_nodes)
-    post_nodes = post_nodes.select('node_id', 'post_id','is_submitter', 'post_id', 'is_post', 'subreddit', 'created_utc','label')
+    post_nodes = post_nodes.select('node_id', 'post_id','is_submitter', 'post_id', 'is_post', 'subreddit', 'label')
     user_nodes = model.transform(user_nodes.select(F.col('node_id').alias('tmp'), 
                 F.col('post_id').alias('node_name'), 
                 F.col('is_submitter'),
                 F.col('post_id'),
                 F.col('is_post'),
                 'subreddit',
-                'created_utc',
                 'label'))
     user_nodes = user_nodes.select(F.col('tmp').alias('node_id'),
                                 F.col('node_name').alias('post_id'),
@@ -97,10 +92,9 @@ def _process_nodes(posts, comm, labels):
                                 F.col('is_post'),
                                 F.col('node_id').alias('parent_id'),
                                 'subreddit',
-                                'created_utc',
                                 'label').orderBy('node_id')
-    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post', 'subreddit', 'created_utc','label')\
-            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post', 'subreddit', 'created_utc','label')).dropDuplicates(['node_id']).orderBy('node_id')
+    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post', 'subreddit', 'label')\
+            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post', 'subreddit', 'label')).dropDuplicates(['node_id']).orderBy('node_id')
     return model, nodes, user_nodes
 
 def create_graph(fp):

@@ -34,7 +34,6 @@ class RedditData(InMemoryDataset):
         edges = pd.read_csv(os.path.join(self.root, 'edges.csv'))
         onehot = OneHotEncoder()
         subreddit_feature = onehot.fit_transform(nodes[['subreddit']].values)
-        time = nodes[['created_utc']].values
         x = torch.from_numpy(np.hstack([nodes[['is_submitter']].values, subreddit_feature.todense()])).long()
         y = torch.from_numpy(nodes['label'].values.astype(int))
         edge_index = torch.from_numpy(edges.values.T).long()
@@ -42,8 +41,7 @@ class RedditData(InMemoryDataset):
         data_list.append(dt(x = x, 
                         edge_index = edge_index,  
                         y = y, 
-                        post_mask = post_mask,
-                        time_stamp = time))
+                        post_mask = post_mask))
         data, slices = self.collate(data_list)
         torch.save((data, slices), self.processed_paths[0])
 
