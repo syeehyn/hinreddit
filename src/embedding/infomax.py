@@ -47,7 +47,7 @@ def infomax(fp, PARAMS):
         optimizer.step()
         return loss.item()
     losses = []
-    for epoch in range(1, PARAMS['NUM_EPOCH']) + 1:
+    for epoch in range(1, PARAMS['NUM_EPOCH']+ 1) :
         loss = train()
         losses.append(loss)
         print('Epoch: {:03d}, Loss: {:.4f}'.format(epoch, loss))

@@ -89,7 +89,7 @@ def main(targets):
     if 'node2vec' in targets:
         node2vec(DATADIR, DATA_NODE2VEC)
     if 'infomax' in targets:
-        infomax(DATADIR, DATA_NODE2VEC)
+        infomax(DATADIR, DATA_INFOMAX)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
