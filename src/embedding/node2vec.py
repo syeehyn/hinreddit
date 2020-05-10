@@ -38,7 +38,7 @@ def node2vec(fp, PARAMS):
     for epoch in range(1, PARAMS['NUM_EPOCH'] + 1):
         loss = train()
         losses.append(loss)
-        print('Epoch: {:02d}, Loss: {:.4f}'.format(epoch, loss))
+        print('Epoch: {:02d}, Node2vec Loss: {:.4f}'.format(epoch, loss))
     model.eval()
     with torch.no_grad():
         z = model(torch.arange(data.num_nodes, device=device))

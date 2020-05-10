@@ -51,12 +51,12 @@
             "unpopularopinion",
             "dndnext"]},
 "EMBEDDING_ARGS": {
-    "BATCH_SIZE": 128,
-    "EMBEDDING_DIM": 256,
+    "BATCH_SIZE": 2048,
+    "EMBEDDING_DIM": 128,
     "WALK_LENGTH": 20,
     "CONTEXT_SIZE": 10,
     "WALKS_PER_NODE": 10,
     "LEARNING_RATE": 0.01,
-    "NUM_EPOCH": 4,
+    "NUM_EPOCH": 5,
     "CUDA": true
     }}
