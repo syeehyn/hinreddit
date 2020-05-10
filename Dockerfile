@@ -36,6 +36,7 @@ RUN pip install torch-scatter==latest+cu100 -f https://pytorch-geometric.com/whl
     && pip install torch-geometric
 
 RUN conda install -y tsnecuda cuda100 -c cannylab
+RUN conda install -y -c dglteam dgl-cuda10.0
 # Install Pyspark
 # RUN conda install --yes \
 #     pyspark
