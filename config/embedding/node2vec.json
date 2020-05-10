@@ -1,5 +1,5 @@
 {
-"BATCH_SIZE": 128,
+"BATCH_SIZE": 1028,
 "EMBEDDING_DIM": 128,
 "WALK_LENGTH": 50,
 "CONTEXT_SIZE": 10,
@@ -7,6 +7,6 @@
 "LEARNING_RATE": 0.001,
 "NUM_EPOCH": 1,
 "P": 1,
-"Q": 0.5,
+"Q": 1,
 "CUDA": true
 }
