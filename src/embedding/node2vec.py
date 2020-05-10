@@ -1,3 +1,4 @@
+import os
 import os.path as osp
 import sys
 import torch
@@ -42,8 +43,10 @@ def node2vec(fp, PARAMS):
     model.eval()
     with torch.no_grad():
         z = model(torch.arange(data.num_nodes, device=device))
-    with open(osp.join(fp, 'interim', 'embedding', 'log.json'), 'w') as f:
+    if not os.path.exists(os.path.join(fp, 'interim', 'node2vec')):
+        os.mkdir(os.path.join(fp, 'interim', 'node2vec'))
+    with open(osp.join(fp, 'interim', 'node2vec', 'log.json'), 'w') as f:
         json.dump({'loss': losses}, f)
-    torch.save(z, osp.join(fp, 'interim', 'embedding','embedding.pt'))
-    torch.save(data, osp.join(fp, 'interim', 'embedding', 'data.pt'))
+    torch.save(z, osp.join(fp, 'interim', 'node2vec','embedding.pt'))
+    torch.save(data, osp.join(fp, 'interim', 'node2vec', 'data.pt'))
     return 'embedding created'

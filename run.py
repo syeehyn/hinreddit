@@ -16,8 +16,8 @@ TESTDIR = TESTPARAMS['META_ARGS']['filepath']
 EDADIR = EDAPARAMS['META_ARGS']['filepath']
 DATADIR = DATAPARAMS['META_ARGS']['filepath']
 MODELDIR = 'config/nlp_model.zip'
-DATA_EMBEDDINGPARAMS = DATAPARAMS['EMBEDDING_ARGS']
-TEST_EMBEDDINGPARAMS = TESTPARAMS['EMBEDDING_ARGS']
+DATA_NODE2VEC = json.load(open('config/embedding/node2vec.json'))
+TEST_NODE2VEC = json.load(open('config/embedding/test-node2vec.json'))
 
 def env_test():
     if not os.path.exists(TESTDIR):
@@ -40,8 +40,6 @@ def env_test():
         os.mkdir(os.path.join(TESTDIR, 'interim', 'label', 'comment'))
     if not os.path.exists(os.path.join(TESTDIR, 'interim', 'graph')):
         os.mkdir(os.path.join(TESTDIR, 'interim', 'graph'))
-    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'embedding')):
-        os.mkdir(os.path.join(TESTDIR, 'interim', 'embedding'))
     return
 def env_data():
     if not os.path.exists(DATADIR):
@@ -64,8 +62,6 @@ def env_data():
         os.mkdir(os.path.join(DATADIR, 'interim', 'label', 'comment'))
     if not os.path.exists(os.path.join(DATADIR, 'interim', 'graph')):
         os.mkdir(os.path.join(DATADIR, 'interim', 'graph'))
-    if not os.path.exists(os.path.join(DATADIR, 'interim', 'embedding')):
-        os.mkdir(os.path.join(DATADIR, 'interim', 'embedding'))
     return
 
 def main(targets):
@@ -90,7 +86,7 @@ def main(targets):
     if 'graph' in targets:
         create_graph(DATADIR)
     if 'embedding' in targets:
-        node2vec(DATADIR, DATA_EMBEDDINGPARAMS)
+        node2vec(DATADIR, DATA_NODE2VEC)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
@@ -105,7 +101,7 @@ def main(targets):
     if 'graph-test' in targets:
         create_graph(TESTDIR)
     if 'embedding-test' in targets:
-        node2vec(TESTDIR, TEST_EMBEDDINGPARAMS)
+        node2vec(TESTDIR, TEST_NODE2VEC)
 
 
 
