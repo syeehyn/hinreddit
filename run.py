@@ -85,7 +85,7 @@ def main(targets):
         labeling(DATADIR)
     if 'graph' in targets:
         create_graph(DATADIR)
-    if 'embedding' in targets:
+    if 'node2vec' in targets:
         node2vec(DATADIR, DATA_NODE2VEC)
 #=================For test============================#
     if 'data-test' in targets:
@@ -100,7 +100,7 @@ def main(targets):
         labeling(TESTDIR)
     if 'graph-test' in targets:
         create_graph(TESTDIR)
-    if 'embedding-test' in targets:
+    if 'node2vec-test' in targets:
         node2vec(TESTDIR, TEST_NODE2VEC)
 
 
