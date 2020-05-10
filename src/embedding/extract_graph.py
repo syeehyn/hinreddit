@@ -1,107 +1,63 @@
-import os
 import pandas as pd
-import numpy as np
-from scipy import sparse
-from pyspark.sql import SparkSession
-from pyspark import SparkContext
-import pyspark.ml as M
-import pyspark.sql.functions as F
-import pyspark.sql.types as T
-from src import *
 from glob import glob
+import os.path as osp
+import numpy as np
+from sklearn.preprocessing import OrdinalEncoder
+import json
 
-COMM_DIR = os.path.join('raw', 'comments', '*.csv')
-LABL_DIR = os.path.join('interim', 'label', '*.csv')
-POST_DIR = os.path.join('raw', 'posts', '*.csv')
-OUT_DIR = os.path.join('interim', 'graph')
-
-def _sparkSession():
-    SparkContext.setSystemProperty('spark.executor.memory', '64g')
-    sc = SparkContext("local", "App Name")
-    sc.setLogLevel("ERROR")
-    spark = SparkSession(sc)
-    spark.conf.set('spark.ui.showConsoleProgress', True)
-    spark.conf.set("spark.sql.shuffle.partitions", NUM_WORKER)
-    return spark
-
-def _get_dfs(spark, fp):
-    LABL, POST, COMM = os.path.join(fp, LABL_DIR), os.path.join(fp, POST_DIR), os.path.join(fp, COMM_DIR)
-    labels = spark.read.format("csv").option("header", "true").load(LABL)
-    labels = labels.select(F.col('post_id'), 'label')
-    labels = labels.where(F.col('label') != -1)
-    posts = pd.concat([pd.read_csv(i) for i in glob(POST)], ignore_index = True)
-    posts = posts[['id', 'author', 'subreddit']]
-    posts.author = posts.author.str.lower()
-    posts.subreddit  = posts.subreddit.str.lower()
-    posts.columns = ['post_id', 'author', 'subreddit']
-    posts = spark.createDataFrame(posts)
-    posts = posts.where(F.col('author') != 'automoderator')
-    comm = spark.read.format("csv").option("header", "true").load(COMM)
-    comm = comm.select(F.col('id').alias('comment_id'), \
-                    F.lower(F.col('author')).alias('author'), \
-                    comm.link_id.substr(4, 10).alias('post_id'), 
-                    F.lower(F.col('subreddit')).alias('subreddit'),
-                    (F.col('is_submitter')==True).cast('int').alias('is_submitter'))
-    comm = comm.where(F.col('author') != 'automoderator')
-    return posts, comm, labels
-
-def _process_nodes(posts, comm, labels):
-    df_comm = comm.select('post_id', 'author', 'is_submitter')
-    df_comm = df_comm.withColumn('is_post', F.lit(0))
-    df_posts = posts.select('post_id', 'author', 'subreddit')
-    df_posts = df_posts.withColumn('is_submitter', F.lit(1))
-    df_posts = df_posts.withColumn('is_post', F.lit(1))
-    df_comm = df_comm.join(df_posts.select('post_id', 'subreddit'), on = ['post_id'], how = 'inner')
-    df_comm = df_comm.join(labels, on = ['post_id'], how = 'inner').na.drop(subset = 'label')
-    df_posts = df_posts.join(labels, on = ['post_id'], how = 'inner').na.drop(subset = 'label')
-    user_nodes_comm = df_comm.select(F.col('author').alias('node_name'),
-                                F.col('post_id').alias('post_id'),
-                                F.col('is_submitter'),
-                                    'subreddit',
-                                    'is_post',
-                                    'label')
-    user_nodes_post = df_posts.select(F.col('author').alias('node_name'),
-                                    F.col('post_id').alias('post_id'),
-                                    F.col('is_submitter'),
-                                        'subreddit',
-                                        'is_post',
-                                        'label')
-    user_nodes = user_nodes_comm.union(user_nodes_post)
-    post_nodes = df_posts.select(F.col('post_id').alias('node_name'),
-                                    F.col('post_id').alias('post_id'),
-                                    F.col('is_submitter'),
-                                    'subreddit',
-                                    'is_post',
-                                    'label')
-    nodes = user_nodes.select('node_name').union(post_nodes.select('node_name')).dropDuplicates(['node_name']).dropna()
-    stringIndexer = M.feature.StringIndexer(inputCol='node_name', outputCol='node_id')
-    model = stringIndexer.setHandleInvalid("skip").fit(nodes)
-    user_nodes = model.transform(user_nodes)
-    post_nodes = model.transform(post_nodes)
-    post_nodes = post_nodes.select('node_id', 'post_id','is_submitter', 'post_id', 'is_post', 'subreddit', 'label')
-    user_nodes = model.transform(user_nodes.select(F.col('node_id').alias('tmp'), 
-                F.col('post_id').alias('node_name'), 
-                F.col('is_submitter'),
-                F.col('post_id'),
-                F.col('is_post'),
-                'subreddit',
-                'label'))
-    user_nodes = user_nodes.select(F.col('tmp').alias('node_id'),
-                                F.col('node_name').alias('post_id'),
-                                F.col('is_submitter'),
-                                F.col('is_post'),
-                                F.col('node_id').alias('parent_id'),
-                                'subreddit',
-                                'label').orderBy('node_id')
-    nodes = user_nodes.select('node_id', 'post_id', 'is_submitter', 'is_post', 'subreddit', 'label')\
-            .union(post_nodes.select('node_id', 'post_id', 'is_submitter','is_post', 'subreddit', 'label')).dropDuplicates(['node_id']).orderBy('node_id')
-    return model, nodes, user_nodes
+COMM_DIR = osp.join('raw', 'comments', '*.csv')
+LABL_DIR = osp.join('interim', 'label', '*.csv')
+POST_DIR = osp.join('raw', 'posts', '*.csv')
+OUT_DIR = osp.join('interim', 'graph')
 
 def create_graph(fp):
-    spark = _sparkSession()
-    posts, comm, labels = _get_dfs(spark, fp)
-    map_model, nodes, user_nodes = _process_nodes(posts, comm, labels)
-    nodes.toPandas().fillna(0).to_csv(os.path.join(fp, OUT_DIR, 'nodes.csv'), header = True, index = False)
-    user_nodes.select('node_id', 'parent_id').distinct().toPandas().to_csv(os.path.join(fp, OUT_DIR, 'edges.csv'), header = True, index = False)
-    # nodes.coalesce(1).write.csv(os.path.join(fp, OUT_DIR, 'nodes.csv'), header = True)
-    # user_nodes.select('node_id', 'parent_id').distinct().coalesce(1).write.csv(os.path.join(fp, OUT_DIR, 'edges.csv'), header = True)
+    comm = osp.join(fp, COMM_DIR)
+    post = osp.join(fp, POST_DIR)
+    labl = osp.join(fp, LABL_DIR)
+    comm = pd.concat([pd.read_csv(i, usecols = ['author', 'link_id', 'subreddit']
+                        ) for i in glob(comm)])
+    post = pd.concat([pd.read_csv(i, usecols = ['id', 'author', 'subreddit']
+                        ) for i in glob(post)])
+    labl = pd.concat([pd.read_csv(i) for i in glob(labl)])
+    labl = labl[labl.label != -1]
+    post.author = post.author.str.lower()
+    post.subreddit = post.subreddit.str.lower()
+    post = post[(post.author != '[deleted]')&(post.author != 'automoderator')& (post.author != 'snapshillbot')]
+    post = post[post.id.isin(labl.post_id)]
+    comm['post_id'] = comm.link_id.str[3:]
+    comm = comm[['author', 'subreddit', 'post_id']]
+    comm.author = comm.author.str.lower()
+    comm.subreddit = comm.subreddit.str.lower()
+    comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
+    author_counts = comm.author.value_counts()
+    author_mask = author_counts > 1
+    author_counts = author_counts[author_mask].index
+    comm = comm[comm.author.isin(author_counts)]
+    comm = comm[comm.post_id.isin(post.id)]
+    add_comm = post.copy()
+    add_comm.columns = ['post_id', 'author', 'subreddit']
+    add_comm =add_comm[['author', 'subreddit', 'post_id']].drop_duplicates()
+    comm = pd.concat([comm, add_comm], ignore_index = True).drop_duplicates()
+    post.columns = ['node_id', 'author', 'subreddit']
+    post = post.drop_duplicates()
+    comm.columns = ['node_id', 'subreddit', 'parent_id']
+    comm['is_post'] = False
+    post['is_post'] = True
+    graph = pd.concat([
+                post[['node_id', 'is_post']],
+                comm[['node_id', 'is_post']]
+                ]).drop_duplicates().reset_index(drop = True)
+    graph = pd.merge(graph, labl, left_on = 'node_id', right_on = 'post_id', how = 'left')
+    graph = graph[['node_id', 'is_post', 'label']]
+    graph = graph.fillna(-1)
+    encoder = OrdinalEncoder()
+    graph.node_id = encoder.fit_transform(graph[['node_id']])
+    post.node_id = encoder.transform(post[['node_id']])
+    comm.node_id = encoder.transform(comm[['node_id']])
+    comm.parent_id = encoder.transform(comm[['parent_id']])
+    graph = graph.sort_values('node_id')
+    edge_index = comm[['node_id', 'parent_id']].drop_duplicates().sort_values('node_id')
+    graph.to_csv(osp.join(fp, OUT_DIR, 'nodes.csv'), header = True, index = False)
+    edge_index.to_csv(osp.join(fp, OUT_DIR, 'edges.csv'), header = True, index = False)
+    with open(osp.join(fp, OUT_DIR, 'nodes_info.json', 'w')) as f:
+        json.dump(pd.Series(encoder.categories_[0]).to_dict(), f)
