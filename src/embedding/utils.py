@@ -32,13 +32,11 @@ class RedditData(InMemoryDataset):
             data_list = [self.pre_transform(data) for data in data_list]
         nodes = pd.read_csv(os.path.join(self.root, 'nodes.csv'))
         edges = pd.read_csv(os.path.join(self.root, 'edges.csv'))
-        onehot = OneHotEncoder()
-        subreddit_feature = onehot.fit_transform(nodes[['subreddit']].values)
-        x = torch.from_numpy(np.hstack([nodes[['is_submitter']].values, subreddit_feature.todense()])).long()
+        
         y = torch.from_numpy(nodes['label'].values.astype(int))
         edge_index = torch.from_numpy(edges.values.T).long()
         post_mask = torch.from_numpy(nodes['is_post'].astype(bool).values)
-        data_list.append(dt(x = x, 
+        data_list.append(dt(
                         edge_index = edge_index,  
                         y = y, 
                         post_mask = post_mask))
