@@ -59,5 +59,5 @@ def create_graph(fp):
     edge_index = comm[['node_id', 'parent_id']].drop_duplicates().sort_values('node_id')
     graph.to_csv(osp.join(fp, OUT_DIR, 'nodes.csv'), header = True, index = False)
     edge_index.to_csv(osp.join(fp, OUT_DIR, 'edges.csv'), header = True, index = False)
-    with open(osp.join(fp, OUT_DIR, 'nodes_info.json', 'w')) as f:
+    with open(osp.join(fp, OUT_DIR, 'nodes_info.json'), 'w') as f:
         json.dump(pd.Series(encoder.categories_[0]).to_dict(), f)
