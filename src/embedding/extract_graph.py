@@ -31,7 +31,7 @@ def create_graph(fp):
     comm.subreddit = comm.subreddit.str.lower()
     comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
     author_counts = comm.author.value_counts()
-    author_mask = author_counts > 1
+    author_mask = author_counts > 3
     author_counts = author_counts[author_mask].index
     comm = comm[comm.author.isin(author_counts)]
     comm = comm[comm.post_id.isin(post.id)]
