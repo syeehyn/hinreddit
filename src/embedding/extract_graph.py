@@ -4,6 +4,7 @@ import os.path as osp
 import numpy as np
 from sklearn.preprocessing import OrdinalEncoder
 import json
+from scipy import sparse
 
 COMM_DIR = osp.join('raw', 'comments', '*.csv')
 LABL_DIR = osp.join('interim', 'label', '*.csv')
@@ -61,3 +62,26 @@ def create_graph(fp):
     edge_index.to_csv(osp.join(fp, OUT_DIR, 'edges.csv'), header = True, index = False)
     with open(osp.join(fp, OUT_DIR, 'nodes_info.json'), 'w') as f:
         json.dump(pd.Series(encoder.categories_[0]).to_dict(), f)
+    post = graph[graph.is_post.astype(bool)]
+    user = graph[~graph.is_post.astype(bool)]
+    post_id = post.node_id.values
+    user_id = user.node_id.values
+    post_map = pd.DataFrame(
+            {
+                'parent_id': post_id,
+                'post': np.arange(len(post_id))
+            }
+    )
+    user_map = pd.DataFrame(
+            {
+                'node_id': user_id,
+                'user': np.arange(len(user_id))
+            }
+    )
+    mat_indx = edge_index.copy()
+    mat_indx = pd.merge(mat_indx, user_map, on = 'node_id', how = 'left')
+    mat_indx = pd.merge(mat_indx, post_map, on = 'parent_id', how = 'left')
+    mat_indx = mat_indx[['post', 'user']].sort_values(['post', 'user'])
+    mat_indx = mat_indx.values
+    adj_matrix = sparse.csc_matrix((np.ones(mat_indx.shape[0]), (mat_indx[:, 0], mat_indx[:, 1])))
+    sparse.save_npz(osp.join(fp, OUT_DIR, 'adj_matrix.npz'))
