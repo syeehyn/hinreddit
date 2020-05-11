@@ -5,6 +5,7 @@ from sklearn.preprocessing import OneHotEncoder
 import torch
 from torch_geometric.data import Data as dt
 from torch_geometric.data import InMemoryDataset
+
 class RedditData(InMemoryDataset):
     def __init__(self, root, transform=None, pre_transform=None):
         super(RedditData, self).__init__(root, transform, pre_transform)
@@ -33,12 +34,10 @@ class RedditData(InMemoryDataset):
         nodes = pd.read_csv(os.path.join(self.root, 'nodes.csv'))
         edges = pd.read_csv(os.path.join(self.root, 'edges.csv'))
         
-        x = torch.from_numpy(nodes[['is_post']].astype(bool).values)
         y = torch.from_numpy(nodes['label'].values.astype(int))
         edge_index = torch.from_numpy(edges.values.T).long()
         post_mask = torch.from_numpy(nodes['is_post'].astype(bool).values)
         data_list.append(dt(
-                        x = x,
                         edge_index = edge_index,  
                         y = y, 
                         post_mask = post_mask))
