@@ -84,4 +84,4 @@ def create_graph(fp):
     mat_indx = mat_indx[['post', 'user']].sort_values(['post', 'user'])
     mat_indx = mat_indx.values
     adj_matrix = sparse.csc_matrix((np.ones(mat_indx.shape[0]), (mat_indx[:, 0], mat_indx[:, 1])))
-    sparse.save_npz(osp.join(fp, OUT_DIR, 'adj_matrix.npz'))
+    sparse.save_npz(osp.join(fp, OUT_DIR, 'adj_matrix.npz'), adj_matrix)
