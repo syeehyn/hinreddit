@@ -28,17 +28,15 @@ RUN apt-get update && apt-get -qq install -y \
 ######################################
 # CLI (non-conda) CUDA compilers, etc. (9.0 due to older drivers on our nodes)
 # nb: cuda-9-0 requires gcc6
-COPY cuda-repo-ubuntu1804_10.1.168-1_amd64.deb /root/ 
-#COPY cuda-repo-ubuntu1704_9.0.176-1_amd64.deb /root/ 
-RUN dpkg -i /root/cuda-repo-ubuntu1804_10.1.168-1_amd64.deb && \
-	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1704/x86_64/7fa2af80.pub && \
+ENV CUDAREPO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+RUN P=/tmp/$(basename $CUDAREPO) && curl -s -o $P $CUDAREPO && dpkg -i $P && \
+	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub && \
 	apt-get update && \
-	apt-get install -y cuda-libraries-dev-10-1 cuda-core-10-1 cuda-minimal-build-10-1 cuda-command-line-tools-10-1 && \
-	apt-get install -y gcc-6 g++-6 g++-6-multilib && \
-	update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6 && \
+	apt-get install -y cuda-libraries-dev-10-1 cuda-compiler-10-1 cuda-minimal-build-10-1 cuda-command-line-tools-10-1 default-jdk && \
 	apt-get clean && \
 	ln -s cuda-10.1 /usr/local/cuda && \
 	ln -s /usr/lib64/nvidia/libcuda.so /usr/lib64/nvidia/libcuda.so.1 /usr/local/cuda/lib64/
+
 
 ######################################
 # Install python packages unprivileged where possible
