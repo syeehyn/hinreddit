@@ -36,9 +36,9 @@ ENV CUDA_PKG_VERSION 10-1=$CUDA_VERSION-1
 # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cudart-$CUDA_PKG_VERSION \
-cuda-compat-10-1 && \
-ln -s cuda-10.1 /usr/local/cuda && \
-    rm -rf /var/lib/apt/lists/*
+        cuda-compat-10-1 && \
+        ln -s cuda-10.1 /usr/local/cuda && \
+        rm -rf /var/lib/apt/lists/*
 
 # Required for nvidia-docker v1
 RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
@@ -61,7 +61,7 @@ RUN pip install --no-cache-dir datascience okpy PyQt5 && \
 ###########################
 # Now the ML toolkits (cuda9 until we update our Nvidia drivers)
 RUN conda install -c anaconda --yes  \
-                cudatoolkit=10.1 \
+                cudatoolkit \
                 cudnn nccl \
 		tensorboard=2.1.0 \
 		tensorflow=2.1.0 \
@@ -139,7 +139,7 @@ RUN conda install --quiet -y 'pyarrow' && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-RUN echo "jupyter notebook \"$@\"" > /run_jupyter.sh /
+RUN echo "jupyter notebook \"$@\"" > /run_jupyter.sh
 
 # Install python packages unprivileged where possible
 USER $NB_UID:$NB_GID
