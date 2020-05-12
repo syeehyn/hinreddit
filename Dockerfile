@@ -64,7 +64,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         pkg-config \
         software-properties-common \
         unzip
-RUN atp-get install -y \
+RUN apt-get install -y \
         defaut-jre \
         defaut-jdk
 # Install TensorRT if not building for PowerPC
