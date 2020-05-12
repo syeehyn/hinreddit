@@ -131,6 +131,14 @@ RUN apt-get update && \
 
 USER $NB_UID:$NB_GID
 
+RUN conda uninstall -y numpy \
+                    tensorflow \
+                    tensorboard \
+                    tensorflow-gpu \ 
+                    pytorch \
+                    torchvision \
+                    nltk spacy
+
 # Now the ML toolkits (cuda9 until we update our Nvidia drivers)
 RUN set -x && conda install -c conda-forge --yes  \
                 cudatoolkit=10.1 \
