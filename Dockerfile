@@ -1,26 +1,18 @@
-# Copyright (c) Jupyter Development Team.
-# Distributed under the terms of the Modified BSD License.
-FROM ucsdets/datascience-notebook
+ARG BASE_CONTAINER=jupyter/scipy-notebook:2ce7c06a61a1
+ARG DATAHUB_CONTAINER=ucsdets/datahub-base-notebook:2019.4.9
+
+FROM $DATAHUB_CONTAINER as datahub
+
+FROM $BASE_CONTAINER
+
+LABEL maintainer="UC San Diego ITS/ETS <ets-consult@ucsd.edu>"
+
 USER root
 
-######################################
-# basic linux commands
-# note that 'screen' requires additional help
-# to function within a 'kubectl exec' terminal environment
-RUN apt-get update && apt-get -qq install -y \
-        	curl \
-        	rsync \
-        	unzip \
-        	less nano vim \
-        	openssh-client \
-		cmake \
-		tmux \
-		screen \
-		gnupg \
-        	wget && \
-	chmod g-s /usr/bin/screen && \
-	chmod 1777 /var/run/screen
+COPY --from=datahub /usr/share/datahub/scripts/* /usr/share/datahub/scripts/
+RUN /usr/share/datahub/scripts/install-all.sh
 
+#JAVA
 ######################################
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -28,8 +20,7 @@ RUN apt-get update && \
     apt-get install -y default-jdk
 
 ######################################
-# CLI (non-conda) CUDA compilers, etc. (9.0 due to older drivers on our nodes)
-# nb: cuda-9-0 requires gcc6
+# CLI (non-conda) CUDA compilers, etc.
 RUN apt-get update && apt-get install -y --no-install-recommends \
 gnupg2 curl ca-certificates && \
     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add - && \
@@ -60,88 +51,21 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV NVIDIA_REQUIRE_CUDA "cuda>=10.1 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411"
-
-######################################
-# Install python packages unprivileged where possible
-# USER $NB_UID:$NB_GID
-
 # Pre-generate font cache so the user does not see fc-list warning when
 # importing datascience. https://github.com/matplotlib/matplotlib/issues/5836
-# RUN pip install --no-cache-dir datascience okpy PyQt5 && \
-# 	python -c 'import matplotlib.pyplot' && \
-# 	conda remove --quiet --yes --force qt pyqt || true && \
-# 	conda clean -tipsy
+RUN pip install --no-cache-dir datascience okpy PyQt5 && \
+	python -c 'import matplotlib.pyplot' && \
+	conda remove --quiet --yes --force qt pyqt || true && \
+	conda clean -tipsy
 
-RUN pip install --no-cache-dir ipywidgets && \
-	jupyter nbextension enable --sys-prefix --py widgetsnbextension
-
-# hacked local version of nbresuse to show GPU activity
-RUN pip install --no-cache-dir git+https://github.com/agt-ucsd/nbresuse.git && \
-	jupyter serverextension enable --sys-prefix --py nbresuse && \
-	jupyter nbextension install --sys-prefix --py nbresuse && \
-	jupyter nbextension enable --sys-prefix --py nbresuse
-
-# ###########################
-# # Now the ML toolkits (cuda9 until we update our Nvidia drivers)
-# RUN set -x && conda install -c conda-forge --yes  \
-#                 cudatoolkit=10.1 \
-#                 cudnn nccl \
-# 		tensorboard=2.1.0 \
-# 		tensorflow=2.1.0 \
-# 		tensorflow-gpu=2.1.0 \
-#         && conda install -c pytorch --yes \
-#                 pytorch=1.4.0 \
-#                 torchvision=0.5.0 \
-#         && conda install --yes \
-#                 nltk spacy \
-#         && conda clean -afy && fix-permissions $CONDA_DIR
-
-
-
-
-# FROM ucsdets/scipy-ml-notebook
-# USER root
-
-# ######################################
-# # CLI (non-conda) CUDA compilers, etc. (9.0 due to older drivers on our nodes)
-# # nb: cuda-9-0 requires gcc6
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-# gnupg2 curl ca-certificates && \
-#     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add - && \
-#     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
-#     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
-#     apt-get purge --autoremove -y curl && \
-# rm -rf /var/lib/apt/lists/*
-
-# ENV CUDA_VERSION 10.1.243
-
-# ENV CUDA_PKG_VERSION 10-1=$CUDA_VERSION-1
-
-# # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#         cuda-cudart-$CUDA_PKG_VERSION \
-# cuda-compat-10-1 && \
-# ln -s cuda-10.1 /usr/local/cuda && \
-#     rm -rf /var/lib/apt/lists/*
-
-# # Required for nvidia-docker v1
-# RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-#     echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
-
-# ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-# ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
-
-# # nvidia-container-runtime
-# ENV NVIDIA_VISIBLE_DEVICES all
-# ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-# ENV NVIDIA_REQUIRE_CUDA "cuda>=10.1 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411"
-
+###########################
 # Now the ML toolkits (cuda9 until we update our Nvidia drivers)
-RUN set -x && conda install -c conda-forge --yes  \
+RUN conda install -c anaconda --yes  \
                 cudatoolkit=10.1 \
                 cudnn nccl \
 		tensorboard=2.1.0 \
 		tensorflow=2.1.0 \
+		tensorflow-base=2.1.0 \
 		tensorflow-gpu=2.1.0 \
         && conda install -c pytorch --yes \
                 pytorch=1.4.0 \
@@ -153,7 +77,7 @@ RUN set -x && conda install -c conda-forge --yes  \
 # Install tensorboard plugin for Jupyter notebooks
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
-
+#Additional
 COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt  && \
 	fix-permissions $CONDA_DIR
@@ -180,7 +104,7 @@ RUN pip install torch-scatter==latest+cu101 -f https://pytorch-geometric.com/whl
 
 RUN conda install -y tsnecuda cuda101 -c cannylab
 RUN conda install -y -c dglteam dgl-cuda10.0
-RUN conda install -c stellargraph stellargraph
+RUN conda install -y -c stellargraph stellargraph
 
 
 # Spark dependencies
