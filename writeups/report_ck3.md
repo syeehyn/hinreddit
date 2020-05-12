@@ -238,11 +238,11 @@ Thus we looked at the subreddit that has the most hateful posts. Below shows the
 
 |subreddit|deleted|benign|hateful|
 |---------|-------|------|-------|
-|Jokes (r/jokes)|833|3,947|144|
-|For your Opinions that are Unpopular (r/unpopularopinion)|2,205|2,435|118|
-|Teenagers (r/teenagers)|654|1,957|114|
-|Today I Fucked Up (r/tifu)|1,997|2,793|98|
-|Escape From Tarkov (r/escapefromtarkov)|368|2,252|76|
+|Incest|1,067|3,295|609|
+|Today I Fucked up(r/tifu)|771|3,708|487|
+|TheRedPill|1,564|2,565|452|
+|Jokes|766|3,758|405|
+|Unpopularopinion)|1,590|2,855|404|
 
 <br>
 We then look at the labels at a higher level without group them into different subreddits. The table below shows the distribution of the labels among posts.  
@@ -262,12 +262,18 @@ Dig deeper into the content of the posts for different labeling groups, we inves
 |hateful|176|1|7048|
 
 Another feture could be the number of comments under each post. 
-The average length of comment for posts labeled hateful is smaller relatively smaller than that for posts labeled as benign. 
+The average length of comment for posts labeled hateful is relatively smaller than that for posts labeled as benign. 
 |label|min|max|mean|
 |-----|---|---|----|
 |benign|0|9,783|24|
 |hateful|0|2,043|16|
 <br>
+Moreover we also find difference in score for the two groups, the mean score of benign posts are generally higher than those of hateful posts.
+
+|label|mean_score|
+|-----|----------|
+|benign|32|
+|hateful|11|
 Moreover, in order to evaluate the quality of the label, we have also done some textual analysis. We find out the top 30 words in posts after removing stop words for each of the groups. However, we have also removed about 20 words that appeared in both groups. Those should be the common words that appeared in the conversation and thus is not helpful as a feature for our classification. 
 
 |malign_word|count|benign_word|count|
