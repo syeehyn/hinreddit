@@ -37,6 +37,8 @@ RUN pip install torch-scatter==latest+cu100 -f https://pytorch-geometric.com/whl
 
 RUN conda install -y tsnecuda cuda100 -c cannylab
 RUN conda install -y -c dglteam dgl-cuda10.0
+RUN conda install -c stellargraph stellargraph
+
 # Install Pyspark
 # RUN conda install --yes \
 #     pyspark
