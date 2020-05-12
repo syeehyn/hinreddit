@@ -1,4 +1,5 @@
 multiprocess
+gensim
 beautifulsoup4
 lxml
 sqlalchemy

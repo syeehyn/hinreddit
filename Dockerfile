@@ -11,6 +11,12 @@ RUN conda install -y -c pytorch \
     pytorch=1.4.0 \
     torchvision=0.5.0
 
+RUN conda install -y \
+    tensorboard=2.1.0 \
+    tensorflow=2.1.0 \
+    tensorflow-base=2.1.0 \
+    tensorflow-gpu=2.1.0
+
 COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt  && \
 	fix-permissions $CONDA_DIR
@@ -37,6 +43,8 @@ RUN pip install torch-scatter==latest+cu100 -f https://pytorch-geometric.com/whl
 
 RUN conda install -y tsnecuda cuda100 -c cannylab
 RUN conda install -y -c dglteam dgl-cuda10.0
+RUN conda install -c stellargraph stellargraph
+
 # Install Pyspark
 # RUN conda install --yes \
 #     pyspark

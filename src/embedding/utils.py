@@ -38,6 +38,7 @@ class RedditData(InMemoryDataset):
         edge_index = torch.from_numpy(edges.values.T).long()
         post_mask = torch.from_numpy(nodes['is_post'].astype(bool).values)
         data_list.append(dt(
+                        x = torch.ones((y.shape[0], 1)),
                         edge_index = edge_index,  
                         y = y, 
                         post_mask = post_mask))
