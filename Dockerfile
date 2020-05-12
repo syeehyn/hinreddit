@@ -153,14 +153,11 @@ ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
     fix-permissions /home/$NB_USER
 
+RUN ln -s $(which python3) /usr/local/bin/python
 
 RUN conda install -c anaconda --yes  \
                 cudatoolkit \
                 cudnn nccl \
-		tensorboard=2.1.0 \
-		tensorflow=2.1.0 \
-		tensorflow-base=2.1.0 \
-		tensorflow-gpu=2.1.0 \
         && conda install -c pytorch --yes \
                 pytorch=1.4.0 \
                 torchvision=0.5.0 \
@@ -170,6 +167,13 @@ RUN conda install -c anaconda --yes  \
 # Install tensorboard plugin for Jupyter notebooks
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
+
+#tf
+ARG TF_PACKAGE=tensorflow
+ARG TF_PACKAGE_VERSION=2.1.0
+RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+COPY bashrc /etc/bash.bashrc
+RUN chmod a+rwx /etc/bash.bashrc
 
 #Additional
 COPY requirements.txt /tmp
