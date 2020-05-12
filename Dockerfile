@@ -191,7 +191,6 @@ RUN pip install torch-scatter==latest+cu101 -f https://pytorch-geometric.com/whl
 
 RUN conda install -y tsnecuda cuda101 -c cannylab
 RUN conda install -y -c dglteam dgl-cuda10.1
-RUN conda install -y -c stellargraph stellargraph
 
 # Spark dependencies
 ENV APACHE_SPARK_VERSION=2.4.5 \
