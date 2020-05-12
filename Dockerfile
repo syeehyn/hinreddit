@@ -1,4 +1,6 @@
 ARG BASE_CONTAINER=jupyter/minimal-notebook
+ARG DATAHUB_CONTAINER=ucsdets/datahub-base-notebook:2019.4.9
+FROM $DATAHUB_CONTAINER as datahub
 FROM $BASE_CONTAINER
 
 USER root
@@ -85,8 +87,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg dvipng && \
     rm -rf /var/lib/apt/lists/*
 
-ARG DATAHUB_CONTAINER=ucsdets/datahub-base-notebook:2019.4.9
-FROM $DATAHUB_CONTAINER as datahub
+
 COPY --from=datahub /usr/share/datahub/scripts/* /usr/share/datahub/scripts/
 RUN /usr/share/datahub/scripts/install-all.sh
 
@@ -231,7 +232,7 @@ RUN conda install --quiet -y 'pyarrow' && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-RUN echo "jupyter notebook \"$@\"" > /run_jupyter.sh
+COPY --from=datahub /run_jupyter.sh /
 
 # Install python packages unprivileged where possible
 USER $NB_UID:$NB_GID
