@@ -77,11 +77,6 @@ RUN set -x && conda install -c conda-forge --yes  \
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
 
-# Additional requirements
-COPY pip-requirements.txt /tmp
-RUN pip install --no-cache-dir -r /tmp/pip-requirements.txt  && \
-	fix-permissions $CONDA_DIR
-
 COPY run_jupyter.sh /
 
 
