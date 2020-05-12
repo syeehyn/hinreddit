@@ -138,3 +138,8 @@ RUN conda install --quiet -y 'pyarrow' && \
     conda clean --all -f -y && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+RUN echo "jupyter notebook \"$@\"" > /run_jupyter.sh /
+
+# Install python packages unprivileged where possible
+USER $NB_UID:$NB_GID
