@@ -77,7 +77,7 @@ RUN set -x && conda install -c conda-forge --yes  \
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
 
-COPY run_jupyter.sh /
+COPY --from=datahub /run_jupyter.sh /
 
 
 
