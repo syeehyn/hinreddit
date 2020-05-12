@@ -135,6 +135,7 @@ RUN conda uninstall -y numpy \
                     tensorflow \
                     tensorboard \
                     tensorflow-gpu \ 
+                    tensorflow-base \
                     pytorch \
                     torchvision \
                     nltk spacy
