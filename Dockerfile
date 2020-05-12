@@ -67,10 +67,10 @@ USER $NB_UID:$NB_GID
 
 # Pre-generate font cache so the user does not see fc-list warning when
 # importing datascience. https://github.com/matplotlib/matplotlib/issues/5836
-RUN pip install --no-cache-dir datascience okpy PyQt5 && \
-	python -c 'import matplotlib.pyplot' && \
-	conda remove --quiet --yes --force qt pyqt || true && \
-	conda clean -tipsy
+# RUN pip install --no-cache-dir datascience okpy PyQt5 && \
+# 	python -c 'import matplotlib.pyplot' && \
+# 	conda remove --quiet --yes --force qt pyqt || true && \
+# 	conda clean -tipsy
 
 RUN pip install --no-cache-dir ipywidgets && \
 	jupyter nbextension enable --sys-prefix --py widgetsnbextension
