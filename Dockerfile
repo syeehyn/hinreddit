@@ -178,15 +178,6 @@ COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt  && \
 	fix-permissions $CONDA_DIR
 
-# Install HDF5 Python bindings.
-RUN conda install -y h5py=2.8.0 \
-    && conda clean -ya
-RUN pip install h5py-cache==1.0
-# Install TorchNet, a high-level framework for PyTorch.
-RUN pip install torchnet==0.0.4
-# Install Graphviz.
-RUN conda install -y graphviz=2.40.1 python-graphviz=0.8.4 \
-    && conda clean -ya
 # Install PyTorch Geometric.
 RUN CPATH=/usr/local/cuda/include:$CPATH \
     && LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH \
