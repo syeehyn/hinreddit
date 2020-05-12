@@ -63,7 +63,7 @@ ENV NVIDIA_REQUIRE_CUDA "cuda>=10.1 brand=tesla,driver>=384,driver<385 brand=tes
 
 ######################################
 # Install python packages unprivileged where possible
-USER $NB_UID:$NB_GID
+# USER $NB_UID:$NB_GID
 
 # Pre-generate font cache so the user does not see fc-list warning when
 # importing datascience. https://github.com/matplotlib/matplotlib/issues/5836
