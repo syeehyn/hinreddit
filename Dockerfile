@@ -85,35 +85,40 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg dvipng && \
     rm -rf /var/lib/apt/lists/*
 
+ARG DATAHUB_CONTAINER=ucsdets/datahub-base-notebook:2019.4.9
+FROM $DATAHUB_CONTAINER as datahub
+COPY --from=datahub /usr/share/datahub/scripts/* /usr/share/datahub/scripts/
+RUN /usr/share/datahub/scripts/install-all.sh
+
 RUN conda install --quiet --yes \
-    'beautifulsoup4=4.9.*' \
+    'beautifulsoup4' \
     'conda-forge::blas=*=openblas' \
-    'bokeh=2.0.*' \
-    'bottleneck=1.3.*' \
-    'cloudpickle=1.4.*' \
-    'cython=0.29.*' \
-    'h5py=2.10.*' \
-    'hdf5=1.10.*' \
-    'ipywidgets=7.5.*' \
-    'ipympl=0.5.*'\
-    'matplotlib-base=3.2.*' \
+    'bokeh' \
+    'bottleneck' \
+    'cloudpickle' \
+    'cython' \
+    'h5py' \
+    'hdf5' \
+    'ipywidgets' \
+    'ipympl'\
+    'matplotlib-base' \
     # numba update to 0.49 fails resolving deps.
-    'numba=0.48.*' \
-    'numexpr=2.7.*' \
-    'pandas=1.0.*' \
-    'patsy=0.5.*' \
-    'protobuf=3.11.*' \
-    'pytables=3.6.*' \
-    'scikit-image=0.16.*' \
-    'scikit-learn=0.22.*' \
-    'scipy=1.4.*' \
-    'seaborn=0.10.*' \
-    'sqlalchemy=1.3.*' \
-    'statsmodels=0.11.*' \
-    'sympy=1.5.*' \
-    'vincent=0.4.*' \
-    'widgetsnbextension=3.5.*'\
-    'xlrd=1.2.*' \
+    'numba' \
+    'numexpr' \
+    'pandas' \
+    'patsy' \
+    'protobuf' \
+    'pytables' \
+    'scikit-image' \
+    'scikit-learn' \
+    'scipy' \
+    'seaborn' \
+    'sqlalchemy' \
+    'statsmodels' \
+    'sympy' \
+    'vincent' \
+    'widgetsnbextension'\
+    'xlrd' \
     && \
     conda clean --all -f -y && \
     # Activate ipywidgets extension in the environment that runs the notebook server
