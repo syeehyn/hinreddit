@@ -11,6 +11,12 @@ RUN conda install -y -c pytorch \
     pytorch=1.4.0 \
     torchvision=0.5.0
 
+RUN conda install -y \
+    tensorboard=2.1.0 \
+    tensorflow=2.1.0 \
+    tensorflow-base=2.1.0 \
+    tensorflow-gpu=2.1.0
+
 COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt  && \
 	fix-permissions $CONDA_DIR
