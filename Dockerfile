@@ -224,6 +224,7 @@ RUN conda install --quiet -y 'pyarrow' && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
+WORKDIR /
 COPY --from=datahub /run_jupyter.sh /
 
 # Install python packages unprivileged where possible
