@@ -155,15 +155,13 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 
 RUN ln -s $(which python3) /usr/local/bin/python
 
-RUN conda install -c anaconda --yes  \
-                cudatoolkit \
-                cudnn nccl \
-        && conda install -c pytorch --yes \
-                pytorch=1.4.0 \
-                torchvision=0.5.0 \
-        && conda install --yes \
-                nltk spacy \
-        && conda clean -afy && fix-permissions $CONDA_DIR
+# RUN conda install -c anaconda --yes  \
+#                 cudatoolkit \
+#                 cudnn nccl \
+#         && conda install -c pytorch --yes \
+#                 pytorch=1.4.0 \
+#                 torchvision=0.5.0 \
+#         && conda clean -afy && fix-permissions $CONDA_DIR
 # Install tensorboard plugin for Jupyter notebooks
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
