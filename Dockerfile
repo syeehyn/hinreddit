@@ -163,8 +163,6 @@ RUN ln -s $(which python3) /usr/local/bin/python
 #                 torchvision=0.5.0 \
 #         && conda clean -afy && fix-permissions $CONDA_DIR
 # Install tensorboard plugin for Jupyter notebooks
-RUN pip install --no-cache-dir jupyter-tensorboard && \
-	jupyter tensorboard enable --sys-prefix
 
 #tf
 ARG TF_PACKAGE=tensorflow
@@ -172,6 +170,8 @@ ARG TF_PACKAGE_VERSION=2.1.0
 RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
+RUN pip install --no-cache-dir jupyter-tensorboard && \
+	jupyter tensorboard enable --sys-prefix
 
 #Additional
 COPY requirements.txt /tmp
