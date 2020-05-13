@@ -13,7 +13,7 @@ POST_DIR = osp.join('raw', 'posts', '*.csv')
 OUT_DIR = osp.join('interim', 'graph')
 
 def create_graph(fp):
-    print('starting preprocessing: (filtering)')
+    print('start preprocessing: (filtering)')
     comm = osp.join(fp, COMM_DIR)
     post = osp.join(fp, POST_DIR)
     labl = osp.join(fp, LABL_DIR)
@@ -38,7 +38,7 @@ def create_graph(fp):
     comm_root = comm[comm.parent_id.str.len() == 6]
     comm_nest = comm[comm.parent_id.str.len() == 7]
     comm_ = comm_root[['comment_id', 'author']]
-    print('starting preprocessing: (edges)')
+    print('start preprocessing: (edges)')
     comm_nest_edges = pd.merge(comm_nest, comm_, left_on = 'parent_id', right_on = 'comment_id', how = 'inner')[['author_x', 'author_y']]
     comm_nest_edges.columns = ['who', 'whom']
     comm_root_edges_lower = pd.merge(comm_root, post, left_on = 'parent_id', right_on = 'id', how = 'inner')[['author_x', 'id']]
@@ -61,7 +61,7 @@ def create_graph(fp):
     edge_idx = edges_[['who_id', 'whom_id']].values.astype(int)
     edge_weight = edges_[['weights']].values
     post_label = pd.merge(post, labl, left_on = 'id', right_on = 'post_id', how = 'left')
-    print('starting preprocessing: (nodes)')
+    print('start preprocessing: (nodes)')
     nodes = pd.DataFrame(
         {
             'node_name': pd.Series(encoder.categories_[0])
@@ -75,8 +75,8 @@ def create_graph(fp):
     nodes.is_submitter = nodes.is_submitter.fillna(True).astype(int)
     X = OneHotEncoder(sparse = False).fit_transform(nodes.subreddit.values.reshape(-1, 1))
     X = np.hstack([X, nodes.is_submitter.values.reshape(-1, 1)])
-    post_mask = (y != -1).reshape(-1, 1)
     y = nodes.label.values.reshape(-1, 1)
+    post_mask = (nodes.label.values != -1).reshape(-1, 1)
     node_output = np.hstack([X, post_mask, y])
     edge_output = np.hstack([edge_idx, edge_weight])
     print('writing raw graphs')
