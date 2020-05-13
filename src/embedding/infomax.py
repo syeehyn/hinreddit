@@ -35,7 +35,7 @@ def infomax(fp, PARAMS):
     data.x = data.x.float()
     data = data.to(device)
     model = DeepGraphInfomax(
-        hidden_channels=PARAMS['HIDDEN_CHANNELS'], encoder=Encoder(dataset.num_features, PARAMS['SUMMARY']),
+        hidden_channels=PARAMS['HIDDEN_CHANNELS'], encoder=Encoder(data.x.shape[1], PARAMS['SUMMARY']),
         summary=lambda z, *args, **kwargs: torch.sigmoid(z.mean(dim=0)),
         corruption=corruption).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
