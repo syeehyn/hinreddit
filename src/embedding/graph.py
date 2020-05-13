@@ -35,6 +35,10 @@ def create_graph(fp):
     comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
     comm = comm.dropna()
     comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.comment_id))]
+    author_counts = comm.author.value_counts()
+    author_mask = author_counts > 3
+    author_counts = author_counts[author_mask].index
+    comm = comm[comm.author.isin(author_counts)]
     post = post[post.id.isin(comm.parent_id)]
     comm_root = comm[comm.parent_id.str.len() == 6]
     comm_nest = comm[comm.parent_id.str.len() == 7]
@@ -87,4 +91,5 @@ def create_graph(fp):
     shutil.rmtree(osp.join(fp, 'interim', 'graph', 'processed'), ignore_errors = True)
     shutil.rmtree(osp.join(fp, 'interim', 'graph', 'raw'), ignore_errors = True)
     create_dataset(fp)
+    print('graph with {} nodes constructed'.format(X.shape[0]))
 
