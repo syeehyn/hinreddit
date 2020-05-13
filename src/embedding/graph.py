@@ -1,6 +1,5 @@
 import pandas as pd
 from glob import glob
-import os
 import os.path as osp
 import numpy as np
 from sklearn.preprocessing import OrdinalEncoder
@@ -16,11 +15,6 @@ OUT_DIR = osp.join('interim', 'graph')
 
 def create_graph(fp):
     print('start preprocessing: (filtering)')
-    try:
-        os.remove(osp.join(fp, OUT_DIR, 'nodes.npy'))
-        os.remove(osp.join(fp, OUT_DIR, 'edges.npy'))
-    except OSError:
-        pass
     comm = osp.join(fp, COMM_DIR)
     post = osp.join(fp, POST_DIR)
     labl = osp.join(fp, LABL_DIR)
@@ -32,12 +26,12 @@ def create_graph(fp):
     labl = labl[labl.label != -1]
     post.author = post.author.str.lower()
     post.subreddit = post.subreddit.str.lower()
-    # post = post[(post.author != '[deleted]')&(post.author != 'automoderator')& (post.author != 'snapshillbot')]
+    post = post[(post.author != '[deleted]')&(post.author != 'automoderator')& (post.author != 'snapshillbot')]
     comm['link_id'] = comm.link_id.str[3:]
     comm = comm[['id','author', 'is_submitter', 'link_id']]
     comm.columns = ['comment_id','author', 'is_submitter', 'link_id']
     comm.author = comm.author.str.lower()
-    # comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
+    comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
     comm = comm.dropna()
     comm = comm[(comm.link_id.isin(post.id))]
     post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.link_id))]
