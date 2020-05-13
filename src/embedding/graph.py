@@ -6,7 +6,8 @@ from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import OneHotEncoder
 import json
 from scipy import sparse
-
+import shutil
+from .utils import create_dataset
 COMM_DIR = osp.join('raw', 'comments', '*.csv')
 LABL_DIR = osp.join('interim', 'label', '*.csv')
 POST_DIR = osp.join('raw', 'posts', '*.csv')
@@ -82,4 +83,8 @@ def create_graph(fp):
     print('writing raw graphs')
     np.save(osp.join(fp, OUT_DIR, 'nodes.npy'), node_output)
     np.save(osp.join(fp, OUT_DIR, 'edges.npy'), edge_output)
+    print('formatting to pytorch dataset')
+    shutil.rmtree(osp.join(fp, 'interim', 'graph', 'processed'), ignore_errors = True)
+    shutil.rmtree(osp.join(fp, 'interim', 'graph', 'raw'), ignore_errors = True)
+    create_dataset(fp)
 
