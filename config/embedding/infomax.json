@@ -3,5 +3,6 @@
 "SUMMARY": 128,
 "LEARNING_RATE": 0.001,
 "NUM_EPOCH": 300,
-"CUDA": true
+"CUDA": true,
+"BATCH_SIZE": 64
 }
