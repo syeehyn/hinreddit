@@ -27,7 +27,6 @@ def create_graph(fp):
     post.author = post.author.str.lower()
     post.subreddit = post.subreddit.str.lower()
     post = post[(post.author != '[deleted]')&(post.author != 'automoderator')& (post.author != 'snapshillbot')]
-    post = post[post.id.isin(labl.post_id)]
     comm['parent_id'] = comm.parent_id.str[3:]
     comm = comm[['id','author', 'is_submitter', 'parent_id']]
     comm.columns = ['comment_id','author', 'is_submitter', 'parent_id']
@@ -35,6 +34,7 @@ def create_graph(fp):
     comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
     comm = comm.dropna()
     comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.comment_id))]
+    post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.parent_id))]
     author_counts = comm.author.value_counts()
     author_mask = author_counts > 3
     author_counts = author_counts[author_mask].index
