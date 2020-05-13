@@ -25,12 +25,11 @@ def corruption(x, edge_index):
     return x[torch.randperm(x.size(0))], edge_index
 
 def infomax(fp, PARAMS):
-    dataset = create_dataset(fp)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:
         device = 'cpu'
-    data = dataset[0]
+    data = torch.load(osp.join(fp, 'interim', 'graph', 'processed', 'data.pt'))
     data.x = data.x.float()
     data = data.to(device)
     model = DeepGraphInfomax(
