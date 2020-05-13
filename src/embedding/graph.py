@@ -73,13 +73,10 @@ def create_graph(fp):
         }
     )
     nodes = pd.merge(nodes, post_label, left_on = 'node_name', right_on = 'id', how = 'left')
-    nodes = pd.merge(nodes, comm, left_on = 'node_name', right_on = 'author', how = 'left')
-    nodes = nodes[['node_name', 'subreddit', 'is_submitter','label']]
+    nodes = nodes[['node_name', 'subreddit','label']]
     nodes.subreddit = nodes.subreddit.fillna('0')
     nodes.label = nodes.label.fillna(-1)
-    nodes.is_submitter = nodes.is_submitter.fillna(True).astype(int)
     X = OneHotEncoder(sparse = False).fit_transform(nodes.subreddit.values.reshape(-1, 1))
-    X = np.hstack([X, nodes.is_submitter.values.reshape(-1, 1)])
     y = nodes.label.values.reshape(-1, 1)
     post_mask = (nodes.label.values != -1).reshape(-1, 1)
     node_output = np.hstack([X, post_mask, y])
