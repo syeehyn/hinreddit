@@ -49,7 +49,7 @@ def create_graph(fp):
     comm_root_edges_lower = pd.merge(comm_root, post, left_on = 'parent_id', right_on = 'id', how = 'inner')[['author_x', 'id']]
     comm_root_edges_lower.columns = ['who', 'whom']
     comm_root_edges_upper = pd.merge(comm_root, post, left_on = 'parent_id', right_on = 'id', how = 'inner')[['id', 'author_x']]
-    comm_root_edges_upper.columns = ['whom', 'who']
+    comm_root_edges_upper.columns = ['who', 'whom']
     comm_root_edges = pd.concat([comm_root_edges_lower, comm_root_edges_upper], ignore_index = True)
     edges = pd.concat([comm_nest_edges, comm_root_edges], ignore_index = True)
     graph_idx = np.unique(np.append(edges.who.values, edges.whom.values)).reshape(-1, 1)
