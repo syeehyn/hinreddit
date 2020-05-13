@@ -10,7 +10,7 @@ from torch_geometric.nn import GCNConv, DeepGraphInfomax
 from tqdm import tqdm
 import json
 from torch import nn
-
+import shutil
 class Encoder(nn.Module):
     def __init__(self, in_channels, hidden_channels):
         super(Encoder, self).__init__()
@@ -25,11 +25,13 @@ def corruption(x, edge_index):
     return x[torch.randperm(x.size(0))], edge_index
 
 def infomax(fp, PARAMS):
+    dataset = torch.load(osp.join(fp, 'interim', 'graph', 'processed', 'data.pt'))
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:
         device = 'cpu'
-    data = torch.load(osp.join(fp, 'interim', 'graph', 'processed', 'data.pt'))
+    data = dataset[0]
+    shutil.rmtree(osp.join(fp, 'interim', 'infomax'), ignore_errors = True)
     data.x = data.x.float()
     data = data.to(device)
     model = DeepGraphInfomax(
