@@ -34,6 +34,7 @@ def node2vec(fp, PARAMS):
             optimizer.step()
             total_loss += loss.item()
         return total_loss / len(loader)
+    print('number of nodes to be embedded {}'.format(data.num_nodes))
     print('Start Node2vec Embedding Process with Following Parameters:')
     print(PARAMS)
     losses = []
