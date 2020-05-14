@@ -33,7 +33,7 @@ class RedditData(InMemoryDataset):
 
         if self.pre_transform is not None:
             data_list = [self.pre_transform(data) for data in data_list]
-        g = io.loadmat(osp.join(self.root, 'interim', 'graph', 'graph.mat'))
+        g = io.loadmat(osp.join(self.root))
         N = g['N']
         edge_idx, x =from_scipy_sparse_matrix(N)
         data_list.append(
