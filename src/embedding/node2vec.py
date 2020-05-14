@@ -11,10 +11,9 @@ from tqdm import tqdm
 import json
 import shutil
 def node2vec(fp, PARAMS):
-
-    dataset = torch.load(osp.join(fp, 'interim', 'graph', 'processed', 'data.pt'))
-    data = dataset[0]
     shutil.rmtree(osp.join(fp, 'interim', 'node2vec'), ignore_errors = True)
+    dataset = create_dataset(fp)
+    data = dataset[0]
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
