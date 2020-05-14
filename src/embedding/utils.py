@@ -7,6 +7,7 @@ from torch_geometric.data import Data as dt
 from torch_geometric.data import InMemoryDataset
 from torch_geometric.utils import from_scipy_sparse_matrix
 from scipy import io
+import shutil
 class RedditData(InMemoryDataset):
     def __init__(self, root, transform=None, pre_transform=None):
         super(RedditData, self).__init__(root, transform, pre_transform)
@@ -19,7 +20,7 @@ class RedditData(InMemoryDataset):
 
     @property
     def processed_file_names(self):
-        return ['data.pt']
+        return ['graph.pt']
 
     def download(self):
         # Download to `self.raw_dir`.
@@ -45,5 +46,7 @@ class RedditData(InMemoryDataset):
         torch.save((data, slices), self.processed_paths[0])
 
 def create_dataset(fp):
+    shutil.rmtree(osp.join(fp, 'interim', 'graph', 'processed'), ignore_errors = True)
+    shutil.rmtree(osp.join(fp, 'interim', 'graph', 'raw'), ignore_errors = True)
     data = RedditData(root = os.path.join(fp, 'interim', 'graph'))
     return data
