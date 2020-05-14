@@ -1,9 +1,12 @@
 import os
+import os.path as osp
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import torch
 from torch_geometric.data import Data as dt
 from torch_geometric.data import InMemoryDataset
+from torch_geometric.utils import from_scipy_sparse_matrix
+from scipy import io
 class RedditData(InMemoryDataset):
     def __init__(self, root, transform=None, pre_transform=None):
         super(RedditData, self).__init__(root, transform, pre_transform)
@@ -12,7 +15,7 @@ class RedditData(InMemoryDataset):
 
     @property
     def raw_file_names(self):
-        return ['nodes.npy', 'edges.npy']
+        return ['graph.mat']
 
     @property
     def processed_file_names(self):
@@ -29,17 +32,13 @@ class RedditData(InMemoryDataset):
 
         if self.pre_transform is not None:
             data_list = [self.pre_transform(data) for data in data_list]
-        nodes = np.load(os.path.join(self.root, 'nodes.npy'))
-        edges = np.load(os.path.join(self.root, 'edges.npy'))
-        X, post_mask, y= nodes[:, :-2], nodes[:, -2], nodes[:, -1]
-        edge_index, edge_weights = edges[:, :-1], edges[:, -1]
+        g = io.loadmat(osp.join(self.root, 'interim', 'graph', 'graph.mat'))
+        N = g['N']
+        edge_idx, x =from_scipy_sparse_matrix(N)
         data_list.append(
             dt(
-                x = torch.from_numpy(X).long(),
-                edge_index = torch.from_numpy(edge_index.T).long(),
-                y = torch.from_numpy(y).int(),
-                post_mask = torch.from_numpy(post_mask.astype(bool)),
-                edge_attr = torch.from_numpy(edge_weights).view(-1, 1)
+                x = x,
+                edge_index = edge_idx
             )
         )
         data, slices = self.collate(data_list)
