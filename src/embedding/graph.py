@@ -83,7 +83,7 @@ def create_graph(fp):
     edge_weight = edge_idx[['weight']].values
     edge_idx = edge_idx.sort_values(['who_id', 'whom_id'])
     edge_idx_ = edge_idx[['who_id', 'whom_id']].values
-    N = sparse.csr_matrix((np.ones(edge_idx_.shape[0]), (edge_idx_[:, 0], edge_idx_[:, 1])), \
+    N = sparse.csr_matrix((edge_weight.reshape(-1,), (edge_idx_[:, 0], edge_idx_[:, 1])), \
                                 shape = (node_maps.shape[0], node_maps.shape[0]))
     post_mask = node_maps.name.isin(post_names)
     post_indx = node_maps[post_mask].id.values
