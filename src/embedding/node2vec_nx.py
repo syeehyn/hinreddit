@@ -3,6 +3,7 @@ import networkx as nx
 import random
 import os.path as osp
 from scipy import io
+import os
 from gensim.models import Word2Vec
 from tqdm import tqdm
 NUM_WORKERS = 8
@@ -175,4 +176,7 @@ def node2vec(fp, PARAMS):
     g.preprocess_transition_probs()
     print('simulating random walks')
     walks = g.simulate_walks(PARAMS['WALKS_PER_NODE'],PARAMS['WALK_LENGTH'])
+    print('creating embedding')
+    if not os.path.exists(os.path.join(fp, 'interim', 'node2vec')):
+        os.mkdir(os.path.join(fp, 'interim', 'node2vec'))
     learn_embeddings(walks, PARAMS, fp)
