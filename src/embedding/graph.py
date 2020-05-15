@@ -57,7 +57,7 @@ def create_graph(fp):
     cauthor_pauthor_edges.columns = ['who', 'whom']
     cauthor_cauthor = pd.merge(comm_nest[['parent_id', 'author']], comm_nest[['id', 'author']], \
             left_on = 'parent_id', right_on = 'id', how = 'left')[['author_x', 'author_y']]
-    cauthor_cauthor.columns = ['who', 'whom']
+    cauthor_cauthor.columns = ['whom', 'who']
     edges = pd.concat([pauthor_post_edges, cauthor_pauthor_edges, cauthor_cauthor], ignore_index = True)
     edges = edges[edges.who != edges.whom]
     print('start preprocessing: (nodes)')
