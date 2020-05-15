@@ -166,7 +166,7 @@ RUN ln -s $(which python3) /usr/local/bin/python
 
 #tf
 ARG TF_PACKAGE=tensorflow
-ARG TF_PACKAGE_VERSION=2.1.0
+ARG TF_PACKAGE_VERSION=1.8.0
 RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} -t /usr/local
 RUN cd /usr/local && ln -s ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} tensorflow
 WORKDIR /
