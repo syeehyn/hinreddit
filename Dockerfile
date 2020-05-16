@@ -165,10 +165,10 @@ RUN ln -s $(which python3) /usr/local/bin/python
 # Install tensorboard plugin for Jupyter notebooks
 
 #tf
-ARG TF_PACKAGE=tensorflow
-ARG TF_PACKAGE_VERSION=1.14.0
-RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} -t /usr/local
-RUN cd /usr/local && ln -s ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} tensorflow
+# ARG TF_PACKAGE=tensorflow
+# ARG TF_PACKAGE_VERSION=1.14.0
+# RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} -t /usr/local
+# RUN cd /usr/local && ln -s ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} tensorflow
 WORKDIR /
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
