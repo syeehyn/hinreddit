@@ -45,9 +45,11 @@ autoNumber: "AMS"
       - [Data Cleaning](#data-cleaning)
       - [Applicability](#applicability)
   - [3. Labeling](#3-labeling)
-  - [4. Graph Extraction](#4-graph-extraction)
+  - [4. EDA](#4-eda)
+  - [5. Graph Extraction](#5-graph-extraction)
     - [Graph Structure](#graph-structure)
-  - [5. EDA](#5-eda)
+    - [Adjacency Matrix](#adjacency-matrix)
+    - [Graph Example](#graph-example)
   - [6. ML Deployment](#6-ml-deployment)
     - [Metrics](#metrics)
     - [Baseline Model](#baseline-model)
@@ -231,87 +233,7 @@ By following a [tutorial](https://androidkt.com/multi-label-text-classification-
 
 We will label a post as hateful if the max of the 5 values is greater than 0.5 or one of the comment has a mean among the 5 values that is greater than 0.5. Otherwise it will be labled as benign. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA.
 
-## 4. Graph Extraction
-
-### Graph Structure
-
-the graph structure is shown as below:
-
-![Graph Structure](graph.jpeg)
-
-The graph consists two kind of nodes:
-
-- Post Node: the post group
-- User Node: the user group
-  - Author Node: author of the post
-  - Commentor Node: commentors who answer the post or comments under the posts
-  - Note: Author Nodes and Commentor Nodes can be overlapped
-
-The graph rule is explained as following:
-
-- Post Nodes can go to all User Nodes under them directly (both Author and Commentor).
-- Author Nodes can only go to Post Nodes they associate with.
-- Commentor Nodes can only go to User Nodes who reply them.
-
-We will represent our Graph into following Adjacency matrix form:
-
-``` math
-
-- U matrix
-  - if user i has been replied by user j, then i,j entry of U will be added 1
-
-- P matrix
-  - if post i has author or commentor j, then i,j entry of P will be added 1
-
-- A matrix
-  - if author i writes post j, then i,j entry of A will be 1
-
-- N matrix
-  - N matrix will be the homogeneous representaion of hetergeneous graph above
-  - U | A
-    P | 0
-
-```
-
-Example:
-
-``` text
-we have two reddit posts with id 1 and 2 shown below
-
-post_id: 1
-author_user_id: 1
-  commentor_user_id: 2
-    commentor_user_id: 3
-post_id: 2
-author_user_id: 2
-  commentor_user_id:4
-  commentor_user_id:2
-
-The Matrices will be:
-
-U:  0|0|0|0
-    0|0|1|0
-    0|0|0|0
-    0|1|0|0
-
-P:  1|1|1|0
-    0|1|0|1
-
-A:  1|0
-    0|1
-    0|0
-    0|0
-
-N:  0|0|0|0|1|0
-    0|0|1|0|0|1
-    0|0|0|0|0|0
-    0|1|0|0|0|0
-    1|1|1|0|0|0
-    0|1|0|1|0|0
-
-```
-
-## 5. EDA
+## 4. EDA
 
 As you may know, Reddit has already banned lots of subreddit that contained explicit or controversial materials. Thus in order to discover more hateful speech, we researched online and find out a [list](https://www.reddit.com/r/GoldTesting/comments/3fxs3q/list_of_quarantined_subreddits/) contained both banned and quarantined subreddits. Quarantined subreddits are subs that host no advertisement, and Reddit doesn't generate any revenue off toxic content. People can still acess those subs, but there will be a prompt warns telling people about the content on the sub. We have selected around 37 qurantined subreddit along with 10 normal subreddits. </br>
 By using the data ingestion pipeline, we have successfully extracted 5,000 posts from each of the 47 subreddits which is 235,000 posts in total. For each of the subreddit we have calculated **total_comment**: the total number of comments recieved for the posts contained in that subreddit, **avg_comment**: average number of comments received for the posts contained in that subreddit, **top_num_comment**: the maximum number of comments recieved by a post in that subreddit. The statistics for the top 5 subreddits that have the most total comments are shown in the table below. From the table, we can observe that the subreddit with higher number of total_comments also has higher number of average_comment. And we also want to figure out whether those hot subreddit also tend to contain more hateful speech. 
@@ -377,6 +299,88 @@ Moreover, in order to evaluate the quality of the label, we have also done some 
 |started|1,840|new|11,002|
 |ass|1,800|need|10,629|
 |went|1,717|years|10,374|
+
+## 5. Graph Extraction
+
+### Graph Structure
+
+the graph structure is shown as below:
+
+![Graph Structure](graph.jpeg)
+
+The graph consists two kind of nodes:
+
+- Post Node: the post group
+- User Node: the user group
+  - Author Node: author of the post
+  - Commentor Node: commentors who answer the post or comments under the posts
+  - Note: Author Nodes and Commentor Nodes can be overlapped
+
+The graph rule is explained as following:
+
+- Post Nodes can go to all User Nodes under them directly (both Author and Commentor).
+- Author Nodes can only go to Post Nodes they associate with.
+- Commentor Nodes can only go to User Nodes who reply them.
+
+### Adjacency Matrix
+
+We will represent our Graph into following Adjacency matrix form:
+
+``` math
+
+- U matrix
+  - if user i has been replied by user j, then i,j entry of U will be added 1
+
+- P matrix
+  - if post i has author or commentor j, then i,j entry of P will be added 1
+
+- A matrix
+  - if author i writes post j, then i,j entry of A will be 1
+
+- N matrix
+  - N matrix will be the homogeneous representaion of hetergeneous graph above
+  - U | A
+    P | 0
+
+```
+
+### Graph Example
+
+``` text
+we have two reddit posts with id 1 and 2 shown below
+
+post_id: 1
+author_user_id: 1
+  commentor_user_id: 2
+    commentor_user_id: 3
+post_id: 2
+author_user_id: 2
+  commentor_user_id:4
+  commentor_user_id:2
+
+The Matrices will be:
+
+U:  0|0|0|0
+    0|0|1|0
+    0|0|0|0
+    0|1|0|0
+
+P:  1|1|1|0
+    0|1|0|1
+
+A:  1|0
+    0|1
+    0|0
+    0|0
+
+N:  0|0|0|0|1|0
+    0|0|1|0|0|1
+    0|0|0|0|0|0
+    0|1|0|0|0|0
+    1|1|1|0|0|0
+    0|1|0|1|0|0
+
+```
 
 
 ## 6. ML Deployment
