@@ -263,6 +263,11 @@ We will represent our Graph into following Adjacency matrix form:
 - A matrix
   - if author i writes post j, then i,j entry of A will be 1
 
+- N matrix
+  - N matrix will be the homogeneous representaion of hetergeneous graph above
+  - U | A
+    P | 0
+
 ```
 
 Example:
