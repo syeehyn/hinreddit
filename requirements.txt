@@ -15,7 +15,7 @@ h5py==2.8.0
 h5py-cache==1.0
 torchnet==0.0.4
 graphviz==0.8.4
-tensorflow==1.14.0
+tensorflow==1.15.2
 tensorboard==1.14.0
 networkx==1.11
 numpy==1.14.5
