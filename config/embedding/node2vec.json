@@ -7,6 +7,6 @@
 "LEARNING_RATE": 0.01,
 "NUM_EPOCH": 3,
 "P": 1,
-"Q": 4,
+"Q": 1,
 "CUDA": true
 }
