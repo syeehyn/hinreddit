@@ -45,8 +45,10 @@ autoNumber: "AMS"
       - [Data Cleaning](#data-cleaning)
       - [Applicability](#applicability)
   - [3. Labeling](#3-labeling)
-  - [4. EDA](#4-eda)
-  - [5. ML Deployment](#5-ml-deployment)
+  - [4. Graph Extraction](#4-graph-extraction)
+    - [Graph Structure](#graph-structure)
+  - [5. EDA](#5-eda)
+  - [6. ML Deployment](#6-ml-deployment)
     - [Metrics](#metrics)
     - [Baseline Model](#baseline-model)
     - [Hinreddit](#hinreddit-1)
@@ -227,11 +229,41 @@ Since the original data obtained from Reddit is not labeled, we will be using a 
 
 By following a [tutorial](https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/) of using `keras` and the pretrained word vectors, we will train a multi-label NLP model with kaggle labeled dataset of wikipedia comments detailed in [Datasets](#4-datasets). We will save this model in directory `interim`. This multi-label model then can be used to classify each Reddit post as "hateful" according to either our definition, which is any of `toxic`, `severe_toxic`, `threat`, `insult`, `identity_hate`, or user-defined "hatefulness" using any combination of the five labels. 
 
-We will label a post as hateful if the max of the 5 values is greater than 0.5 or one of the comment has a mean among the 5 values that is greater than 0.5. Otherwise it will be labled as benign. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA. 
+We will label a post as hateful if the max of the 5 values is greater than 0.5 or one of the comment has a mean among the 5 values that is greater than 0.5. Otherwise it will be labled as benign. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA.
 
+## 4. Graph Extraction
 
+### Graph Structure
 
-## 4. EDA
+the graph structure is shown as below:
+
+![Graph Structure](graph.jpeg)
+
+The graph consists two kind of nodes:
+
+- Post Node: the post group
+- User Node: the user group
+  - Author Node: author of the post
+  - Commentor Node: commentors who answer the post or comments under the posts
+  - Note: Author Nodes and Commentor Nodes can be overlapped
+
+The graph rule is explained as following:
+
+- Post Nodes can go to all User Nodes under them directly (both Author and Commentor).
+- Author Nodes can only go to Post Nodes they associate with.
+- Commentor Nodes can only go to User Nodes who reply them.
+
+We will represent our Graph 
+
+Example:
+
+```
+we have two reddit posts
+
+```
+
+## 5. EDA
+
 As you may know, Reddit has already banned lots of subreddit that contained explicit or controversial materials. Thus in order to discover more hateful speech, we researched online and find out a [list](https://www.reddit.com/r/GoldTesting/comments/3fxs3q/list_of_quarantined_subreddits/) contained both banned and quarantined subreddits. Quarantined subreddits are subs that host no advertisement, and Reddit doesn't generate any revenue off toxic content. People can still acess those subs, but there will be a prompt warns telling people about the content on the sub. We have selected around 37 qurantined subreddit along with 10 normal subreddits. </br>
 By using the data ingestion pipeline, we have successfully extracted 5,000 posts from each of the 47 subreddits which is 235,000 posts in total. For each of the subreddit we have calculated **total_comment**: the total number of comments recieved for the posts contained in that subreddit, **avg_comment**: average number of comments received for the posts contained in that subreddit, **top_num_comment**: the maximum number of comments recieved by a post in that subreddit. The statistics for the top 5 subreddits that have the most total comments are shown in the table below. From the table, we can observe that the subreddit with higher number of total_comments also has higher number of average_comment. And we also want to figure out whether those hot subreddit also tend to contain more hateful speech. 
 |subreddit|total_comment|avg_comment|top_num_comment|
@@ -298,7 +330,7 @@ Moreover, in order to evaluate the quality of the label, we have also done some 
 |went|1,717|years|10,374|
 
 
-## 5. ML Deployment
+## 6. ML Deployment
 
 ### Metrics
 
