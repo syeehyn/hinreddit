@@ -256,10 +256,13 @@ The graph rule is explained as following:
 We will represent our Graph into following Adjacency matrix form:
 
 ``` math
+
 - U matrix
   - if user i has been replied by user j, then i,j entry of U will be added 1
+
 - P matrix
   - if post i has author or commentor j, then i,j entry of P will be added 1
+
 - A matrix
   - if author i writes post j, then i,j entry of A will be 1
 
