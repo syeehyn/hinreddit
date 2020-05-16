@@ -253,12 +253,53 @@ The graph rule is explained as following:
 - Author Nodes can only go to Post Nodes they associate with.
 - Commentor Nodes can only go to User Nodes who reply them.
 
-We will represent our Graph 
+We will represent our Graph into following Adjacency matrix form:
+
+``` math
+- U matrix
+  - if user i has been replied by user j, then i,j entry of U will be added 1
+- P matrix
+  - if post i has author or commentor j, then i,j entry of P will be added 1
+- A matrix
+  - if author i writes post j, then i,j entry of A will be 1
+
+```
 
 Example:
 
-```
-we have two reddit posts
+``` text
+we have two reddit posts with id 1 and 2 shown below
+
+post_id: 1
+author_user_id: 1
+  commentor_user_id: 2
+    commentor_user_id: 3
+post_id: 2
+author_user_id: 2
+  commentor_user_id:4
+  commentor_user_id:2
+
+The Matrices will be:
+
+U:  0|0|0|0
+    0|0|1|0
+    0|0|0|0
+    0|1|0|0
+
+P:  1|1|1|0
+    0|1|0|1
+
+A:  1|0
+    0|1
+    0|0
+    0|0
+
+N:  0|0|0|0|1|0
+    0|0|1|0|0|1
+    0|0|0|0|0|0
+    0|1|0|0|0|0
+    1|1|1|0|0|0
+    0|1|0|1|0|0
 
 ```
 
