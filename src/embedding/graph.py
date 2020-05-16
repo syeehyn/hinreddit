@@ -103,12 +103,12 @@ def create_graph(fp):
     res = {}
     res['N'] = N
     res['U'] = U
-    res['PU'] = A
-    res['UP'] = P
+    res['A'] = A
+    res['P'] = P
     res['post_label'] = heter_label
     res['post_cate'] = heter_feature
     res['post_indx'] = post_indx
     res['user_indx'] = user_indx
-    io.savemat(osp.join(fp, OUT_DIR, 'graph.mat'), res)
+    io.savemat(osp.join(fp, OUT_DIR, 'graph_eda.mat'), res)
     print('graph constructed, with N shape: {}'.format(N.shape),)
 
