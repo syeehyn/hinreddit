@@ -109,6 +109,6 @@ def create_graph(fp):
     res['post_cate'] = heter_feature
     res['post_indx'] = post_indx
     res['user_indx'] = user_indx
-    io.savemat(osp.join(fp, OUT_DIR, 'graph_eda.mat'), res)
+    io.savemat(osp.join(fp, OUT_DIR, 'graph.mat'), res)
     print('graph constructed, with N shape: {}'.format(N.shape),)
 
