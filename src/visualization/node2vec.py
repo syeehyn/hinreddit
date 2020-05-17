@@ -3,25 +3,31 @@ from glob import glob
 import os.path as osp
 import os
 import numpy as np
-from sklearn.preprocessing import OrdinalEncoder
-from sklearn.preprocessing import OneHotEncoder
 import json
-from scipy import sparse
 import shutil
-from .utils import create_dataset
 import scipy.io as io
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+import networkx as nx
+import numpy as np
+import pandas as pd
+from stellargraph.data import BiasedRandomWalk
+from stellargraph import StellarGraph
+from stellargraph import datasets
+from IPython.display import display, HTML
+from gensim.models import Word2Vec
+from tensorflow import keras
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import RandomForestClassifier
 
 COMM_DIR = osp.join('raw', 'comments', '*.csv')
 LABL_DIR = osp.join('interim', 'label', '*.csv')
 POST_DIR = osp.join('raw', 'posts', '*.csv')
-OUT_DIR = osp.join('interim', 'graph', 'graph_incest.mat')
+OUT_DIR = osp.join('interim', 'graph')
 
-def create_graph(fp):
-    print('start preprocessing: (filtering)')
-    try:
-        os.remove(osp.join(fp, OUT_DIR))
-    except FileNotFoundError:
-        pass
+def create_graph(fp, subreddit):
     comm = osp.join(fp, COMM_DIR)
     post = osp.join(fp, POST_DIR)
     labl = osp.join(fp, LABL_DIR)
@@ -40,13 +46,10 @@ def create_graph(fp):
     comm.author = comm.author.str.lower()
     comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
     comm = comm.dropna()
+    post = post[post.subreddit == subreddit]
     post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.link_id))]
-    # post = post[post.subreddit == 'incest']
     comm = comm[comm.link_id.isin(post.id)]
     comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id)) | (comm.link_id.isin(post.id))]
-    # author_counts = comm.author.value_counts()
-    # author_mask = author_counts > 3
-    # author_counts = author_counts[author_mask].index
     comm_root = comm[comm.parent_id.str.len() == 6]
     comm_nest = comm[comm.parent_id.str.len() == 7]
     print('start preprocessing: (edges)')
@@ -88,29 +91,80 @@ def create_graph(fp):
     edge_weight = edge_idx[['weight']].values
     edge_idx = edge_idx.sort_values(['who_id', 'whom_id'])
     edge_idx_ = edge_idx[['who_id', 'whom_id']].values
-    N = sparse.csr_matrix((edge_weight.reshape(-1,), (edge_idx_[:, 0], edge_idx_[:, 1])), \
-                                    shape = (node_maps.shape[0], node_maps.shape[0]))
     post_mask = node_maps.name.isin(post_names)
     post_indx = node_maps[post_mask].id.values
-    user_indx = node_maps[~post_mask].id.values
-    U = N[user_indx, :][:, user_indx]
-    A = N[user_indx, :][:, post_indx]
-    P = N[post_indx, :][:, user_indx]
-    subreddit = pd.merge(node_maps[post_mask][['name']], post[['id', 'subreddit']].drop_duplicates(), \
-                            left_on = 'name', right_on='id', how='left').subreddit.values
-    heter_feature = OneHotEncoder().fit_transform(subreddit.reshape(-1, 1))
-    heter_label = pd.merge(node_maps[post_mask][['name']], 
-            labl, left_on='name', right_on='post_id', how='left').label.values
-    print('start writing matrices')
-    res = {}
-    res['N'] = N
-    res['U'] = U
-    res['A'] = A
-    res['P'] = P
-    res['post_label'] = heter_label
-    res['post_cate'] = heter_feature
-    res['post_indx'] = post_indx
-    res['user_indx'] = user_indx
-    io.savemat(osp.join(fp, OUT_DIR), res)
-    print('graph constructed, with N shape: {}'.format(N.shape),)
+    y = pd.merge(node_maps[post_mask][['name']], 
+                labl, left_on='name', right_on='post_id', how='left').label.values
+    return edge_idx_, edge_weight.reshape(-1), y, subreddit, post_indx
 
+def plot_embedding(embd, y):
+    tsne = TSNE(n_components=2)
+    node_embeddings_2d = tsne.fit_transform(embd)
+    fig = plt.figure(figsize=(16, 16))
+    for i in range(2):
+        plt.scatter(node_embeddings_2d[y == i, 0], node_embeddings_2d[y == i, 1], s=10, label = i)
+    plt.legend()
+    plt.axis('off')
+    plt.show()
+    return fig
+def evaluate(clf, X_train, y_train, X_test, y_test):
+    METRICS = [
+        keras.metrics.TruePositives(name='tp'),
+        keras.metrics.FalsePositives(name='fp'),
+        keras.metrics.TrueNegatives(name='tn'),
+        keras.metrics.FalseNegatives(name='fn'), 
+        keras.metrics.BinaryAccuracy(name='accuracy'),
+        keras.metrics.Precision(name='precision'),
+        keras.metrics.Recall(name='recall'),
+        keras.metrics.AUC(name='auc'),
+    ]   
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    res = {}
+    for i in METRICS:
+        res[i.name] = i(y_test, y_pred).numpy()
+    return res
+
+def generate_node2vec_result(edge_idx, edge_weight, y, subreddit, post_indx, walk_length, p, q):
+    edges = pd.DataFrame(edge_idx, columns = ['source', 'target'])
+    edges['weight'] = edge_weight.reshape(-1)
+    G = StellarGraph(edges=edges, is_directed=True)
+    print(G.info())
+    rw = BiasedRandomWalk(G)
+    print('Random Walk Length: {}, p: {}, q: {}'.format(walk_length, p, q))
+    walks = rw.run(
+        nodes=list(G.nodes()),  # root nodes
+        length=100,  # maximum length of a random walk
+        n=10,  # number of random walks per root node
+        p=1,  # Defines (unormalised) probability, 1/p, of returning to source node
+        q=.5,  # Defines (unormalised) probability, 1/q, for moving away from source node
+    )
+    print("Number of random walks: {}".format(len(walks)))
+    str_walks = [[str(n) for n in walk] for walk in walks]
+    model = Word2Vec(str_walks, size=128, window=5, min_count=0, sg=1, workers=8, iter=1)
+    embd = model.wv.vectors[post_indx, :]
+    fig = plot_embedding(embd, y)
+    neg, pos = np.bincount(y)
+    total = neg + pos
+    print('Examples:\n    Total: {}\n    Positive: {} ({:.2f}% of total)\n'.format(
+        total, pos, 100 * pos / total))
+    weight_for_0 = (1 / neg)*(total)/2.0 
+    weight_for_1 = (1 / pos)*(total)/2.0
+
+    class_weight = {0: weight_for_0, 1: weight_for_1}
+
+    print('Weight for class 0: {:.2f}'.format(weight_for_0))
+    print('Weight for class 1: {:.2f}'.format(weight_for_1))
+    print('Test Size: {}'.format(0.2))
+    X_train, X_test, y_train, y_test = train_test_split(embd, y, test_size=0.2)
+    clfs = [
+        LogisticRegression(
+        verbose=False, max_iter=1000, class_weight = class_weight
+        ),
+        LinearSVC(class_weight=class_weight),
+        RandomForestClassifier(class_weight=class_weight)
+    ]
+    res = {}
+    for clf in clfs:
+        res[clf.__class__.__name__] = evaluate(clf, X_train, y_train, X_test, y_test)
+    return fig, res
