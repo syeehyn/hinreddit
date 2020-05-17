@@ -32,7 +32,7 @@
         - [triggered by `baseline` in targets](#triggered-by-baseline-in-targets)
       - [Data Cleaning](#data-cleaning)
       - [Applicability](#applicability)
-  - [3. Labeling](#3-labeling)
+  - [3. Labeling (editted)](#3-labeling-editted)
   - [4. Graph Extraction](#4-graph-extraction)
     - [Graph Structure](#graph-structure)
     - [Adjacency Matrix](#adjacency-matrix)
@@ -216,9 +216,9 @@ The csv file contains the information of each specific post in a dataframe where
 
 ###### Label
 
-- `label.csv` contains the label of posts after sentimental anlysis.
+- `label.csv` contains the label of posts after taking in to account comment labels.
 - `comment` directory conatians sentimental analysis over comments by different subreddits.
-- `post` directory contains sentimental nalysis over posts.
+- `post` directory contains sentimental analysis over posts.
 
 ##### Processed
 
@@ -270,13 +270,15 @@ Since we are directly using the Pushshift API, it has taken care most of the dat
 
 The above data ingestion pipeline can be used to obtain data as long as the data originates from Reddit. Our pipeline has limited applicability depending on data sources. Possible data sources include other online social platforms such as Twitter, Facebook, LinkedIn, and Instagram. Platforms have similar overall structure but differ in detailed construction and API calls, thus our pipeline may only be helpful for general data ingestion framework reference  when applying to other online social platforms. Also, it is important to check the policies and guidelines of each platform before employing our pipeline to avoid the raise of legal issues or privacy concerns. 
 
-## 3. Labeling
+## 3. Labeling (editted)
 
-Since the original data obtained from Reddit is not labeled, we will be using a RNN and bidirectional layers, through python library `keras`, as well as pre-trained word representation vectors from GloVe, to label the Reddit posts before we use it for our project main analysis.
+Since the original data obtained from Reddit is not labeled, we will be using a RNN and bidirectional layers, through python library `keras`, as well as pre-trained word representation vectors from [GloVe](https://nlp.stanford.edu/projects/glove/), to label the Reddit posts before we use it for our project main analysis.
 
-By following a [tutorial](https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/) of using `keras` and the pretrained word vectors, we will train a multi-label NLP model with kaggle labeled dataset of wikipedia comments detailed in [Datasets](#4-datasets). We will save this model in directory `interim`. This multi-label model then can be used to classify each Reddit post as "hateful" according to either our definition, which is any of `toxic`, `severe_toxic`, `threat`, `insult`, `identity_hate`, or user-defined "hatefulness" using any combination of the five labels. 
+By following a [tutorial](https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/) of using `keras` and the pretrained word vectors, we will train a multi-label NLP model with kaggle labeled dataset of wikipedia comments detailed in [Datasets](#4-datasets). We will save this model in directory `interim`. This multi-label model then can be used to calculate each Reddit post or comment a score between 0 to 1 for each of the label `toxic`, `severe_toxic`, `threat`, `insult`, `identity_hate`. 
 
-We will label a post as hateful if the max of the 5 values is greater than 0.5 or one of the comment has a mean among the 5 values that is greater than 0.5. Otherwise it will be labled as benign. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA.
+The labeling process for a single post is as follows: We first obtain scores for the post itself if it has textual content. Then, we also obtain scores for all of its comments to compute an average of all five labels. We then compute total scores for the post by adding scores of post content and its comments. We then compute the max of all five total scores, and if the max value is greater than the threshold, we classify the post as 'hateful'. In our project, we set the threshold to 0.5. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA.
+
+In this way, we can also label those posts which are missing textual content by making use of its comment data. Moreover, with this labeling process, we are defining hateful posts so that they not only include those that demonstrate hatefulness in its content, but also those that stir up negative discussions in comments and replies.
 
 ## 4. Graph Extraction
 
