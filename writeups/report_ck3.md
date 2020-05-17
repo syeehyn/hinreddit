@@ -270,7 +270,7 @@ Since we are directly using the Pushshift API, it has taken care most of the dat
 
 The above data ingestion pipeline can be used to obtain data as long as the data originates from Reddit. Our pipeline has limited applicability depending on data sources. Possible data sources include other online social platforms such as Twitter, Facebook, LinkedIn, and Instagram. Platforms have similar overall structure but differ in detailed construction and API calls, thus our pipeline may only be helpful for general data ingestion framework reference  when applying to other online social platforms. Also, it is important to check the policies and guidelines of each platform before employing our pipeline to avoid the raise of legal issues or privacy concerns. 
 
-## 3. Labeling (editted)
+## 4. Labeling (editted)
 
 Since the original data obtained from Reddit is not labeled, we will be using a RNN and bidirectional layers, through python library `keras`, as well as pre-trained word representation vectors from [GloVe](https://nlp.stanford.edu/projects/glove/), to label the Reddit posts before we use it for our project main analysis.
 
@@ -280,7 +280,7 @@ The labeling process for a single post is as follows: We first obtain scores for
 
 In this way, we can also label those posts which are missing textual content by making use of its comment data. Moreover, with this labeling process, we are defining hateful posts so that they not only include those that demonstrate hatefulness in its content, but also those that stir up negative discussions in comments and replies.
 
-## 4. Graph Extraction
+## 5. Graph Extraction
 
 ### Graph Structure
 
@@ -362,7 +362,7 @@ N:  0|0|0|0|1|0
 
 ```
 
-## 5. EDA
+## 6. EDA
 
 ### Tabular Data EDA
 
@@ -435,7 +435,7 @@ Moreover, in order to evaluate the quality of the label, we have also done some 
 
 ### EDA Analysis
 
-## 6. ML Deployment
+## 7. ML Deployment
 
 ### Metrics
 
@@ -470,7 +470,7 @@ We use implementation from `pytorch_geometric` for our modeling to get the Graph
 NetMF, Network Embedding as Matrix Factorization, method from the ["Network Embedding as Matrix Factorization: Unifying DeepWalk, LINE, PTE, and node2vec"](arXiv:1710.02971) paper, lays the theoretical foundation for skip-gram based network embedding methods, leading to a better understanding of latent network representation learning.
 
 
-## 7. Experimental Result
+## 8. Experimental Result
 
 ### Baseline Model Result
 
@@ -503,11 +503,11 @@ Not finished implementation
 
 Not finished implementation
 
-## 8. Discussion
+## 9. Discussion
 
 TODO
 
-## 9. Backlog
+## 10. Backlog
 
 ### Graph Extraction
 
