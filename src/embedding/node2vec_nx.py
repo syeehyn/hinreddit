@@ -170,7 +170,7 @@ def node2vec(fp, PARAMS):
     print(PARAMS)
     print('loading graph')
     g = io.loadmat(osp.join(fp, 'interim/graph/graph_incest.mat'))
-    g = nx.from_scipy_sparse_matrix(g['N'])
+    g = nx.from_scipy_sparse_matrix(g['N'].T)
     g = Graph(g, True, PARAMS['P'], PARAMS['Q'])
     print('generating transitional probabilities')
     g.preprocess_transition_probs()
