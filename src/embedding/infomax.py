@@ -45,7 +45,7 @@ def infomax(fp, PARAMS):
         total_loss = 0
         for subset in tqdm(loader):
             optimizer.zero_grad()
-            pos_z, neg_z, summary = model(subset, data.edge_index)
+            pos_z, neg_z, summary = model(subset.to(device), data.edge_index)
             loss = model.loss(pos_z, neg_z, summary)
             loss.backward()
             optimizer.step()
