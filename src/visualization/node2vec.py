@@ -160,10 +160,10 @@ def generate_node2vec_result(edge_idx, edge_weight, y, subreddit, post_indx, wal
     X_train, X_test, y_train, y_test = train_test_split(embd, y, test_size=0.2)
     clfs = [
         LogisticRegression(
-        verbose=False, max_iter=1000, class_weight = class_weight
+        verbose=False, max_iter=2000, class_weight = class_weight, n_jobs=8
         ),
         LinearSVC(class_weight=class_weight),
-        RandomForestClassifier(class_weight=class_weight)
+        RandomForestClassifier(class_weight=class_weight, n_jobs=8)
     ]
     res = {}
     for clf in clfs:
