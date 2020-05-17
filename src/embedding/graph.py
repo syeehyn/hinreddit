@@ -43,7 +43,7 @@ def create_graph(fp):
     post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.link_id))]
     post = post[post.subreddit == 'incest']
     comm = comm[comm.link_id.isin(post.id)]
-    comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id))]
+    comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id)) | (comm.link_id.isin(post.id))]
     # author_counts = comm.author.value_counts()
     # author_mask = author_counts > 3
     # author_counts = author_counts[author_mask].index
@@ -88,7 +88,7 @@ def create_graph(fp):
     edge_weight = edge_idx[['weight']].values
     edge_idx = edge_idx.sort_values(['who_id', 'whom_id'])
     edge_idx_ = edge_idx[['who_id', 'whom_id']].values
-    N = sparse.csr_matrix((np.ones(edge_weight.reshape(-1,).shape), (edge_idx_[:, 0], edge_idx_[:, 1])), \
+    N = sparse.csr_matrix((edge_weight.reshape(-1,), (edge_idx_[:, 0], edge_idx_[:, 1])), \
                                     shape = (node_maps.shape[0], node_maps.shape[0]))
     post_mask = node_maps.name.isin(post_names)
     post_indx = node_maps[post_mask].id.values

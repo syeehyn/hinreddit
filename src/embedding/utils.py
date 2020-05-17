@@ -35,7 +35,7 @@ class RedditData(InMemoryDataset):
             data_list = [self.pre_transform(data) for data in data_list]
         g = io.loadmat(osp.join(self.root, 'graph_incest.mat'))
         N = g['N']
-        edge_idx, x =from_scipy_sparse_matrix(N)
+        edge_idx, x =from_scipy_sparse_matrix(N.T)
         data_list.append(
             dt(
                 x = x,
