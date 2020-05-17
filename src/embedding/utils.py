@@ -45,7 +45,8 @@ class RedditData(InMemoryDataset):
         data_list.append(
             dt(
                 x = x,
-                edge_index = edge_idx
+                edge_index = edge_idx,
+                post_indx = post_indx
             )
         )
         data, slices = self.collate(data_list)
