@@ -34,6 +34,7 @@ def infomax(fp, PARAMS):
         device = 'cpu'
     shutil.rmtree(osp.join(fp, 'processed', 'infomax'), ignore_errors = True)
     data = data.to(device)
+    loader = DataLoader(data.x, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     model = DeepGraphInfomax(
         hidden_channels=PARAMS['HIDDEN_CHANNELS'], encoder=Encoder(data.x.shape[1], PARAMS['SUMMARY']),
         summary=lambda z, *args, **kwargs: torch.sigmoid(z.mean(dim=0)),
@@ -41,12 +42,15 @@ def infomax(fp, PARAMS):
     optimizer = torch.optim.Adam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
     def train():
         model.train()
-        optimizer.zero_grad()
-        pos_z, neg_z, summary = model(data.x, data.edge_index)
-        loss = model.loss(pos_z, neg_z, summary)
-        loss.backward()
-        optimizer.step()
-        return loss.item()
+        total_loss = 0
+        for subset in tqdm(loader):
+            optimizer.zero_grad()
+            pos_z, neg_z, summary = model(subset, data.edge_index)
+            loss = model.loss(pos_z, neg_z, summary)
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        return total_loss / len(loader)
     losses = []
     for epoch in range(1, PARAMS['NUM_EPOCH']+ 1) :
         loss = train()
