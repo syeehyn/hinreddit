@@ -20,56 +20,22 @@ DATA_NODE2VEC = json.load(open('config/embedding/node2vec.json'))
 TEST_NODE2VEC = json.load(open('config/embedding/test-node2vec.json'))
 DATA_INFOMAX = json.load(open('config/embedding/infomax.json'))
 
-def env_test():
-    if not os.path.exists(TESTDIR):
-        os.mkdir(TESTDIR)
-    if not os.path.exists(os.path.join(TESTDIR, 'raw')):
-        os.mkdir(os.path.join(TESTDIR, 'raw'))
-    if not os.path.exists(os.path.join(TESTDIR, 'raw', 'posts')):
-        os.mkdir(os.path.join(TESTDIR, 'raw', 'posts'))
-    if not os.path.exists(os.path.join(TESTDIR, 'raw', 'posts_detail')):
-        os.mkdir(os.path.join(TESTDIR, 'raw', 'posts_detail'))
-    if not os.path.exists(os.path.join(TESTDIR, 'raw', 'comments')):
-        os.mkdir(os.path.join(TESTDIR, 'raw', 'comments'))
-    if not os.path.exists(os.path.join(TESTDIR, 'interim')):
-        os.mkdir(os.path.join(TESTDIR, 'interim'))
-    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'label')):
-        os.mkdir(os.path.join(TESTDIR, 'interim', 'label'))
-    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'label', 'post')):
-        os.mkdir(os.path.join(TESTDIR, 'interim', 'label', 'post'))
-    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'label', 'comment')):
-        os.mkdir(os.path.join(TESTDIR, 'interim', 'label', 'comment'))
-    if not os.path.exists(os.path.join(TESTDIR, 'interim', 'graph')):
-        os.mkdir(os.path.join(TESTDIR, 'interim', 'graph'))
-    return
-def env_data():
-    if not os.path.exists(DATADIR):
-        os.mkdir(DATADIR)
-    if not os.path.exists(os.path.join(DATADIR, 'raw')):
-        os.mkdir(os.path.join(DATADIR, 'raw'))
-    if not os.path.exists(os.path.join(DATADIR, 'raw', 'posts')):
-        os.mkdir(os.path.join(DATADIR, 'raw', 'posts'))
-    if not os.path.exists(os.path.join(DATADIR, 'raw', 'posts_detail')):
-        os.mkdir(os.path.join(DATADIR, 'raw', 'posts_detail'))
-    if not os.path.exists(os.path.join(DATADIR, 'raw', 'comments')):
-        os.mkdir(os.path.join(DATADIR, 'raw', 'comments'))
-    if not os.path.exists(os.path.join(DATADIR, 'interim')):
-        os.mkdir(os.path.join(DATADIR, 'interim'))
-    if not os.path.exists(os.path.join(DATADIR, 'interim', 'label')):
-        os.mkdir(os.path.join(DATADIR, 'interim', 'label'))
-    if not os.path.exists(os.path.join(DATADIR, 'interim', 'label', 'post')):
-        os.mkdir(os.path.join(DATADIR, 'interim', 'label', 'post'))
-    if not os.path.exists(os.path.join(DATADIR, 'interim', 'label', 'comment')):
-        os.mkdir(os.path.join(DATADIR, 'interim', 'label', 'comment'))
-    if not os.path.exists(os.path.join(DATADIR, 'interim', 'graph')):
-        os.mkdir(os.path.join(DATADIR, 'interim', 'graph'))
+def env(fp):
+    os.makedirs(os.path.join(fp, 'raw', 'posts'), exist_ok=True)
+    os.makedirs(os.path.join(fp, 'raw', 'posts_detail'), exist_ok=True)
+    os.makedirs(os.path.join(fp, 'raw', 'comments'), exist_ok=True)
+    os.makedirs(os.path.join(fp, 'interim', 'label', 'post'), exist_ok=True)
+    os.makedirs(os.path.join(fp, 'interim', 'label', 'comment'), exist_ok=True)
+    os.makedirs(os.path.join(fp, 'interim', 'graph'), exist_ok=True)
+    os.makedirs(os.path.join(fp, 'interim', 'graph'), exist_ok=True)
+    os.makedirs(os.path.join(fp, 'processed'), exist_ok=True)
     return
 
 def main(targets):
     if any(['test'in i for i in targets]):
-        env_test()
+        env(TESTDIR)
     else:
-        env_data()
+        env(DATADIR)
     # if 'test' in targets:
     #     fetch_submissions(**TESTPARAMS)
     #     submissions_detail(TESTDIR)
@@ -91,20 +57,35 @@ def main(targets):
     if 'infomax' in targets:
         infomax(DATADIR, DATA_INFOMAX)
 #=================For test============================#
-    if 'data-test' in targets:
+    # if 'data-test' in targets:
+    #     fetch_submissions(**TESTPARAMS)
+    #     submissions_detail(TESTDIR)
+    #     comments_detail(TESTDIR)
+    # if 'sentimental-test' in targets:
+    #     model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
+    #     label_comments(TESTDIR, model, tokenizer)
+    #     label_posts(TESTDIR, model, tokenizer)
+    # if 'label-test' in targets:
+    #     labeling(TESTDIR)
+    # if 'graph-test' in targets:
+    #     create_graph(TESTDIR)
+    # if 'node2vec-test' in targets:
+    #     node2vec(TESTDIR, TEST_NODE2VEC)
+    if 'test-project' in targets:
+        ##
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
         comments_detail(TESTDIR)
-    if 'sentimental-test' in targets:
+        ##
         model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
         label_comments(TESTDIR, model, tokenizer)
         label_posts(TESTDIR, model, tokenizer)
-    if 'label-test' in targets:
         labeling(TESTDIR)
-    if 'graph-test' in targets:
+        ##
         create_graph(TESTDIR)
-    if 'node2vec-test' in targets:
+        ##
         node2vec(TESTDIR, TEST_NODE2VEC)
+
 
 
 

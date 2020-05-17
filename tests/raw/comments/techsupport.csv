@@ -1,10 +1,9 @@
 id,author,created_utc,is_submitter,subreddit,link_id,body,parent_id,send_replies
-fm2kf3z,PhaseBarney,1585699277,False,techsupport,t3_fsofvw,Did it stop working?,t3_fsofvw,True
 fm2kqj2,DCRX2020,1585699471,False,techsupport,t3_fsoffs,"You mean VGA, and try pressing the Window key + P to choose how you're showing your displays. You can also right click on the desktop and go to to Display Properties and see if it's showing both displays.",t3_fsoffs,True
-fm2kvo8,GoonieIRL,1585699558,False,techsupport,t3_fsock1,"When a capacitor goes, it normally sprays brown gunk at the case panel, if you look at the panels you may see for sure if that happened...but does sound capacitor based fault",t3_fsock1,True
-fm2kyru,NoHeadShot123,1585699611,True,techsupport,t3_fsofvw,My monitor is fine like it shows like the hdmi cable isn’t plugged in,t1_fm2kf3z,True
-fm2lb0p,PhaseBarney,1585699820,False,techsupport,t3_fsofvw,But did you do anything for it to stop working or did it stop from the day to the night,t1_fm2kyru,True
-fm2mp2r,NoHeadShot123,1585700680,True,techsupport,t3_fsofvw,I cleaned my pc today then I plugged it back in and it didn’t work,t3_fsofvw,True
+fm2lbmp,aolsux00,1585699830,False,techsupport,t3_fsoarc,"You can try changing your WIFI channel and see if that helps. The highest channels for 5GHz are usually better as long as they aren't being used excessively by others
+
+Yes a range extender will help",t3_fsoarc,True
+fm2phzp,YourWorstFear53,1585702440,False,techsupport,t3_fsoel9,The socket you're plugging into is likely a three conductor instead of a four conductor.,t3_fsoel9,True
 fm2q2zr,DeepKaizen,1585702812,True,techsupport,t3_fsoffs,"thanks for the correction.
 
 Ive pressed the windows key + P. Message i got is ""windows cant project to another screen. Try reinstalling the driver or using a different video card
@@ -37,7 +36,6 @@ affirmative
 &gt;Try restarting with vga plugged it and then entering bios (press del, f1, f2, f12 keys rapidly while the computer is booting). Is anything displayed on the monitor?
 
 Im a bit confused. So connect 1 monitor to cpu via vga then restart and enter BIOS?",t1_fm2ws50,True
-fm2xpdc,Kiru4444,1585707872,True,techsupport,t3_fsock1,There is some dark liquid on the part of the motherboard where the capacitor is but I don’t see it anywhere else. Is it possible that a capacitor that dies will also kill a motherboard?,t1_fm2kvo8,True
 fm2yfji,Susko,1585708379,False,techsupport,t3_fsoffs,"The last is to confirm the monitor, the cable, and the VGA port on PC works. To rule out any problems caused by Windows.
 
 Enter BIOS or just see if anything is displayed on the monitor while booting.",t1_fm2xf8c,True
@@ -45,6 +43,7 @@ fm2zf2a,DeepKaizen,1585709054,True,techsupport,t3_fsoffs,"&gt; Enter BIOS or jus
 
 let me check and get back",t1_fm2yfji,True
 fm3ezks,DeepKaizen,1585721280,True,techsupport,t3_fsoffs,i dont see any info regarding monitor devices,t1_fm2yfji,True
-fm3mq5z,GoonieIRL,1585729093,False,techsupport,t3_fsock1,"Yeah if a capacitor goes it won't boot... normally! , if the head of a capacitor is raised and not flat that typically is the sign it's that. Sometimes...and this is rarely they will still boot but under loads they will crash, but a sign of liquid on the mobo is not a good sign. Any warranty on the motherboard? If it's replaced with the exact same model it should still boot ok to original installation.",t3_fsock1,True
-fm3nxzk,GoonieIRL,1585730414,False,techsupport,t3_fsock1,"If you've got access to another PSU try that first obviously, they don't last forever that's for sure, especially no brands or Corsair! I've never replaced an Antec, and they do some really amazing ones, typically they do a 3,5 or 7 year warranty  dependant on the model so I can recommend one of those.",t1_fm3mq5z,True
 fm42x8e,Susko,1585745126,False,techsupport,t3_fsoffs,"Only one monitor should be plugged in, via VGA. Turn on your computer and do what enters BIOS. What do you see on the screen? Is it displaying: BIOS, Check signal cable, or is the monitor in standby (aka power saving mode, usually denoted by a blinking power light on the monitor)",t1_fm3ezks,True
+fm4qcjq,Ur_Species_Fecies,1585758868,True,techsupport,t3_fsoel9,I'm not sure what that means,t1_fm2phzp,True
+fm5evbz,YourWorstFear53,1585771633,False,techsupport,t3_fsoel9,https://www.headphonesty.com/2019/04/headphone-jacks-plugs-explained/,t1_fm4qcjq,True
+fm5g8rp,Ur_Species_Fecies,1585772377,True,techsupport,t3_fsoel9,It used to work normally. It’s not like the mic doesn’t work at all. It works perfectly after I reinstall the audio driver I’m using,t1_fm5evbz,True

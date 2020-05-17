@@ -5,22 +5,6 @@
 - Yanyu Tao
 - Shuibenyang Yuan
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-tex2jax: {
-inlineMath: [['$','$'], ['\\(','\\)']],
-processEscapes: true},
-jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
-extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js", "[Contrib]/a11y/accessibility-menu.js"],
-TeX: {
-extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
-equationNumbers: {
-autoNumber: "AMS"
-}
-}
-});
-</script>
-
 <div class="pagebreak"></div>
 
 - [HinReddit](#hinreddit)
@@ -45,24 +29,29 @@ autoNumber: "AMS"
       - [Data Cleaning](#data-cleaning)
       - [Applicability](#applicability)
   - [3. Labeling](#3-labeling)
-  - [4. EDA](#4-eda)
-  - [5. Graph Extraction](#5-graph-extraction)
+  - [4. Graph Extraction](#4-graph-extraction)
     - [Graph Structure](#graph-structure)
     - [Adjacency Matrix](#adjacency-matrix)
     - [Graph Example](#graph-example)
+  - [5. EDA](#5-eda)
+    - [Tabular Data EDA](#tabular-data-eda)
+    - [Graph Data EDA](#graph-data-eda)
+    - [EDA Analysis](#eda-analysis)
   - [6. ML Deployment](#6-ml-deployment)
     - [Metrics](#metrics)
     - [Baseline Model](#baseline-model)
     - [Hinreddit](#hinreddit-1)
       - [Node2vec](#node2vec)
-      - [DGI](#dgi)
-      - [NetMF](#netmf)
+      - [DGI (not finished)](#dgi-not-finished)
+      - [NetMF (not finished)](#netmf-not-finished)
   - [6. Experimental Result](#6-experimental-result)
     - [Baseline Model Result](#baseline-model-result)
     - [Hinreddit Result](#hinreddit-result)
       - [Node2vec](#node2vec-1)
-      - [DGI](#dgi-1)
-      - [NetMF](#netmf-1)
+      - [Small Data Result](#small-data-result)
+      - [DGI](#dgi)
+      - [NetMF](#netmf)
+  - [7. Backlog](#7-backlog)
 
 
 ## 1. Hateful Post Classification
@@ -94,7 +83,7 @@ Our project includes two datasets:
    
 1. Main dataset used for our project analysis
     This is a dataset we will obtain from Reddit through a couple APIs. We use the API called [PushShift](https://github.com/pushshift/api) to obtain Reddit post information, including post text, title, and user ids who reply to either the post itself or any of the reply below the post and the comments that it provided. We use `PushShift` because it offers a specific API to obtain the flattened list of repliers' ids and takes considerably less time than doing the same with [PRAW](https://praw.readthedocs.io/en/latest/). After a brief EDA on the most popular 124 subreddits, we select 50 subreddits in which the proportion of valid text posts of the posts are the highest and then sample a number of newest posts in each of the 50 subreddits. By doing this, our data will represent a population of newer posts in subreddits whose posts have higher text-proportion. We want to eliminate image/meme posts and deleted posts so we can better apply NLP model for our supervised learning.
-<br>
+
    - advantages:
       - This dataset is obtained from the actual social platform, and thus we obtain real-world perspective when training.
       - Reddit has a couple APIs for us to suit our different needs.
@@ -102,17 +91,17 @@ Our project includes two datasets:
       - There are no ground-truth labels we can use for the data we collect, and thus need the assistance of other well-defined and pre-trained models to first label our data.
       - We are not certain of the level of hatefulness from Reddit posts we obtain, and may lead to an unbalanced number of posts in benign and hateful categories.
       - Our dataset will include newest posts in each subreddit, and may not apply well for older posts.
-<br>
+
 
 2. Kaggle Toxic Comment Classification Dataset
     This is a dataset provided on https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge/data, including information of hundreds of thousands of wikipedia comments along with multiple negative labels. We will be mainly using this dataset to train a nlp pretrained BERT classifier model to label our reddit post data before we use it for HIN learning. 
-<br>
+
    - advantages: 
       - This dataset is labeled, allowing us to perform supervised learning to train a nlp classifier model.
       - The dataset include several labels, including `severe_toxic`, `obscene`, `threat`, `insult`, `identity_hate`, thus giving us some space to define what constructs a hateful post.
     - limitations:
       - We are not certain if labels for wikipedia comments can be applied to posts from Reddit or other social platforms.
-<br>
+
 
 ### Data Ingestion Process
 
@@ -147,7 +136,7 @@ data/
 
 ###### First Layer: Posts
 
-The csv file contains the information of each post in a dataframe where the unit of observation is the individual post. <br>
+The csv file contains the information of each post in a dataframe where the unit of observation is the individual post. 
 `id`: post_id
 `author`: username of the author who make the post
 `title`: title of the post
@@ -160,7 +149,7 @@ The csv file contains the information of each post in a dataframe where the unit
 
 ###### Second Layer: Post detail
 
-The file contains certain number of posts id and all of its comments id under a certain subrredit. <br>
+The file contains certain number of posts id and all of its comments id under a certain subrredit. 
 `submission_id` : id of the post
 `comment_ids`: id of each comment
 ```json
@@ -170,7 +159,7 @@ The file contains certain number of posts id and all of its comments id under a 
 
 ###### Third Layer: Comments
 
-The csv file contains the information of each specific post in a dataframe where the unit of observation is the individual comment. <br>
+The csv file contains the information of each specific post in a dataframe where the unit of observation is the individual comment. 
 `id`: comment id
 `author` : username of the author who make the comment
 `created_utc` : the epoch date for which the comment is made
@@ -233,74 +222,7 @@ By following a [tutorial](https://androidkt.com/multi-label-text-classification-
 
 We will label a post as hateful if the max of the 5 values is greater than 0.5 or one of the comment has a mean among the 5 values that is greater than 0.5. Otherwise it will be labled as benign. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA.
 
-## 4. EDA
-
-As you may know, Reddit has already banned lots of subreddit that contained explicit or controversial materials. Thus in order to discover more hateful speech, we researched online and find out a [list](https://www.reddit.com/r/GoldTesting/comments/3fxs3q/list_of_quarantined_subreddits/) contained both banned and quarantined subreddits. Quarantined subreddits are subs that host no advertisement, and Reddit doesn't generate any revenue off toxic content. People can still acess those subs, but there will be a prompt warns telling people about the content on the sub. We have selected around 37 qurantined subreddit along with 10 normal subreddits. </br>
-By using the data ingestion pipeline, we have successfully extracted 5,000 posts from each of the 47 subreddits which is 235,000 posts in total. For each of the subreddit we have calculated **total_comment**: the total number of comments recieved for the posts contained in that subreddit, **avg_comment**: average number of comments received for the posts contained in that subreddit, **top_num_comment**: the maximum number of comments recieved by a post in that subreddit. The statistics for the top 5 subreddits that have the most total comments are shown in the table below. From the table, we can observe that the subreddit with higher number of total_comments also has higher number of average_comment. And we also want to figure out whether those hot subreddit also tend to contain more hateful speech. 
-|subreddit|total_comment|avg_comment|top_num_comment|
-|---------|-------------|-----------|---------------|
-|Politics (r/politics)|374,963|74|12,837|
-|Pussy Pass Denied (r/pussypassdenied)|352,941|70|2,202|
-|TumblrInAction: O Toucan, Where Art Thou? (r/TumblrInAction)|311,407|62|1,571|
-|conspiracy (r/conspiracy)|223,516|44|949|
-|KotakuInAction: The almost-official GamerGate subreddit! (r/KotakuInAction)|158,596|31|2,331|
-<br>
-Thus we looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits. 
-<br>
-
-|subreddit|deleted|benign|hateful|
-|---------|-------|------|-------|
-|Incest|1,067|3,295|609|
-|Today I Fucked up(r/tifu)|771|3,708|487|
-|TheRedPill|1,564|2,565|452|
-|Jokes|766|3,758|405|
-|Unpopularopinion)|1,590|2,855|404|
-
-<br>
-We then look at the labels at a higher level without group them into different subreddits. The table below shows the distribution of the labels among posts.  
-<br>
-
-|label|% post|
-|-----|------|
-|deleted|10.8%|
-|benign|84%|
-|hateful|4.7%|
-<br>
-Dig deeper into the content of the posts for different labeling groups, we investigate on the length of the content. From the table below, it shows that even though the min and max of the length of content in each group is around the same, the average length of content for posts that are labled hateful is more than double of the average length of content for posts that are labled benign. Thus we can add this as one of our feature. 
-
-|label|mean|min|max|
-|-----|----|---|---|
-|benign|82.87|1|7549|
-|hateful|176|1|7048|
-
-Another feture could be the number of comments under each post. 
-The average length of comment for posts labeled hateful is relatively smaller than that for posts labeled as benign. 
-|label|min|max|mean|
-|-----|---|---|----|
-|benign|0|9,783|24|
-|hateful|0|2,043|16|
-<br>
-Moreover we also find difference in score for the two groups, the mean score of benign posts are generally higher than those of hateful posts.
-
-|label|mean_score|
-|-----|----------|
-|benign|32|
-|hateful|11|
-Moreover, in order to evaluate the quality of the label, we have also done some textual analysis. We find out the top 30 words in posts after removing stop words for each of the groups. However, we have also removed about 20 words that appeared in both groups. Those should be the common words that appeared in the conversation and thus is not helpful as a feature for our classification. 
-
-|malign_word|count|benign_word|count|
-|-----------|-----|-----------|-----|
-|fuck|5,835|amp|13,155|
-|nigger|4,078|work|12,508|
-|fucking|3,233|feel|12,388|
-|shit|2,907|right|12,208|
-|place|2,713|gt|11,256|
-|sex|2,200|things|11,244|
-|started|1,840|new|11,002|
-|ass|1,800|need|10,629|
-|went|1,717|years|10,374|
-
-## 5. Graph Extraction
+## 4. Graph Extraction
 
 ### Graph Structure
 
@@ -382,6 +304,78 @@ N:  0|0|0|0|1|0
 
 ```
 
+## 5. EDA
+
+### Tabular Data EDA
+
+As you may know, Reddit has already banned lots of subreddit that contained explicit or controversial materials. Thus in order to discover more hateful speech, we researched online and find out a [list](https://www.reddit.com/r/GoldTesting/comments/3fxs3q/list_of_quarantined_subreddits/) contained both banned and quarantined subreddits. Quarantined subreddits are subs that host no advertisement, and Reddit doesn't generate any revenue off toxic content. People can still acess those subs, but there will be a prompt warns telling people about the content on the sub. We have selected around 37 qurantined subreddit along with 10 normal subreddits. </br>
+By using the data ingestion pipeline, we have successfully extracted 5,000 posts from each of the 47 subreddits which is 235,000 posts in total. For each of the subreddit we have calculated **total_comment**: the total number of comments recieved for the posts contained in that subreddit, **avg_comment**: average number of comments received for the posts contained in that subreddit, **top_num_comment**: the maximum number of comments recieved by a post in that subreddit. The statistics for the top 5 subreddits that have the most total comments are shown in the table below. From the table, we can observe that the subreddit with higher number of total_comments also has higher number of average_comment. And we also want to figure out whether those hot subreddit also tend to contain more hateful speech. 
+|subreddit|total_comment|avg_comment|top_num_comment|
+|---------|-------------|-----------|---------------|
+|Politics (r/politics)|374,963|74|12,837|
+|Pussy Pass Denied (r/pussypassdenied)|352,941|70|2,202|
+|TumblrInAction: O Toucan, Where Art Thou? (r/TumblrInAction)|311,407|62|1,571|
+|conspiracy (r/conspiracy)|223,516|44|949|
+|KotakuInAction: The almost-official GamerGate subreddit! (r/KotakuInAction)|158,596|31|2,331|
+
+Thus we looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits. 
+
+
+|subreddit|deleted|benign|hateful|
+|---------|-------|------|-------|
+|Incest|1,067|3,295|609|
+|Today I Fucked up(r/tifu)|771|3,708|487|
+|TheRedPill|1,564|2,565|452|
+|Jokes|766|3,758|405|
+|Unpopularopinion|1,590|2,855|404|
+
+
+We then look at the labels at a higher level without group them into different subreddits. The table below shows the distribution of the labels among posts.  
+
+
+|label|% post|
+|-----|------|
+|deleted|10.8%|
+|benign|84%|
+|hateful|4.7%|
+
+Dig deeper into the content of the posts for different labeling groups, we investigate on the length of the content. From the table below, it shows that even though the min and max of the length of content in each group is around the same, the average length of content for posts that are labled hateful is more than double of the average length of content for posts that are labled benign. Thus we can add this as one of our feature. 
+
+|label|mean|min|max|
+|-----|----|---|---|
+|benign|82.87|1|7549|
+|hateful|176|1|7048|
+
+Another feture could be the number of comments under each post. 
+The average length of comment for posts labeled hateful is relatively smaller than that for posts labeled as benign. 
+|label|min|max|mean|
+|-----|---|---|----|
+|benign|0|9,783|24|
+|hateful|0|2,043|16|
+
+Moreover we also find difference in score for the two groups, the mean score of benign posts are generally higher than those of hateful posts.
+
+|label|mean_score|
+|-----|----------|
+|benign|32|
+|hateful|11|
+Moreover, in order to evaluate the quality of the label, we have also done some textual analysis. We find out the top 30 words in posts after removing stop words for each of the groups. However, we have also removed about 20 words that appeared in both groups. Those should be the common words that appeared in the conversation and thus is not helpful as a feature for our classification. 
+
+|malign_word|count|benign_word|count|
+|-----------|-----|-----------|-----|
+|fuck|5,835|amp|13,155|
+|nigger|4,078|work|12,508|
+|fucking|3,233|feel|12,388|
+|shit|2,907|right|12,208|
+|place|2,713|gt|11,256|
+|sex|2,200|things|11,244|
+|started|1,840|new|11,002|
+|ass|1,800|need|10,629|
+|went|1,717|years|10,374|
+
+### Graph Data EDA
+
+### EDA Analysis
 
 ## 6. ML Deployment
 
@@ -409,13 +403,13 @@ Hinreddit will present methodologies over following graph techniques: `Node2vec`
 The Node2vec model from the ["node2vec:Scalable Feature Learning for Networks"](arXiv:1607.00653) paper where random walks of length `walk length` are sampled in a given graph, the embedding is learned by negative sampling optimization.
 
 
-#### DGI
+#### DGI (not finished)
 
 DGI, Deep Graph Infomax, model from the ["Deep Graph Infomax"](arXiv:1809.10341 ) paper based on user-defined encoder and summary model $$\epsilon$$ and $$R$$ respectively, and a corruption function $$C$$
 
 We use implementation from `pytorch_geometric` for our modeling to get the Graph embedding of latent features.
 
-#### NetMF
+#### NetMF (not finished)
 
 LATER
 
@@ -435,22 +429,31 @@ From the table above, we can observe that the performances of the three classifi
 
 ### Hinreddit Result
 
-In hinreddit, we split our dataset into 70% training, 15% validation, and 15% testing.
-
 #### Node2vec
+
+#### Small Data Result
+
+Since the computational cost for Node2vec is large, and we have an overall large graph, we are going to limit our model to subreddit `incest`, which has 228 positive data and 1383 negative data (1611) in total.
+
+  TODO
 
 
 #### DGI
 
+Not finished implementation
 
 #### NetMF
+
+Not finished implementation
+
+## 7. Backlog
 
 
 
 <!-- ## 9. Proposal Revision
 
 Since the last checkpoint, due to the difficulty encountered during the implementation of BERT models, we switch to bidirectional RNN model that can be implemented through `keras` when it comes to training a model to label the post data we downloaded. The process closely follows instructions in the [link](https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/). We also use word vector representations, called Global Vectors for Word Representation that can be downloaded [here](https://nlp.stanford.edu/projects/glove/).
-<br>
+
 We have also add the data population of interest that we missed to include for checkpoint 1 in section 4.1.
 
 ## 10. Backlog
