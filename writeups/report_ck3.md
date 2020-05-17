@@ -22,6 +22,10 @@
           - [First Layer: Posts](#first-layer-posts)
           - [Second Layer: Post detail](#second-layer-post-detail)
           - [Third Layer: Comments](#third-layer-comments)
+        - [Interim](#interim)
+          - [Graph](#graph)
+          - [Label](#label)
+        - [Processed](#processed)
       - [Pipeline](#pipeline)
         - [triggered by `data-(read/eda/test)` in targets](#triggered-by-data-readedatest-in-targets)
         - [triggered by `label` in targets](#triggered-by-label-in-targets)
@@ -44,14 +48,19 @@
       - [Node2vec](#node2vec)
       - [DGI (not finished)](#dgi-not-finished)
       - [NetMF (not finished)](#netmf-not-finished)
-  - [6. Experimental Result](#6-experimental-result)
+  - [7. Experimental Result](#7-experimental-result)
     - [Baseline Model Result](#baseline-model-result)
     - [Hinreddit Result](#hinreddit-result)
       - [Node2vec](#node2vec-1)
       - [Small Data Result](#small-data-result)
       - [DGI](#dgi)
       - [NetMF](#netmf)
-  - [7. Backlog](#7-backlog)
+  - [8. Discussion](#8-discussion)
+  - [9. Backlog](#9-backlog)
+    - [Graph Extraction](#graph-extraction)
+    - [ML Deployment](#ml-deployment)
+      - [Node2vec](#node2vec-2)
+      - [NetMF](#netmf-1)
 
 
 ## 1. Hateful Post Classification
@@ -115,20 +124,46 @@ Our project includes two datasets:
 As [Reddit](https://www.reddit.com) is an online public social platform and all posts and replies are open to viewers, we will not get into issues regarding privacy. Nevertheless, we will encrypt all users' personal information if involved and eliminate sensitive posts or replies in case of any information leakage.
 
 #### Schema
-After extracting the posts and comments using the `PushShift` API, we have organized the data into three layers. As shown below, under the raw folder it contains the three layers, *post_detail*, *posts* and *comments*. The name of the files under each folder corresponds to each subrredit where the contents are taken from. 
+
+The data schema is shown below
 
 ```source
-data/
-|--raw/
-|  |-- post_detail/
-|  |   |-- science.json
-|  |   |-- videos.json
-|  |-- posts/
-|  |-- |-- science.csv
-|  |-- |-- videos.csv
-|  |-- comments/
-|  |   |-- science.csv
-|  |   |-- videos.csv
+./data
+├── interim
+│   ├── graph
+│   │   ├── graph.mat
+│   │   └── processed
+│   │       ├── graph.pt
+│   │       ├── pre_filter.pt
+│   │       └── pre_transform.pt
+│   └── label
+│       ├── comment
+│       │   ├── buildapc.csv
+│       │   ├── legaladvice.csv
+│       │   └── ...
+│       ├── label.csv
+│       └── post
+│           └── post_sentimental.csv
+├── processed
+│   └── node2vec
+│       ├── data.pt
+│       ├── embedding.pt
+│       └── log.json
+└── raw
+    ├── comments
+    │   ├── buildapc.csv
+    │   ├── legaladvice.csv
+    │   ├── log.json
+    │   └── ...
+    ├── posts
+    │   ├── buildapc.csv
+    │   ├── legaladvice.csv
+    │   ├── log.json
+    │   └── ...
+    └── posts_detail
+        ├── buildapc.json
+        ├── legaladvice.json
+        └── ...
 
 ```
 
@@ -137,22 +172,26 @@ data/
 ###### First Layer: Posts
 
 The csv file contains the information of each post in a dataframe where the unit of observation is the individual post. 
-`id`: post_id
-`author`: username of the author who make the post
-`title`: title of the post
-`selftext`
-`num_comments`: number of comments
-`created_utc`: the epoch date for which the post is created
-`full_link`: the link to the reddit post
-`subreddit`: subreddit it belongs to
-`score`: number of upvote - number of downvote
+
+- `id`: post_id
+- `author`: username of the author who make the post
+- `title`: title of the post
+- `selftext`: the content of the post
+- `num_comments`: number of comments
+- `created_utc`: the epoch date for which the post is created
+- `full_link`: the link to the reddit post
+- `subreddit`: subreddit it belongs to
+- `score`: number of upvote - number of downvote
 
 ###### Second Layer: Post detail
 
 The file contains certain number of posts id and all of its comments id under a certain subrredit. 
-`submission_id` : id of the post
-`comment_ids`: id of each comment
+
+- `submission_id` : id of the post
+- `comment_ids`: id of each comment
+
 ```json
+
 [{"submission_id":"fsoala","comment_ids":[]},
 {"submission_id": "fsnmj4", "comment_ids": ["fm2fd48", "fm2hrmh", "fm2k37i", "fm2k8p4", "fm2kuot", "fm2lces", "fm2lsao", "fm2lu4n", "fm2m5at", "fm3trkl", "fm4c7i6"]}]
 ```
@@ -160,13 +199,30 @@ The file contains certain number of posts id and all of its comments id under a 
 ###### Third Layer: Comments
 
 The csv file contains the information of each specific post in a dataframe where the unit of observation is the individual comment. 
-`id`: comment id
-`author` : username of the author who make the comment
-`created_utc` : the epoch date for which the comment is made
-`is_submitter`: whether that person post the original post
-`subreddit`: the subreddit it belongs to
-`link_id`: the post id for which this comment is made for
-`send_replies`
+
+- `id`: comment id
+- `author` : username of the author who make the comment
+- `created_utc` : the epoch date for which the comment is made
+- `is_submitter`: whether that person post the original post
+- `subreddit`: the subreddit it belongs to
+- `link_id`: the post id for which this comment is made for
+
+##### Interim
+
+###### Graph
+
+- `graph.mat` contains the sparse matrix file of N, P, U, A matrices
+- `processed` directory contains the pytorch datasets of `graph.mat`.
+
+###### Label
+
+- `label.csv` contains the label of posts after sentimental anlysis.
+- `comment` directory conatians sentimental analysis over comments by different subreddits.
+- `post` directory contains sentimental nalysis over posts.
+
+##### Processed
+
+- `node2vec` directory contains the pytorch embedding layer of node2vec algorithm.
 
 #### Pipeline
 
@@ -381,18 +437,17 @@ Moreover, in order to evaluate the quality of the label, we have also done some 
 
 ### Metrics
 
-Since we are performing binary classification, `True Positive, True Negative` plays a more crutial role in our classification model. Also, our label is extremely unblanced with few positive labels and much more negative labels. Becuse graph technique will be significantly influenced (invalided) by traditional balancing data technique like over-sampling and under-sampling, we will be evaluate our model with fowllowing metrics: `Recall, AUC, and Precision`. To catch more potential hateful posts, we favor Racall over Precision.
+Since we are performing binary classification, `True Positive, True Negative` plays a more crutial role in our classification model. Also, our label is extremely unblanced with few positive labels and much more negative labels. Becuse graph technique will be significantly influenced (invalided) by traditional balancing data technique like over-sampling and under-sampling, we will be evaluate our model with fowllowing metrics: `Recall, and Precision`. To catch more potential hateful posts, we favor Racall over Precision.
 
 ### Baseline Model
 
 We use Logistic Regression, Random Forest, and Gradient Boost Classifier to train our models based on the features `['num_comments', 'subreddit', 'score', 'length', 'title_length']` and classify whether a post is hateful.
 
-
-`num_comment`: number of comments for each post
-`subreddit`: the subreddit that the post belongs to
-`score`: the upvote score that the post receives
-`length`: the length of text body of the post
-`title_length`: the length of the title
+- `num_comment`: number of comments for each post
+- `subreddit`: the subreddit that the post belongs to
+- `score`: the upvote score that the post receives
+- `length`: the length of text body of the post
+- `title_length`: the length of the title
 
 ### Hinreddit
 
@@ -402,7 +457,6 @@ Hinreddit will present methodologies over following graph techniques: `Node2vec`
 
 The Node2vec model from the ["node2vec:Scalable Feature Learning for Networks"](arXiv:1607.00653) paper where random walks of length `walk length` are sampled in a given graph, the embedding is learned by negative sampling optimization.
 
-
 #### DGI (not finished)
 
 DGI, Deep Graph Infomax, model from the ["Deep Graph Infomax"](arXiv:1809.10341 ) paper based on user-defined encoder and summary model $$\epsilon$$ and $$R$$ respectively, and a corruption function $$C$$
@@ -411,9 +465,10 @@ We use implementation from `pytorch_geometric` for our modeling to get the Graph
 
 #### NetMF (not finished)
 
-LATER
+NetMF, Network Embedding as Matrix Factorization, method from the ["Network Embedding as Matrix Factorization: Unifying DeepWalk, LINE, PTE, and node2vec"](arXiv:1710.02971) paper, lays the theoretical foundation for skip-gram based network embedding methods, leading to a better understanding of latent network representation learning.
 
-## 6. Experimental Result
+
+## 7. Experimental Result
 
 ### Baseline Model Result
 
@@ -446,22 +501,45 @@ Not finished implementation
 
 Not finished implementation
 
-## 7. Backlog
+## 8. Discussion
 
+## 9. Backlog
 
+### Graph Extraction
 
-<!-- ## 9. Proposal Revision
+We have tried different approaches upon graph extraction, as follow:
 
-Since the last checkpoint, due to the difficulty encountered during the implementation of BERT models, we switch to bidirectional RNN model that can be implemented through `keras` when it comes to training a model to label the post data we downloaded. The process closely follows instructions in the [link](https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/). We also use word vector representations, called Global Vectors for Word Representation that can be downloaded [here](https://nlp.stanford.edu/projects/glove/).
+- Approach 1
+  - Post - User (undirected) if Post contains User
+  - User - User (undirected) if User replied by User
+- Approach 2 (under file `graph_v1.py`)
+  - Post - User (undirected) if Post contains User
+  - User - User (directed) if User replied by User
+- Approach 3 (under file `graph_v2.py1`)
+  - Post - User_author (undirected) if Post written by User
+  - User - User (directed) if User replied by User
 
-We have also add the data population of interest that we missed to include for checkpoint 1 in section 4.1.
+Approach 1 was replaced by Approach 2 because it cannot present the relationship between User and User as a post-reply conversation.
 
-## 10. Backlog
+Approach 2 was replaced by Approach 3 because it cannot present the author of the post as author is an important feature of user when the question comes to hateful post.
 
-* Besides using post body text to identify hateful ones, also use comments. In other words, label the post as hateful if the comments have higher proportion of hatefulness.
-* Manually search for controversial subreddits and ingest data from such to include more potential hateful data
-* Reingest data from our current sampled subreddits and obtain comments under each post; post will be labelled as hateful based on the contents of the post itself as well as the comments and conversations going on under the post
-* If the above changes cannot effectively solve the problem, we will consider making adjustment to our data ingestion pipeline and change our data structure from post level to thread level, which will also help to lower the dimension of our meta path in the HIN process. 
-* Include parameters to make more space for the definition of hatefulness.
-* Update pipeline so the labeling part can directly saves uses the saved model to label data.
- -->
+Approach 3 was replaced by our current approach since it breaks the connection between author and users who reply the post.
+
+### ML Deployment
+
+#### Node2vec
+
+Since our graph is extreamly large, we try to find a way to make the training process to be as optimized as possible (in terms of memory and time). We have done following approach w.r.p to Node2vec
+
+- using self implemented random walk and word2vec in `gensim` with cutting users nodes
+  - We try to cutting users nodes to lower dimension, but since the user nodes are much sparser than android API. We have to abandon this approach
+- using implemented Node2vec in `pytorch geometric` library
+  - Pytorch geometric can utilize GPU accerlerated API to expede our process of training, but it only support Node2vec random walk with parameter p=1 and q=1, which is basically a DeepWalk algorithm. 
+  - We try to implemente a custom random walk with torch tensor, but the lower abstraction of the random walk algorithm was not published, so we have to abandon pytorch geometric Node2vec.
+- using implemented Random Walk in `Stellargraph` library
+  - Random Walk in Stellargraph takes about 3 minutes to train a much smaller graph with only 1 subreddit . Since it does not have estimated time to finish random walk, we have not yet tested out in the large graph.
+
+#### NetMF
+
+We just found this paper two days before the deadline of this check point, and we are still in development of NetMF
+
