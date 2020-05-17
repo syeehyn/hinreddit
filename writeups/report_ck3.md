@@ -46,14 +46,14 @@
     - [Baseline Model](#baseline-model)
     - [Hinreddit](#hinreddit-1)
       - [Node2vec](#node2vec)
-      - [DGI (not finished)](#dgi-not-finished)
+      - [DGI](#dgi)
       - [NetMF (not finished)](#netmf-not-finished)
   - [7. Experimental Result](#7-experimental-result)
     - [Baseline Model Result](#baseline-model-result)
     - [Hinreddit Result](#hinreddit-result)
       - [Node2vec](#node2vec-1)
-      - [Small Data Result](#small-data-result)
-      - [DGI](#dgi)
+        - [Small Data Result](#small-data-result)
+      - [DGI](#dgi-1)
       - [NetMF](#netmf)
   - [8. Discussion](#8-discussion)
   - [9. Backlog](#9-backlog)
@@ -457,7 +457,7 @@ Hinreddit will present methodologies over following graph techniques: `Node2vec`
 
 The Node2vec model from the ["node2vec:Scalable Feature Learning for Networks"](arXiv:1607.00653) paper where random walks of length `walk length` are sampled in a given graph, the embedding is learned by negative sampling optimization.
 
-#### DGI (not finished)
+#### DGI
 
 DGI, Deep Graph Infomax, model from the ["Deep Graph Infomax"](arXiv:1809.10341 ) paper based on user-defined encoder and summary model $$\epsilon$$ and $$R$$ respectively, and a corruption function $$C$$
 
@@ -486,7 +486,7 @@ From the table above, we can observe that the performances of the three classifi
 
 #### Node2vec
 
-#### Small Data Result
+##### Small Data Result
 
 Since the computational cost for Node2vec is large, and we have an overall large graph, we are going to limit our model to subreddit `incest`, which has 228 positive data and 1383 negative data (1611) in total.
 
@@ -502,6 +502,8 @@ Not finished implementation
 Not finished implementation
 
 ## 8. Discussion
+
+TODO
 
 ## 9. Backlog
 
