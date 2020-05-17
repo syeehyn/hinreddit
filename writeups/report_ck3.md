@@ -17,7 +17,7 @@
     - [Data Ingestion Process](#data-ingestion-process)
       - [Data Origination and Legality](#data-origination-and-legality)
       - [Privacy Concerns](#privacy-concerns)
-      - [Schema](#schema)
+      - [Schema (editted)](#schema-editted)
         - [Raw](#raw)
           - [First Layer: Posts](#first-layer-posts)
           - [Second Layer: Post detail](#second-layer-post-detail)
@@ -33,30 +33,30 @@
       - [Data Cleaning](#data-cleaning)
       - [Applicability](#applicability)
   - [4. Labeling (editted)](#4-labeling-editted)
-  - [5. Graph Extraction](#5-graph-extraction)
+  - [5. Graph Extraction (new)](#5-graph-extraction-new)
     - [Graph Structure](#graph-structure)
     - [Adjacency Matrix](#adjacency-matrix)
     - [Graph Example](#graph-example)
-  - [6. EDA](#6-eda)
+  - [6. EDA (editted)](#6-eda-editted)
     - [Tabular Data EDA](#tabular-data-eda)
     - [Graph Data EDA](#graph-data-eda)
     - [EDA Analysis](#eda-analysis)
-  - [7. ML Deployment](#7-ml-deployment)
+  - [7. ML Deployment (new)](#7-ml-deployment-new)
     - [Metrics](#metrics)
     - [Baseline Model](#baseline-model)
     - [Hinreddit](#hinreddit-1)
       - [Node2vec](#node2vec)
       - [DGI](#dgi)
       - [NetMF (not finished)](#netmf-not-finished)
-  - [8. Experimental Result](#8-experimental-result)
+  - [8. Experimental Result (new)](#8-experimental-result-new)
     - [Baseline Model Result](#baseline-model-result)
     - [Hinreddit Result](#hinreddit-result)
       - [Node2vec](#node2vec-1)
         - [Small Data Result](#small-data-result)
       - [DGI](#dgi-1)
       - [NetMF](#netmf)
-  - [9. Discussion](#9-discussion)
-  - [10. Backlog](#10-backlog)
+  - [9. Discussion (new)](#9-discussion-new)
+  - [10. Backlog (new)](#10-backlog-new)
     - [Graph Extraction](#graph-extraction)
     - [ML Deployment](#ml-deployment)
       - [Node2vec](#node2vec-2)
@@ -123,7 +123,7 @@ Our project includes two datasets:
 #### Privacy Concerns
 As [Reddit](https://www.reddit.com) is an online public social platform and all posts and replies are open to viewers, we will not get into issues regarding privacy. Nevertheless, we will encrypt all users' personal information if involved and eliminate sensitive posts or replies in case of any information leakage.
 
-#### Schema
+#### Schema (editted)
 
 The data schema is shown below
 
@@ -280,7 +280,7 @@ The labeling process for a single post is as follows: We first obtain scores for
 
 In this way, we can also label those posts which are missing textual content by making use of its comment data. Moreover, with this labeling process, we are defining hateful posts so that they not only include those that demonstrate hatefulness in its content, but also those that stir up negative discussions in comments and replies.
 
-## 5. Graph Extraction
+## 5. Graph Extraction (new)
 
 ### Graph Structure
 
@@ -362,7 +362,7 @@ N:  0|0|0|0|1|0
 
 ```
 
-## 6. EDA
+## 6. EDA (editted)
 
 ### Tabular Data EDA
 
@@ -435,7 +435,7 @@ Moreover, in order to evaluate the quality of the label, we have also done some 
 
 ### EDA Analysis
 
-## 7. ML Deployment
+## 7. ML Deployment (new)
 
 ### Metrics
 
@@ -470,7 +470,7 @@ We use implementation from `pytorch_geometric` for our modeling to get the Graph
 NetMF, Network Embedding as Matrix Factorization, method from the ["Network Embedding as Matrix Factorization: Unifying DeepWalk, LINE, PTE, and node2vec"](arXiv:1710.02971) paper, lays the theoretical foundation for skip-gram based network embedding methods, leading to a better understanding of latent network representation learning.
 
 
-## 8. Experimental Result
+## 8. Experimental Result (new)
 
 ### Baseline Model Result
 
@@ -507,7 +507,7 @@ Not finished implementation
 
 TODO
 
-## 10. Backlog
+## 10. Backlog (new)
 
 ### Graph Extraction
 
