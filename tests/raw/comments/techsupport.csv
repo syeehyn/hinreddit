@@ -1,8 +1,9 @@
 id,author,created_utc,is_submitter,subreddit,link_id,body,parent_id,send_replies
+fm2kf3z,PhaseBarney,1585699277,False,techsupport,t3_fsofvw,Did it stop working?,t3_fsofvw,True
 fm2kqj2,DCRX2020,1585699471,False,techsupport,t3_fsoffs,"You mean VGA, and try pressing the Window key + P to choose how you're showing your displays. You can also right click on the desktop and go to to Display Properties and see if it's showing both displays.",t3_fsoffs,True
-fm2lbmp,aolsux00,1585699830,False,techsupport,t3_fsoarc,"You can try changing your WIFI channel and see if that helps. The highest channels for 5GHz are usually better as long as they aren't being used excessively by others
-
-Yes a range extender will help",t3_fsoarc,True
+fm2kyru,NoHeadShot123,1585699611,True,techsupport,t3_fsofvw,My monitor is fine like it shows like the hdmi cable isn’t plugged in,t1_fm2kf3z,True
+fm2lb0p,PhaseBarney,1585699820,False,techsupport,t3_fsofvw,But did you do anything for it to stop working or did it stop from the day to the night,t1_fm2kyru,True
+fm2mp2r,NoHeadShot123,1585700680,True,techsupport,t3_fsofvw,I cleaned my pc today then I plugged it back in and it didn’t work,t3_fsofvw,True
 fm2phzp,YourWorstFear53,1585702440,False,techsupport,t3_fsoel9,The socket you're plugging into is likely a three conductor instead of a four conductor.,t3_fsoel9,True
 fm2q2zr,DeepKaizen,1585702812,True,techsupport,t3_fsoffs,"thanks for the correction.
 

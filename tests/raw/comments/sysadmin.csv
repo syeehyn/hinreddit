@@ -15,10 +15,20 @@ fm2islw,h3nchman24,1585698331,False,sysadmin,t3_fsnpaq,"I believe so, I do not t
 
 I know azure will not see .local address.",t3_fsnpaq,True
 fm2kobk,disclosure5,1585699434,False,sysadmin,t3_fsnr1u,"You should probably note the majority of ""updates"" these days include killing off no longer trusted CAs, so you're actually doing security a dissservice.",t3_fsnr1u,True
+fm2kw4x,disclosure5,1585699566,False,sysadmin,t3_fsnq0w,"&gt;I see people using the commands setup.exe /PrepareSchema and PrepareAD before starting the upgrade. Is this needed before starting every CU upgrade?
+
+In a small deployment it usually doesn't matter. The problem is ""it depends"". It needs to be done in the same AD site as your schema master, and the first Exchange server you update may not be in that site. So a ""best practice"" means running these commands on a suitable machine in advance.
+
+It definitely is a ""per domain"" thing. It doesn't need to be done on every server, in fact you can follow the above point and run it on a machine not even running Exchange.
+
+It's not required for every CU but it's needed for many of them and it never hurts, so again best practice says just do it.",t3_fsnq0w,True
 fm2lxzv,disclosure5,1585700214,False,sysadmin,t3_fsnpaq,Yes it's expected behaviour. Microsoft's guides strongly recommend you fix the UPN to match properly first.,t3_fsnpaq,True
 fm2mdui,Sidiki88,1585700485,False,sysadmin,t3_fsn5au,Dude I think not. Because when I first started it was running on this old ass desktop computer and one of my coworkers migrated it to a VM. 😂 It's old school but tbh it does the job.,t3_fsn5au,True
 fm2na8k,TronLightyear,1585701045,False,sysadmin,t3_fsobop,Yeah... its going to be all manual.,t3_fsobop,True
 fm2nh6h,TronLightyear,1585701164,False,sysadmin,t3_fsnn0o,you should really consider a split tunnel and only route traffic over the VPN that has to go over the VPN,t3_fsnn0o,True
+fm2o2al,GreenEgg9999,1585701531,False,sysadmin,t3_fsnq0w,"No - most CUs do NOT need to perform an AD prep / schema update.  Do your homework on the CU you will be applying .
+
+Also be aware that the CU will do a full uninstall and reinstall of Exchange.  If you’ve made any file level changes (web config for example) or reg key changes those will need to be reapplied.",t3_fsnq0w,True
 fm2o4mq,wasabiiii,1585701572,False,sysadmin,t3_fsn5au,"I really enjoyed a product called Edge Connector back in the day. Integrated into AD. So like, disabling a user instantly just disabled the user. Wasn't a synchronize thing either... literally just queried AD.
 
 I don't think it was suited to large installs. But it was cool for the small business I was at at the time. Only 5 doors.
@@ -32,6 +42,9 @@ Binds to AD, has logging.",t3_fsn5au,True
 fm2q0g9,rabbit994,1585702768,False,sysadmin,t3_fsnoqf,"Used this extension, can confirm is awesome.
 
 However, it's shit like this that makes my hatred of GSuite grow. Apparently we have to slather our browser in extensions to get decent experience.",t3_fsnoqf,True
+fm2q2x9,JeepMunkee,1585702811,False,sysadmin,t3_fsnq0w,"Which version and CU?
+
+Do you have dotnet4.8?",t3_fsnq0w,True
 fm2qbzj,JeepMunkee,1585702970,False,sysadmin,t3_fsn5au,"We use Infinias.  Nice system and cheap. 
 
 If I was to start over, I'd go with Isonas.
@@ -41,18 +54,36 @@ They have their controller built into the reader:
 https://www.isonas.com/products/pure-ip-reader-controller-wallmount-rc04/",t3_fsn5au,True
 fm2qewb,Fusorfodder,1585703022,False,sysadmin,t3_fsn5au,I'm intrigued by Kisi whenever we update ours. I've used Honeywell and Galaxy and have not been wowed by either of them.,t3_fsn5au,True
 fm2r3p0,galad2003,1585703477,False,sysadmin,t3_fsob6i,A lot kf people are doing to be grateful.for even having a job in the next few weeks.,t3_fsob6i,True
+fm2rnpe,twisted636,1585703843,True,sysadmin,t3_fsnq0w,"The newest one, I do plan on doing the .net upgrade before hand.",t1_fm2q2x9,True
+fm2t62x,twisted636,1585704843,True,sysadmin,t3_fsnq0w,"This is something iv inherited; I'm aware of one registry modification to allow for larger then 1tb mailbox database (I also inherited that mess) I have the registry entry backed up and know ill need to reapply those changes. I was told it shouldn't have any other changes, but really not sure so I have backed up the web.config files and the OWA page is default. Ill probably snapshot the VM before hand and hope for the best. I also have actual backups if things so really south haha.",t1_fm2o2al,True
 fm2ujwt,MDFolger,1585705745,False,sysadmin,t3_fsnpaq,"Sounds like a default AD Connect config which will use the AD UPN to set the O365 UPN, which will produce the behavior you are experiencing.  You can use an 'Alternate Login ID' such as the mail attribute to set the O365 UPN, instead of the AD UPN. 
 
 https://docs.microsoft.com/en-us/azure/active-directory/hybrid/plan-connect-userprincipalname#alternate-login-id",t3_fsnpaq,True
 fm3006z,netburnr2,1585709458,False,sysadmin,t3_fsn5au,"We do too, I'm fairly new to the physical security IT but I will say short stint supporting Lenel has not been fun",t1_fm2e7ti,True
+fm30lpv,evolutionxtinct,1585709869,False,sysadmin,t3_fsnq0w,"Whatever you do keep a archive of ALL CU UPDATES... you will become a hoarder of CU updates till that server is decommissioned...
+
+If possible snapshot the vm I’d you can and make sure to have updates applied and correct .NET.
+
+If you are jumping a large number make sure to do the CUs With correct CU pre-reqs. 
+
+Hope this helps.",t3_fsnq0w,True
+fm313af,twisted636,1585710208,True,sysadmin,t3_fsnq0w,Why keep a copy of the cu's? this is something id not thought about.,t1_fm30lpv,True
 fm32kxt,cjcox4,1585711267,False,sysadmin,t3_fsn5au,"yeah... I was just sharing what we use :-)
 
 I figure there's a lot of popular products that really shouldn't be used (like Windows, you know?).",t1_fm3006z,True
 fm352wd,imfromthebay415,1585713086,True,sysadmin,t3_fsnoqf,Agreed!,t1_fm2q0g9,True
+fm38fmu,evolutionxtinct,1585715657,False,sysadmin,t3_fsnq0w,"N+2 updates are only available I tried updating 2013!to CU18 found the earliest online was Cu20, it was annoying.",t1_fm313af,True
 fm3bk0k,highschooldropout002,1585718202,False,sysadmin,t3_fsnpaq,Yes this is expected,t3_fsnpaq,True
 fm3d9nc,highschooldropout002,1585719693,False,sysadmin,t3_fsnn0o,"How are your current update settings set ?
 
 Is it set to gain updates from a wsus server or windows itself ??",t3_fsnn0o,True
+fm3fi85,dawho1,1585721775,False,sysadmin,t3_fsnq0w,"In your scenario it sounds like no, you don't need to do anything at all.  /ps and /preparead are rarely required (last feb patches not withstanding due to a problem with the gui not properly running the appropriate commands.)
+
+If you've got 2 AD servers, it's likely you only have a single site.  Running setup and clicking next/next/next is good enough.  
+
+If you haven't run a /preparead since 2016 CU12 (or 2013...I want to say it's CU22) you probably should do it just to cover your bases.  
+
+Generally, it's not required, but it hurts nothing and takes about 30 seconds to run it once in your environment prior to patching just to be sure especially if you've inherited everything and aren't sure if the whole split-permissions CVE had been properly remediated in your environment yet.",t3_fsnq0w,True
 fm3najr,Tatermen,1585729705,False,sysadmin,t3_fsn5au,"We use [Paxton](https://www.paxton-access.com/). It's not cheap - each door controller costs about $500, but each door controller operates as it's own independent unit and doesn't require the server to be online.
 
 A customer of ours had a Honeywell system that locked them all in the building when someone created a network loop.",t3_fsn5au,True

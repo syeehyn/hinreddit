@@ -25,7 +25,7 @@ def corruption(x, edge_index):
     return x[torch.randperm(x.size(0))], edge_index
 
 def infomax(fp, PARAMS):
-    shutil.rmtree(osp.join(fp, 'processed', 'node2vec'), ignore_errors = True)
+    shutil.rmtree(osp.join(fp, 'processed', 'infomax'), ignore_errors = True)
     dataset = create_dataset(fp)
     data = dataset[0]
     if PARAMS['CUDA']:

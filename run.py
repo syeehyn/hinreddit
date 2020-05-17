@@ -19,6 +19,7 @@ MODELDIR = 'config/nlp_model.zip'
 DATA_NODE2VEC = json.load(open('config/embedding/node2vec.json'))
 TEST_NODE2VEC = json.load(open('config/embedding/test-node2vec.json'))
 DATA_INFOMAX = json.load(open('config/embedding/infomax.json'))
+TEST_INFOMAX = json.load(open('config/embedding/test-infomax.json'))
 
 def env(fp):
     os.makedirs(os.path.join(fp, 'raw', 'posts'), exist_ok=True)
@@ -85,6 +86,7 @@ def main(targets):
         create_graph(TESTDIR)
         ##
         node2vec(TESTDIR, TEST_NODE2VEC)
+        infomax(TESTDIR, TEST_INFOMAX)
 
 
 
