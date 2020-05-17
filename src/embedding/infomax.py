@@ -33,7 +33,6 @@ def infomax(fp, PARAMS):
     else:
         device = 'cpu'
     shutil.rmtree(osp.join(fp, 'processed', 'infomax'), ignore_errors = True)
-    data.x = data.x.float()
     data = data.to(device)
     model = DeepGraphInfomax(
         hidden_channels=PARAMS['HIDDEN_CHANNELS'], encoder=Encoder(data.x.shape[1], PARAMS['SUMMARY']),
