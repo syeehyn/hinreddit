@@ -42,7 +42,8 @@ def create_graph(fp):
     comm = comm.dropna()
     post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.link_id))]
     post = post[post.subreddit == 'incest']
-    comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id)) | (comm.link_id.isin(post.id))]
+    comm = comm[comm.link_id.isin(post.id)]
+    comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id))]
     # author_counts = comm.author.value_counts()
     # author_mask = author_counts > 3
     # author_counts = author_counts[author_mask].index
