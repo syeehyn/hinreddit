@@ -95,6 +95,7 @@ def create_graph(fp, subreddit):
     post_indx = node_maps[post_mask].id.values
     y = pd.merge(node_maps[post_mask][['name']], 
                 labl, left_on='name', right_on='post_id', how='left').label.values
+    print('done')
     return edge_idx_, edge_weight.reshape(-1), y, subreddit, post_indx
 
 def plot_embedding(embd, y):
