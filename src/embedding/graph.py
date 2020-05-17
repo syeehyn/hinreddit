@@ -41,7 +41,7 @@ def create_graph(fp):
     comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
     comm = comm.dropna()
     post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.link_id))]
-    post = post[post.subreddit == 'politics']
+    # post = post[post.subreddit == 'politics']
     comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id)) | (comm.link_id.isin(post.id))]
     # author_counts = comm.author.value_counts()
     # author_mask = author_counts > 3
