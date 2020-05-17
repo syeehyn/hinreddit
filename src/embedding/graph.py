@@ -78,7 +78,7 @@ def create_graph(fp):
     edge_pair = edges.copy()
     pair_counts = edge_pairs.value_counts()
     edge_pair['pairs'] = edge_pairs
-    pair_counts = np.log(pair_counts + pair_counts.std()).astype(int).to_frame()
+    pair_counts = pair_counts.astype(int).to_frame()
     edges = pd.merge(edge_pair, pair_counts, left_on = 'pairs', right_index = True)[['who', 'whom', 0]]
     edge_idx = edges.drop_duplicates()
     edge_idx = pd.merge(edge_idx, node_maps, left_on='who', right_on='name', how='left')[['id', 'whom', 0]]
