@@ -169,7 +169,7 @@ def node2vec(fp, PARAMS):
     print('Start Node2vec Embedding Process with Following Parameters:')
     print(PARAMS)
     print('loading graph')
-    g = io.loadmat(osp.join(fp, 'interim/graph/graph.mat'))
+    g = io.loadmat(osp.join(fp, 'interim/graph/graph_incest.mat'))
     g = nx.from_scipy_sparse_matrix(g['N'])
     g = Graph(g, True, PARAMS['P'], PARAMS['Q'])
     print('generating transitional probabilities')
