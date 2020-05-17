@@ -35,7 +35,13 @@ class RedditData(InMemoryDataset):
             data_list = [self.pre_transform(data) for data in data_list]
         g = io.loadmat(osp.join(self.root, 'graph.mat'))
         N = g['N']
+        p_cate = g['post_cate'].toarray()
+        post_indx = g['post_indx']
         edge_idx, x =from_scipy_sparse_matrix(N)
+        x = x.view(-1, 1).float()
+        feature = np.zeros((x.shape[0], p_cate.shape[1]))
+        feature[post_indx, :] = p_cate
+        x = torch.cat([x, torch.FloatTensor(feature)], 1)
         data_list.append(
             dt(
                 x = x,
