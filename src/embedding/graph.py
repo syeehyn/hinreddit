@@ -14,12 +14,12 @@ import scipy.io as io
 COMM_DIR = osp.join('raw', 'comments', '*.csv')
 LABL_DIR = osp.join('interim', 'label', '*.csv')
 POST_DIR = osp.join('raw', 'posts', '*.csv')
-OUT_DIR = osp.join('interim', 'graph')
+OUT_DIR = osp.join('interim', 'graph', 'graph.mat')
 
 def create_graph(fp):
     print('start preprocessing: (filtering)')
     try:
-        os.remove(osp.join(fp, OUT_DIR, 'graph.mat'))
+        os.remove(osp.join(fp, OUT_DIR))
     except FileNotFoundError:
         pass
     comm = osp.join(fp, COMM_DIR)
@@ -110,6 +110,6 @@ def create_graph(fp):
     res['post_cate'] = heter_feature
     res['post_indx'] = post_indx
     res['user_indx'] = user_indx
-    io.savemat(osp.join(fp, OUT_DIR, 'graph_politics.mat'), res)
+    io.savemat(osp.join(fp, OUT_DIR), res)
     print('graph constructed, with N shape: {}'.format(N.shape),)
 
