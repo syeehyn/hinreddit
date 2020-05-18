@@ -17,7 +17,7 @@
     - [Data Ingestion Process](#data-ingestion-process)
       - [Data Origination and Legality](#data-origination-and-legality)
       - [Privacy Concerns](#privacy-concerns)
-      - [Schema (editted)](#schema-editted)
+      - [Schema (updated)](#schema-updated)
         - [Raw](#raw)
           - [First Layer: Posts](#first-layer-posts)
           - [Second Layer: Post detail](#second-layer-post-detail)
@@ -28,12 +28,12 @@
         - [Processed](#processed)
       - [Data Cleaning](#data-cleaning)
       - [Applicability](#applicability)
-  - [4. Labeling (editted)](#4-labeling-editted)
+  - [4. Labeling (updated)](#4-labeling-updated)
   - [5. Graph Extraction (new)](#5-graph-extraction-new)
     - [Graph Structure](#graph-structure)
     - [Adjacency Matrix](#adjacency-matrix)
     - [Graph Example](#graph-example)
-  - [6. EDA (editted)](#6-eda-editted)
+  - [6. EDA (updated)](#6-eda-updated)
     - [Tabular Data EDA](#tabular-data-eda)
     - [Graph Data EDA](#graph-data-eda)
     - [EDA Analysis](#eda-analysis)
@@ -51,8 +51,8 @@
         - [Small Data Result](#small-data-result)
       - [DGI](#dgi-1)
       - [NetMF](#netmf)
-  - [9. Discussion](#9-discussion)
-  - [10. Pipeline (edited)](#10-pipeline-edited)
+  - [9. Discussion (new)](#9-discussion-new)
+  - [10. Pipeline (updated)](#10-pipeline-updated)
     - [ETL Process](#etl-process)
     - [Labeling Process](#labeling-process)
     - [Create Baseline Model](#create-baseline-model)
@@ -127,7 +127,7 @@ Our project includes two datasets:
 #### Privacy Concerns
 As [Reddit](https://www.reddit.com) is an online public social platform and all posts and replies are open to viewers, we will not get into issues regarding privacy. Nevertheless, we will encrypt all users' personal information if involved and eliminate sensitive posts or replies in case of any information leakage.
 
-#### Schema (editted)
+#### Schema (updated)
 
 The data schema is shown below
 
@@ -236,7 +236,7 @@ Since we are directly using the Pushshift API, it has taken care most of the dat
 
 The above data ingestion pipeline can be used to obtain data as long as the data originates from Reddit. Our pipeline has limited applicability depending on data sources. Possible data sources include other online social platforms such as Twitter, Facebook, LinkedIn, and Instagram. Platforms have similar overall structure but differ in detailed construction and API calls, thus our pipeline may only be helpful for general data ingestion framework reference  when applying to other online social platforms. Also, it is important to check the policies and guidelines of each platform before employing our pipeline to avoid the raise of legal issues or privacy concerns.
 
-## 4. Labeling (editted)
+## 4. Labeling (updated)
 
 Since the original data obtained from Reddit is not labeled, we will be using a RNN and bidirectional layers, through python library `keras`, as well as pre-trained word representation vectors from [GloVe](https://nlp.stanford.edu/projects/glove/), to label the Reddit posts before we use it for our project main analysis.
 
@@ -328,7 +328,7 @@ N:  0|0|0|0|1|0
 
 ```
 
-## 6. EDA (editted)
+## 6. EDA (updated)
 
 ### Tabular Data EDA
 
@@ -476,11 +476,13 @@ The result of implementing Heterogeous Deep Graph Infomax is presented below:
 
 Not finished implementation
 
-## 9. Discussion
+## 9. Discussion (new)
 
-TODO
+### Result Analysis
 
-## 10. Pipeline (edited)
+### Possible Improvement
+
+## 10. Pipeline (updated)
 
 ### ETL Process
 
