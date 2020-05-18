@@ -420,7 +420,7 @@ Some users engage in both benign and hateful posts, and we found that among user
 
 |Proportion of speech for users engaged in hateful posts|
 |-----------|
-|14.53%|
+|28.15%|
 
 ## 7. ML Deployment (new)
 
@@ -505,6 +505,12 @@ Not finished implementation
 ### Result Analysis
 
 ### Possible Improvement
+
+First possible improvement can be done in the labeling process. To label our reddit data, we have trained a NLP classifier with labeled Wikipedia comments as well as pretrained Wikipedia vocabularies. It would be better if we can obtain labeled social platform data, such as labeled tweets to be trained with pretrained Twitter vocabularies provided by [Glove](https://nlp.stanford.edu/projects/glove/). 
+
+Another possible improvement, which we originally would like to implement, is to include more user-to-user relations in our graph representations. Some examples include subreddit subsription lists and friends connection. We currently have a hard time including these relationships because user information features are still in development in the API we use, `pushift`. Although Reddit's own API, `PRAW`, offers related features, it unfortunately employs a different system of user ID from what pushift uses, and we are unable to connect them to obtain user information. This can be done as soon as `pushift` succesfully develops user information features.
+
+Finally, we can also improve our algorithm to make use of the timeline data we obtain along with posts and comments. By adding a time feature, we can construct sequence nodes and feed in to Recurrent Neural Network models, such as Long Short-Term Memory. 
 
 ## 10. Pipeline (updated)
 
