@@ -443,13 +443,13 @@ Since we are performing binary classification, `True Positive, True Negative` pl
 
 ### Baseline Model
 
-We use Logistic Regression, Random Forest, and Gradient Boost Classifier to train our models based on the features `['num_comments', 'subreddit', 'score', 'length', 'title_length']` and classify whether a post is hateful.
+Based on our tabular data EDA, we have determined a few features that maybe helpful in defining our baseline model, including number of comments, subreddit it belongs to, upvote score, length of the text body, and some sensitive words that frequently appear in hateful posts shown in EDA. We use Logistic Regression, Random Forest, and Gradient Boost Classifier to train our models based on the features `['num_comments', 'subreddit', 'score', 'length', 'sensitive']` and classify whether a post is hateful.
 
 - `num_comment`: number of comments for each post
 - `subreddit`: the subreddit that the post belongs to
 - `score`: the upvote score that the post receives
 - `length`: the length of text body of the post
-- `title_length`: the length of the title
+- `sensitive`: whether the post includes any of the sensitive words: 'fuck', 'nigger', 'shit', 'sex', 'ass'.
 
 ### Hinreddit
 
