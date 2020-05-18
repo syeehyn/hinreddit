@@ -399,9 +399,11 @@ Moreover, in order to evaluate the quality of the label, we have also done some 
 
 In order to maximize the model performance in later machine learning deployment, we restrict the type of users to active users only in our ingested data by removing users who never post, deactivated authors, auto-moderators and SnapshillBot. We also drop all posts authored by these removed users. With our cleaned data, we constructed heterogeneous graphs according to [adjacency matrice definition](#adjacency-matrix).
 
- We have 99004 negative posts and 4409 positive posts in total after cleaning. Due to the imbalance between the spread of post labels, we will be weighing correspondingly in model constructions. 
+We have 99,004 benign posts and 4,409 hateful posts in total after cleaning. Due to the imbalance between the spread of post labels, we will be weighing correspondingly in model constructions. 
 
 In our assumption, we hypothesize association between certain users who post hateful speech and the posts they interact with, thus we aim at investigating users' posting behaviors within subreddits.
+
+We have 483,173 unique users in our data. 7% of users in our data have been involved with hateful posts. Among them, of users have themselves create posts/comments labeled as hateful.
 
 |Percentage of users only post once|Proportion of users post only in 1 subreddit|
 |-----------|-----|
@@ -503,6 +505,10 @@ Not finished implementation
 ## 9. Discussion (new)
 
 ### Result Analysis
+
+As seen above, we have obtained fairly low precisions and recalls with our current user-post embeddings and models. The results can be understand together with our Exploratory Data Analysis. The data has shown that only 7% of users have ever engaged in hateful posts, and among them only __ of users have themselves write posts/comments that are labeled as hateful. Moreover, for users who have engaged in hateful posts, only around 28% of their posted speeches are labeled as hateful. These numbers suggest users have a small chance of creating their own hateful posts/comments although they have engaged in any of the hateful posts. Furthermore, even if they have created any, it is not a consistent behavior. This then demonstrates that our initial hypothesis might not be accurate as mere relationships of users' reply behavior and authorship cannot provide much useful information in identifying hateful posts, which is then confirmed by our model results.
+
+Due to the fact that our graph representation only embeds authorship and reply behavior, and as Node2vec and Deep Graph Infomax both are greedy in the training process, the models cannot clearly distinguish between hateful and benign posts, which is shown by the AUC values that are only slightly higher than, or even lower than, 0.5 and our baseline models that make use of post-related features.
 
 ### Possible Improvement
 
