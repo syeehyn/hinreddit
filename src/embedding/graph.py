@@ -14,7 +14,7 @@ import scipy.io as io
 COMM_DIR = osp.join('raw', 'comments', '*.csv')
 LABL_DIR = osp.join('interim', 'label', '*.csv')
 POST_DIR = osp.join('raw', 'posts', '*.csv')
-OUT_DIR = osp.join('interim', 'graph', 'graph_incest.mat')
+OUT_DIR = osp.join('interim', 'graph', 'graph.mat')
 
 def create_graph(fp):
     print('start preprocessing: (filtering)')

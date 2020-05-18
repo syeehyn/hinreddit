@@ -25,14 +25,14 @@ def corruption(x, edge_index):
     return x[torch.randperm(x.size(0))], edge_index
 
 def infomax(fp, PARAMS):
-    dataset = torch.load(osp.join(fp, 'interim', 'graph', 'processed', 'data.pt'))
+    shutil.rmtree(osp.join(fp, 'processed', 'infomax'), ignore_errors = True)
+    dataset = create_dataset(fp)
+    data = dataset[0]
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:
         device = 'cpu'
-    data = dataset[0]
-    shutil.rmtree(osp.join(fp, 'interim', 'infomax'), ignore_errors = True)
-    data.x = data.x.float()
+    shutil.rmtree(osp.join(fp, 'processed', 'infomax'), ignore_errors = True)
     data = data.to(device)
     model = DeepGraphInfomax(
         hidden_channels=PARAMS['HIDDEN_CHANNELS'], encoder=Encoder(data.x.shape[1], PARAMS['SUMMARY']),
@@ -55,10 +55,10 @@ def infomax(fp, PARAMS):
     model.eval()
     with torch.no_grad():
         z, _, _ =model(data.x, data.edge_index)
-    if not os.path.exists(os.path.join(fp, 'interim', 'infomax')):
-        os.mkdir(os.path.join(fp, 'interim', 'infomax'))
-    with open(osp.join(fp, 'interim', 'infomax', 'log.json'), 'w') as f:
+    if not os.path.exists(os.path.join(fp, 'processed', 'infomax')):
+        os.mkdir(os.path.join(fp, 'processed', 'infomax'))
+    with open(osp.join(fp, 'processed', 'infomax', 'log.json'), 'w') as f:
         json.dump({'loss': losses}, f)
-    torch.save(z, osp.join(fp, 'interim', 'infomax','embedding.pt'))
-    torch.save(data, osp.join(fp, 'interim', 'infomax', 'data.pt'))
+    torch.save(z, osp.join(fp, 'processed', 'infomax','embedding.pt'))
+    torch.save(data, osp.join(fp, 'processed', 'infomax', 'data.pt'))
     return 'embedding infomax created'

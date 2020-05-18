@@ -11,7 +11,7 @@ from tqdm import tqdm
 import json
 import shutil
 def node2vec(fp, PARAMS):
-    shutil.rmtree(osp.join(fp, 'interim', 'node2vec'), ignore_errors = True)
+    shutil.rmtree(osp.join(fp, 'processed', 'node2vec'), ignore_errors = True)
     dataset = create_dataset(fp)
     data = dataset[0]
     loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
@@ -44,10 +44,10 @@ def node2vec(fp, PARAMS):
     model.eval()
     with torch.no_grad():
         z = model(torch.arange(data.num_nodes, device=device))
-    if not os.path.exists(os.path.join(fp, 'interim', 'node2vec')):
-        os.mkdir(os.path.join(fp, 'interim', 'node2vec'))
-    with open(osp.join(fp, 'interim', 'node2vec', 'log.json'), 'w') as f:
+    if not os.path.exists(os.path.join(fp, 'processed', 'node2vec')):
+        os.makedirs(os.path.join(fp, 'processed', 'node2vec'), exist_ok=True)
+    with open(osp.join(fp, 'processed', 'node2vec', 'log.json'), 'w') as f:
         json.dump({'loss': losses}, f)
-    torch.save(z, osp.join(fp, 'interim', 'node2vec','embedding.pt'))
-    torch.save(data, osp.join(fp, 'interim', 'node2vec', 'data.pt'))
+    torch.save(z, osp.join(fp, 'processed', 'node2vec','embedding.pt'))
+    torch.save(data, osp.join(fp, 'processed', 'node2vec', 'data.pt'))
     return 'embedding node2vec created'
