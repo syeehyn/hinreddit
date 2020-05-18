@@ -416,9 +416,9 @@ In addition to general user, we also investigate hateful post users' behaviors s
 
 We can observe that users who engage in hateful post are more active authors compare to general users. 
 
-As some users may engage in both benign and hateful post, we calculate the proportion of users who actually have hateful speeches among all users engaged in hateful post.
+Some users engage in both benign and hateful posts, and we found that among users who have engaged in hateful posts, 14% of there authored posts and comments are classified as hateful.
 
-|Proportion of users who comment hatefully|
+|Proportion of speech for users engaged in hateful posts|
 |-----------|
 |14.53%|
 
