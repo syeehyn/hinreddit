@@ -37,20 +37,19 @@ def main(targets):
         env(TESTDIR)
     else:
         env(DATADIR)
-    # if 'test' in targets:
-    #     fetch_submissions(**TESTPARAMS)
-    #     submissions_detail(TESTDIR)
-    #     comments_detail(TESTDIR)
     if 'data' in targets:
         fetch_submissions(**DATAPARAMS)
         submissions_detail(DATADIR)
         comments_detail(DATADIR)
-    if 'sentimental' in targets:
+    if 'label' in targets:
         model, tokenizer = load_nlp('config/nlp_model.zip', DATADIR)
         label_comments(DATADIR, model, tokenizer)
         label_posts(DATADIR, model, tokenizer)
-    if 'label' in targets:
         labeling(DATADIR)
+    if 'baseline' in targets:
+        posts = extract_feat(os.path.join(DATADIR, 'raw', 'posts'),\
+                            os.path.join(DATADIR, 'interim', 'label', 'label.csv'))
+        baseline_model(posts)
     if 'graph' in targets:
         create_graph(DATADIR)
     if 'node2vec' in targets:
@@ -58,20 +57,25 @@ def main(targets):
     if 'infomax' in targets:
         infomax(DATADIR, DATA_INFOMAX)
 #=================For test============================#
-    # if 'data-test' in targets:
-    #     fetch_submissions(**TESTPARAMS)
-    #     submissions_detail(TESTDIR)
-    #     comments_detail(TESTDIR)
-    # if 'sentimental-test' in targets:
-    #     model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
-    #     label_comments(TESTDIR, model, tokenizer)
-    #     label_posts(TESTDIR, model, tokenizer)
-    # if 'label-test' in targets:
-    #     labeling(TESTDIR)
-    # if 'graph-test' in targets:
-    #     create_graph(TESTDIR)
-    # if 'node2vec-test' in targets:
-    #     node2vec(TESTDIR, TEST_NODE2VEC)
+    if 'data-test' in targets:
+        fetch_submissions(**TESTPARAMS)
+        submissions_detail(TESTDIR)
+        comments_detail(TESTDIR)
+    if 'label-test' in targets:
+        model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
+        label_comments(TESTDIR, model, tokenizer)
+        label_posts(TESTDIR, model, tokenizer)
+        labeling(TESTDIR)
+    if 'baseline-test' in targets:
+        posts = extract_feat(os.path.join(TESTDIR, 'raw', 'posts'),\
+                            os.path.join(TESTDIR, 'interim', 'label', 'label.csv'))
+        baseline_model(posts)
+    if 'graph-test' in targets:
+        create_graph(TESTDIR)
+    if 'node2vec-test' in targets:
+        node2vec(TESTDIR, TEST_NODE2VEC)
+    if 'infomax-test' in targets:
+        infomax(TESTDIR, TEST_INFOMAX)
     if 'test-project' in targets:
         ##
         fetch_submissions(**TESTPARAMS)
