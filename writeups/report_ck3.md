@@ -474,15 +474,15 @@ NetMF, Network Embedding as Matrix Factorization, method from the ["Network Embe
 
 ### Baseline Model Result
 
-Our current dataset is splited into 70% training and 30% test.The resulting metrics for each classifier regarding the performance on the test set are listed in the table below.
+Our current dataset is splited into 70% training and 30% test. We also adjust weights due to out data imabalance. The weights are inversely proportional to class frequencies, and our weights are as follows: 0.53 for benign posts and 9.30 for hateful posts. The resulting metrics for each classifier regarding the performance on the test set are listed in the table below.
 
-||tn|fp|fn|tp|acc|fnr|
-|-----|---|---|---|---|---|---|
-|Logistic Regression|40,593|0|341|0|0.991670|1.0|
-|Random Forest|40,593|0|341|0|0.991670|1.0|
-|Gradient Boost Classifier|40,580|13|341|0|0.991352|1.0|
+||Precision|Recall|AUC|
+|-----|---|---|---|
+|Logistic Regression|0.177778|0.723241|0.847873|
+|Random Forest|0.334432|0.519403|0.780207|
+|Gradient Boost Classifier|0.697987|0.221748|0.862229|
 
-From the table above, we can observe that the performances of the three classifiers by accuracy scores are all around 0.99. Despite the high accuracy, the three classifiers are trained askew to negatively classify data due to the extreme imbalance of our dataset. In order to balance our negative and positive data, we come up with several possible solutions included in backlog.
+From the table above, we can observe that the performances logistic regression produces relatively high recall, meaning that it identifies more hateful posts from all existing ones, while producing low precision, meaning that only a small portion of posts it identifies as hateful are truly hateful. On the other hand, gradient boost classifier produces opposite results with lower recall and higher precision. Both logistic regression and gradient boost classifier have higher AUC compared to random forest, meaning that they are both better at distinguish between hateful posts and benign posts.
 
 ### Hinreddit Result
 
