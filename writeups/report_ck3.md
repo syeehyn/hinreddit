@@ -380,6 +380,7 @@ Moreover we also find difference in score for the two groups, the mean score of 
 |-----|----------|
 |benign|32|
 |hateful|11|
+
 Moreover, in order to evaluate the quality of the label, we have also done some textual analysis. We find out the top 30 words in posts after removing stop words for each of the groups. However, we have also removed about 20 words that appeared in both groups. Those should be the common words that appeared in the conversation and thus is not helpful as a feature for our classification.
 
 |malign_word|count|benign_word|count|
@@ -405,15 +406,18 @@ In our assumption, we hypothesize association between certain users who post hat
 |Percentage of users only post once|Proportion of users post only in 1 subreddit|
 |-----------|-----|
 |44.95%|85.24%|
+
 We can observe that nearly half of the users post only once and are not active authors on Reddit. Most of them are only involved within one subreddit, thus their behavioral movements are representative of that subreddit.
 
 In addition to general user, we also investigate hateful post users' behaviors specifically.
 |Proportion of users engaged in hateful post, only post once in a subreddit|Proportion of users engaged in hateful post, post only in 1 subreddit|
 |-----------|-----|
 |20.01%|70.03%|
+
 We can observe that users who engage in hateful post are more active authors compare to general users. 
 
 As some users may engage in both benign and hateful post, we calculate the proportion of users who actually have hateful speeches among all users engaged in hateful post.
+
 |Proportion of users who comment hatefully|
 |-----------|
 |14.53%|
