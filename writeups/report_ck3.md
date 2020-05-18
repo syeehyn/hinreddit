@@ -36,7 +36,6 @@
   - [6. EDA (updated)](#6-eda-updated)
     - [Tabular Data EDA](#tabular-data-eda)
     - [Graph Data EDA](#graph-data-eda)
-    - [EDA Analysis](#eda-analysis)
   - [7. ML Deployment (new)](#7-ml-deployment-new)
     - [Metrics](#metrics)
     - [Baseline Model](#baseline-model)
@@ -403,7 +402,7 @@ We have 99,004 benign posts and 4,409 hateful posts in total after cleaning. Due
 
 In our assumption, we hypothesize association between certain users who post hateful speech and the posts they interact with, thus we aim at investigating users' posting behaviors within subreddits.
 
-We have 483,173 unique users in our data. 7% of users in our data have been involved with hateful posts. Among them, of users have themselves create posts/comments labeled as hateful.
+We have 483,173 unique users in our data. 7% of users in our data have been involved with hateful posts. Among them, 44.26% of users have themselves create posts/comments labeled as hateful.
 
 |Percentage of users only post once|Proportion of users post only in 1 subreddit|
 |-----------|-----|
@@ -506,7 +505,7 @@ Not finished implementation
 
 ### Result Analysis
 
-As seen above, we have obtained fairly low precisions and recalls with our current user-post embeddings and models. The results can be understand together with our Exploratory Data Analysis. The data has shown that only 7% of users have ever engaged in hateful posts, and among them only __ of users have themselves write posts/comments that are labeled as hateful. Moreover, for users who have engaged in hateful posts, only around 28% of their posted speeches are labeled as hateful. These numbers suggest users have a small chance of creating their own hateful posts/comments although they have engaged in any of the hateful posts. Furthermore, even if they have created any, it is not a consistent behavior. This then demonstrates that our initial hypothesis might not be accurate as mere relationships of users' reply behavior and authorship cannot provide much useful information in identifying hateful posts, which is then confirmed by our model results.
+As seen above, we have obtained fairly low precisions and recalls with our current user-post embeddings and models. The results can be understand together with our Exploratory Data Analysis. The data has shown that only 7% of users have ever engaged in hateful posts, and among them almost half of users have themselves write posts/comments that are labeled as hateful. Moreover, for users who have engaged in hateful posts, only around 28% of their posted speeches are labeled as hateful. These numbers suggest users have a small chance of creating their own hateful posts/comments although they have engaged in any of the hateful posts. Furthermore, even if they have created any, it is not a consistent behavior. This then demonstrates that our initial hypothesis might not be accurate as mere relationships of users' reply behavior and authorship cannot provide much useful information in identifying hateful posts, which is then confirmed by our model results.
 
 Due to the fact that our graph representation only embeds authorship and reply behavior, and as Node2vec and Deep Graph Infomax both are greedy in the training process, the models cannot clearly distinguish between hateful and benign posts, which is shown by the AUC values that are only slightly higher than, or even lower than, 0.5 and our baseline models that make use of post-related features.
 
