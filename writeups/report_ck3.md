@@ -396,7 +396,27 @@ Moreover, in order to evaluate the quality of the label, we have also done some 
 
 ### Graph Data EDA
 
-### EDA Analysis
+In order to maximize the model performance in later machine learning deployment, we restrict the type of users to active users only in our ingested data by removing users who never post, deactivated authors, auto-moderators and SnapshillBot. We also drop all posts authored by these removed users. With our cleaned data, we constructed heterogeneous graphs according to [adjacency matrice definition](#adjacency-matrix).
+
+ We have 99004 negative posts and 4409 positive posts in total after cleaning. Due to the imbalance between the spread of post labels, we will be weighing correspondingly in model constructions. 
+
+In our assumption, we hypothesize association between certain users who post hateful speech and the posts they interact with, thus we aim at investigating users' posting behaviors within subreddits.
+
+|Percentage of users only post once|Proportion of users post only in 1 subreddit|
+|-----------|-----|
+|44.95%|85.24%|
+We can observe that nearly half of the users post only once and are not active authors on Reddit. Most of them are only involved within one subreddit, thus their behavioral movements are representative of that subreddit.
+
+In addition to general user, we also investigate hateful post users' behaviors specifically.
+|Proportion of users engaged in hateful post, only post once in a subreddit|Proportion of users engaged in hateful post, post only in 1 subreddit|
+|-----------|-----|
+|20.01%|70.03%|
+We can observe that users who engage in hateful post are more active authors compare to general users. 
+
+As some users may engage in both benign and hateful post, we calculate the proportion of users who actually have hateful speeches among all users engaged in hateful post.
+|Proportion of users who comment hatefully|
+|-----------|
+|14.53%|
 
 ## 7. ML Deployment (new)
 
