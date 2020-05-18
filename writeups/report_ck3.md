@@ -455,12 +455,22 @@ From the table above, we can observe that the performances logistic regression p
 
 Since the computational cost for Node2vec is large, and we have an overall large graph, we are going to limit our model to subreddit `incest`, which has 228 positive data and 1383 negative data (1611) in total.
 
-  TODO
+||Precision|Recall|AUC|
+|-----|---|---|---|
+|Logistic Regression|0.115044	|0.302326|0.472591|
+|Linear SVC|0.123894|	0.325581|	0.486005|
+|Random Forest|0.000000|0.000000|0.500000|
 
 
 #### DGI
 
-Not finished implementation
+The result of implementing Heterogeous Deep Graph Infomax is presented below:
+
+||Precision|Recall|AUC|
+|-----|---|---|---|
+|Logistic Regression|0.083879|0.585419|0.644055|
+|Linear SVC|0.089744|0.609358|0.660983|
+|Random Forest|0.103790|0.262242|0.578475|
 
 #### NetMF
 
