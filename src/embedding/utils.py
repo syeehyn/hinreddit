@@ -46,7 +46,7 @@ class RedditData(InMemoryDataset):
             dt(
                 x = x,
                 edge_index = edge_idx,
-                post_indx = post_indx
+                post_indx = torch.from_numpy(post_indx.reshape(-1,))
             )
         )
         data, slices = self.collate(data_list)
