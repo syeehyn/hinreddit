@@ -28,7 +28,7 @@ G = StellarGraph(
         {
             'user': user_nodes,
             'post': post_nodes
-        }, edges
+        }, edges, is_directed = True
 )
 print(G.info())
 rw = BiasedRandomWalk(G)
