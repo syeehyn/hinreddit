@@ -49,23 +49,26 @@ hr {
 margin-top: 2rem;
 }
 
+.body {
+	width: 40%;
+}
 
 
 
 /* details */
 @media screen and (min-width: 480px) {
 .body {
-	width: 80%;
+	width: 80% !important;
 }
 }
 @media screen and (min-width: 520px) and (max-width: 779px) {
 	.body {
-		width: 60%;
+		width: 60% !important;
 	}
 }
 @media screen and (min-width: 780px) {
 	.body {
-		width: 40%;
+		width: 40% !important;
 	}
 }
 #contribution {
