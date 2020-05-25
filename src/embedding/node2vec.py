@@ -14,7 +14,7 @@ def node2vec(fp, PARAMS):
     shutil.rmtree(osp.join(fp, 'processed', 'node2vec'), ignore_errors = True)
     dataset = create_dataset(fp)
     data = dataset[0]
-    loader = DataLoader(torch.arange(data.num_nodes), batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
+    loader = DataLoader(data.post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:
@@ -43,7 +43,7 @@ def node2vec(fp, PARAMS):
         print('Epoch: {:02d}, Node2vec Loss: {:.4f}'.format(epoch, loss))
     model.eval()
     with torch.no_grad():
-        z = model(torch.arange(data.num_nodes, device=device))
+        z = model(data.post_indx.to(device))
     if not os.path.exists(os.path.join(fp, 'processed', 'node2vec')):
         os.makedirs(os.path.join(fp, 'processed', 'node2vec'), exist_ok=True)
     with open(osp.join(fp, 'processed', 'node2vec', 'log.json'), 'w') as f:
