@@ -57,9 +57,10 @@ margin-top: 2rem;
 	width: 40%;
 }
 .background{
-	margin-top: 2rem !important;
+	margin-top: 1rem !important;
 }
 #contribution {
+	margin-top: 1rem;
 	font-size: x-small;
 	font-weight: 500;
 }
