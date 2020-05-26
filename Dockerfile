@@ -146,6 +146,8 @@ RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl
 # RUN conda install -y tsnecuda cuda102 -c cannylab
 RUN conda install -y -c dglteam dgl-cuda10.2
 
+RUN conda install -y -c anaconda tensorflow-gpu
+
 # Install pyarrow
 RUN conda install --quiet -y 'pyarrow' && \
     conda clean --all -f -y && \
