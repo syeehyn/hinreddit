@@ -50,7 +50,7 @@ margin-top: 2rem;
 }
 
 .body {
-	width: 40%;
+	width: 50%;
 }
 
 
@@ -68,8 +68,14 @@ margin-top: 2rem;
 }
 @media screen and (min-width: 780px) {
 	.body {
-		width: 40% !important;
+		width: 50% !important;
 	}
+}
+.bk-root {
+	margin-left: 0;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	margin-right: 0;
 }
 #contribution {
 	margin-top: 1rem;
