@@ -19,7 +19,7 @@ OUT_DIR = osp.join('interim', 'graph')
 def create_graph(fp):
     print('start preprocessing: (filtering)')
     try:
-        os.remove(osp.join(fp, OUT_DIR, 'graph.mat'))
+        os.remove(osp.join(fp, OUT_DIR, 'graph_2.mat'))
     except FileNotFoundError:
         pass
     comm = osp.join(fp, COMM_DIR)
