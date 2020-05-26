@@ -127,7 +127,7 @@ RUN conda install -y -c pytorch \
     "torchvision=0.6.0=py37_cu102" \
     && conda clean -ya
 
-RUN conda install -y -c anaconda tensorflow-gpu
+# RUN conda install -y -c anaconda tensorflow-gpu
 
 #Additional
 COPY requirements.txt /tmp

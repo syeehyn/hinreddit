@@ -12,4 +12,6 @@ h5py==2.8.0
 h5py-cache==1.0
 graphviz==0.8.4
 torchnet==0.0.4
+tensorflow
+tensorflow-gpu
 stellargraph
