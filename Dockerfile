@@ -120,6 +120,10 @@ WORKDIR /
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
 
+# CUDA 10.2-specific steps
+RUN conda install -y -c pytorch \
+    cudatoolkit=10.2 \
+    && conda clean -ya
 
 #Additional
 COPY requirements.txt /tmp
