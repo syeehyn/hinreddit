@@ -33,7 +33,7 @@ def node2vec_g1(fp, PARAMS):
             optimizer.step()
             total_loss += loss.item()
         return total_loss / len(loader)
-    print('number of nodes to be embedded {}'.format(data.num_nodes))
+    print('number of nodes to be embedded {}'.format(len(data.post_indx)))
     print('Start Node2vec Embedding Process with Following Parameters:')
     print(PARAMS)
     losses = []
@@ -51,6 +51,7 @@ def node2vec_g1(fp, PARAMS):
     torch.save(z, osp.join(fp, 'processed', 'node2vec','embedding_1.pt'))
 
 def node2vec_g2(fp, PARAMS):
+    create_dataset(fp)
     data = torch.load(osp.join(fp, 'interim', 'graph','processed', 'graph_2.pt'))[0]
     loader = DataLoader(data.post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
@@ -71,7 +72,7 @@ def node2vec_g2(fp, PARAMS):
             optimizer.step()
             total_loss += loss.item()
         return total_loss / len(loader)
-    print('number of nodes to be embedded {}'.format(data.num_nodes))
+    print('number of nodes to be embedded {}'.format(len(data.post_indx)))
     print('Start Node2vec Embedding Process with Following Parameters:')
     print(PARAMS)
     losses = []
