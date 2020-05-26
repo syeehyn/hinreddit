@@ -144,7 +144,7 @@ def create_graph(fp):
     P = N[post_indx, :][:, user_indx]
     subreddit = pd.merge(node_maps[post_mask][['name']], post[['id', 'subreddit']].drop_duplicates(), \
                             left_on = 'name', right_on='id', how='left').subreddit.values
-    big_com = np.isin(subreddit, community).astype(int)
+    big_com = np.isin(subreddit, community).astype(int).reshape(-1, 1)
     heter_feature = OneHotEncoder().fit_transform(subreddit.reshape(-1, 1)).toarray()
     heter_label = pd.merge(node_maps[post_mask][['name']], 
             labl, left_on='name', right_on='post_id', how='left').label.values
