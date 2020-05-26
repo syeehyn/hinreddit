@@ -141,7 +141,7 @@ RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl
     && pip install torch-spline-conv==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
     && pip install torch-geometric
 
-RUN conda install -y tsnecuda cuda102 -c cannylab
+# RUN conda install -y tsnecuda cuda102 -c cannylab
 RUN conda install -y -c dglteam dgl-cuda10.2
 
 # Install pyarrow
