@@ -10,7 +10,10 @@ Plotly
 cufflinks
 h5py==2.8.0
 h5py-cache==1.0
-torchnet==0.0.4
 graphviz==0.8.4
+cudatoolkit==10.2
+torchnet==0.0.4
+pytorch==1.5.0
+torchvision==0.6.0
 tensorflow
 stellargraph
