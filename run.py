@@ -54,9 +54,12 @@ def main(targets):
         g1(DATADIR)
         g2(DATADIR)
     if 'node2vec' in targets:
-        node2vec(DATADIR, DATA_NODE2VEC)
+        node2vec_g1(DATADIR, DATA_NODE2VEC)
+        node2vec_g2(DATADIR, DATA_NODE2VEC)
     if 'infomax' in targets:
         infomax(DATADIR, DATA_INFOMAX)
+    if 'node2vecg2' in targets:
+        node2vec_g2(DATADIR, DATA_NODE2VEC)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
@@ -75,7 +78,8 @@ def main(targets):
         g1(TESTDIR)
         g2(TESTDIR)
     if 'node2vec-test' in targets:
-        node2vec(TESTDIR, TEST_NODE2VEC)
+        node2vec_g1(TESTDIR, TEST_NODE2VEC)
+        node2vec_g2(TESTDIR, TEST_NODE2VEC)
     if 'infomax-test' in targets:
         infomax(TESTDIR, TEST_INFOMAX)
     if 'test-project' in targets:
@@ -92,7 +96,8 @@ def main(targets):
         g1(TESTDIR)
         g2(TESTDIR)
         ##
-        node2vec(TESTDIR, TEST_NODE2VEC)
+        node2vec_g1(TESTDIR, TEST_NODE2VEC)
+        node2vec_g2(TESTDIR, TEST_NODE2VEC)
         infomax(TESTDIR, TEST_INFOMAX)
 
 

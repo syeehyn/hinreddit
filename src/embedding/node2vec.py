@@ -10,7 +10,7 @@ from torch_geometric.nn import Node2Vec
 from tqdm import tqdm
 import json
 import shutil
-def node2vec(fp, PARAMS):
+def node2vec_g1(fp, PARAMS):
     shutil.rmtree(osp.join(fp, 'processed', 'node2vec'), ignore_errors = True)
     create_dataset(fp)
     data = torch.load(osp.join(fp, 'interim', 'graph','processed', 'graph_1.pt'))[0]
@@ -49,6 +49,8 @@ def node2vec(fp, PARAMS):
     with open(osp.join(fp, 'processed', 'node2vec', 'log_1.json'), 'w') as f:
         json.dump({'loss': losses}, f)
     torch.save(z, osp.join(fp, 'processed', 'node2vec','embedding_1.pt'))
+
+def node2vec_g2(fp, PARAMS):
     data = torch.load(osp.join(fp, 'interim', 'graph','processed', 'graph_2.pt'))[0]
     loader = DataLoader(data.post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
@@ -86,3 +88,4 @@ def node2vec(fp, PARAMS):
         json.dump({'loss': losses}, f)
     torch.save(z, osp.join(fp, 'processed', 'node2vec','embedding_2.pt'))
     return 'embedding node2vec created'
+
