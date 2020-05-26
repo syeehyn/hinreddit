@@ -9,7 +9,7 @@ wordcloud
 Plotly
 cufflinks
 torch==1.5.0
-torchvision
+torchvision==0.6.0
 h5py==2.8.0
 h5py-cache==1.0
 torchnet==0.0.4
