@@ -16,6 +16,56 @@ LABL_DIR = osp.join('interim', 'label', '*.csv')
 POST_DIR = osp.join('raw', 'posts', '*.csv')
 OUT_DIR = osp.join('interim', 'graph', 'graph_1.mat')
 
+community = ["KotakuInAction",
+    "TumblrInAction",
+    "pussypassdenied",
+    "conspiracy",
+    "Drama",
+    "aznidentity",
+    "ShitPoliticsSays",
+    "AgainstHateSubreddits",
+    "TopMindsOfReddit",
+    "MensRights",
+    "TheBluePill",
+    "PussyPass",
+    "CringeAnarchy",
+    "Imgoingtohellforthis",
+    "UncensoredNewsSucks",
+    "conspiracy",
+    "politics",
+    "The_Donald_CA",
+    "DebateAltRight",
+    "The_Donald",
+    "TheRedPill",
+    "MGTOW",
+    "spacedicks",
+    "AntiPOZi",
+    "nsfl",
+    "ferguson",
+    "Ellenpaohate",
+    "ChapoTrapHouse",
+    "911truth",
+    "AltRightChristian",
+    "bruhfunny",
+    "CoronavirusConspiracy",
+    "darkmemes",
+    "EDFood",
+    "inbreeding",
+    "incest",
+    "incest_relationships",
+    "FULLCOMMUNISM",
+    "multiculturalcancer",
+    "NationalistsUnited",
+    "okbuddyanarchy",
+    "PissEarth",
+    "SargonofAkkad",
+    "smuggies",
+    "spacedicks",
+    "TimeToGo",
+    "Wuhan_Flu",
+    "jokes",
+    "unpopularopinion"]
+
 def create_graph(fp):
     print('start preprocessing: (filtering)')
     try:
@@ -94,7 +144,8 @@ def create_graph(fp):
     P = N[post_indx, :][:, user_indx]
     subreddit = pd.merge(node_maps[post_mask][['name']], post[['id', 'subreddit']].drop_duplicates(), \
                             left_on = 'name', right_on='id', how='left').subreddit.values
-    heter_feature = OneHotEncoder().fit_transform(subreddit.reshape(-1, 1))
+    big_com = subreddit.isin(community).astype(int)
+    heter_feature = OneHotEncoder().fit_transform(subreddit.reshape(-1, 1)).toarray()
     heter_label = pd.merge(node_maps[post_mask][['name']], 
             labl, left_on='name', right_on='post_id', how='left').label.values
     print('start writing matrices')
@@ -104,7 +155,7 @@ def create_graph(fp):
     res['A'] = A
     res['P'] = P
     res['post_label'] = heter_label.reshape(-1,)
-    res['post_cate'] = heter_feature
+    res['post_cate'] = np.hstack([heter_feature,big_com])
     res['post_indx'] = post_indx.reshape(-1,)
     res['user_indx'] = user_indx.reshape(-1,)
     io.savemat(osp.join(fp, OUT_DIR), res)
