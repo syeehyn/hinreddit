@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cusolver-${CUDA/./-} \
         cuda-cusparse-${CUDA/./-} \
         curl \
-        libcudnn7=${CUDNN}+cuda${CUDA} \
+        libcudnn7=${CUDNN}-1+cuda${CUDA} \
         libfreetype6-dev \
         libhdf5-serial-dev \
         libzmq3-dev \
