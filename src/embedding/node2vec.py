@@ -12,8 +12,8 @@ import json
 import shutil
 def node2vec(fp, PARAMS):
     shutil.rmtree(osp.join(fp, 'processed', 'node2vec'), ignore_errors = True)
-    dataset = create_dataset(fp)
-    data = torch.load(osp.join(fp, 'interim', 'processed', 'graph_1.pt'))
+    create_dataset(fp)
+    data = torch.load(osp.join(fp, 'interim', 'graph','processed', 'graph_1.pt'))
     loader = DataLoader(data.post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -49,7 +49,7 @@ def node2vec(fp, PARAMS):
     with open(osp.join(fp, 'processed', 'node2vec', 'log_1.json'), 'w') as f:
         json.dump({'loss': losses}, f)
     torch.save(z, osp.join(fp, 'processed', 'node2vec','embedding_1.pt'))
-    data = torch.load(osp.join(fp, 'interim', 'processed', 'graph_2.pt'))
+    data = torch.load(osp.join(fp, 'interim', 'graph','processed', 'graph_2.pt'))
     loader = DataLoader(data.post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
