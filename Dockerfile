@@ -13,15 +13,15 @@ gnupg2 curl ca-certificates && \
     apt-get purge --autoremove -y curl && \
 rm -rf /var/lib/apt/lists/*
 
-ENV CUDA_VERSION 10.2.89
+ENV CUDA_VERSION 10.1.243
 
-ENV CUDA_PKG_VERSION 10-2=$CUDA_VERSION-1
+ENV CUDA_PKG_VERSION 10-1=$CUDA_VERSION-1
 
 # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cudart-$CUDA_PKG_VERSION \
-cuda-compat-10-2 && \
-ln -s cuda-10.2 /usr/local/cuda && \
+cuda-compat-10-1 && \
+ln -s cuda-10.1 /usr/local/cuda && \
     rm -rf /var/lib/apt/lists/*
 
 # Required for nvidia-docker v1
@@ -34,14 +34,10 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
 # nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=10.2 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411 brand=tesla,driver>=418,driver<419"
+ENV NVIDIA_REQUIRE_CUDA "cuda>=10.1 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411"
 
-
-ARG ARCH=
-ARG CUDA=10.2
-# ARCH and CUDA are specified again because the FROM directive resets ARGs
-# (but their default value is retained if set previously)
-ARG CUDNN=7.6.5.32
+ARG CUDA=10.1
+ARG CUDNN=7.6.4.38-1
 ARG CUDNN_MAJOR_VERSION=7
 ARG LIB_DIR_PREFIX=x86_64
 ARG LIBNVINFER=6.0.1-1
@@ -63,30 +59,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cusolver-${CUDA/./-} \
         cuda-cusparse-${CUDA/./-} \
         curl \
-        libcudnn7=${CUDNN}-1+cuda${CUDA} \
+        libcudnn7=${CUDNN}+cuda${CUDA} \
         libfreetype6-dev \
         libhdf5-serial-dev \
         libzmq3-dev \
         pkg-config \
         software-properties-common \
-        unzip
-
+        unzip \
+        openjdk-8-jre-headless \
+        ca-certificates-java && \
+        rm -rf /var/lib/apt/lists/*
 # Install TensorRT if not building for PowerPC
 RUN [[ "${ARCH}" = "ppc64le" ]] || { apt-get update && \
         apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} \
         libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*; }
-
 # For CUDA profiling, TensorFlow requires CUPTI.
 ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-
 # Link the libcuda stub to the location where tensorflow is searching for it and reconfigure
 # dynamic linker run-time bindings
 RUN ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 \
     && echo "/usr/local/cuda/lib64/stubs" > /etc/ld.so.conf.d/z-cuda-stubs.conf \
     && ldconfig
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg dvipng && \
+    rm -rf /var/lib/apt/lists/*
 
 
 COPY --from=datahub /usr/share/datahub/scripts/* /usr/share/datahub/scripts/
@@ -156,19 +155,23 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 
 RUN ln -s $(which python3) /usr/local/bin/python
 
+RUN conda install -c anaconda --yes  \
+                cudatoolkit=10.1 \
+                cudnn nccl \
+        && conda install -c pytorch --yes \
+                pytorch=1.5.0 \
+                torchvision=0.6.0 \
+        && conda clean -afy && fix-permissions $CONDA_DIR
+# Install tensorboard plugin for Jupyter notebooks
 
+#tf
+ARG TF_PACKAGE=tensorflow
+ARG TF_PACKAGE_VERSION=2.1.0
+RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} -t /usr/local
+RUN cd /usr/local && ln -s ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} tensorflow
 WORKDIR /
 RUN pip install --no-cache-dir jupyter-tensorboard && \
 	jupyter tensorboard enable --sys-prefix
-
-# CUDA 10.2-specific steps
-RUN conda install -y -c pytorch \
-    cudatoolkit=10.2 \
-    "pytorch=1.5.0=py3.7_cuda10.2.89_cudnn7.6.5_0" \
-    "torchvision=0.6.0=py37_cu102" \
-    && conda clean -ya
-
-# RUN conda install -y -c anaconda tensorflow-gpu
 
 #Additional
 COPY requirements.txt /tmp
@@ -180,27 +183,40 @@ RUN CPATH=/usr/local/cuda/include:$CPATH \
     && LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH \
     && DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
-    && pip install torch-sparse==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
-    && pip install torch-cluster==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
-    && pip install torch-spline-conv==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
-=======
-=======
->>>>>>> parent of 7a4f6d3... update docker
-RUN pip install torch-scatter==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
-    && pip install torch-sparse==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
-    && pip install torch-cluster==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
-    && pip install torch-spline-conv==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
-<<<<<<< HEAD
->>>>>>> parent of 7a4f6d3... update docker
-=======
->>>>>>> parent of 7a4f6d3... update docker
+RUN pip install torch-scatter==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
+    && pip install torch-sparse==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
+    && pip install torch-cluster==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
+    && pip install torch-spline-conv==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
     && pip install torch-geometric
 
-# RUN conda install -y tsnecuda cuda102 -c cannylab
-RUN conda install -y -c dglteam dgl-cuda10.2
+RUN conda install -y tsnecuda cuda101 -c cannylab
+RUN conda install -y -c dglteam dgl-cuda10.1
+
+# Spark dependencies
+ENV APACHE_SPARK_VERSION=2.4.5 \
+    HADOOP_VERSION=2.7
+
+RUN apt-get -y update && \
+    apt-get install --no-install-recommends -y openjdk-8-jre-headless ca-certificates-java && \
+    rm -rf /var/lib/apt/lists/*
+
+# Using the preferred mirror to download the file
+RUN cd /tmp && \
+    wget -q $(wget -qO- https://www.apache.org/dyn/closer.lua/spark/spark-${APACHE_SPARK_VERSION}/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz\?as_json | \
+    python -c "import sys, json; content=json.load(sys.stdin); print(content['preferred']+content['path_info'])") && \
+    echo "2426a20c548bdfc07df288cd1d18d1da6b3189d0b78dee76fa034c52a4e02895f0ad460720c526f163ba63a17efae4764c46a1cd8f9b04c60f9937a554db85d2 *spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" | sha512sum -c - && \
+    tar xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -C /usr/local --owner root --group root --no-same-owner && \
+    rm spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
+RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
+
+
+# Spark and Mesos config
+ENV SPARK_HOME=/usr/local/spark
+ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip \
+    SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info" \
+    PATH=$PATH:$SPARK_HOME/bin
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 # Install pyarrow
 RUN conda install --quiet -y 'pyarrow' && \
