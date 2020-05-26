@@ -127,6 +127,8 @@ RUN conda install -y -c pytorch \
     "torchvision=0.6.0=py37_cu102" \
     && conda clean -ya
 
+RUN conda install -y -c anaconda tensorflow-gpu
+
 #Additional
 COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt  && \
@@ -145,8 +147,6 @@ RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl
 
 # RUN conda install -y tsnecuda cuda102 -c cannylab
 RUN conda install -y -c dglteam dgl-cuda10.2
-
-RUN conda install -y -c anaconda tensorflow-gpu
 
 # Install pyarrow
 RUN conda install --quiet -y 'pyarrow' && \
