@@ -9,6 +9,11 @@ wordcloud
 Plotly
 cufflinks
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+torch==1.4.0
+torchvision==0.5.0
+>>>>>>> parent of 7a4f6d3... update docker
 =======
 torch==1.4.0
 torchvision==0.5.0

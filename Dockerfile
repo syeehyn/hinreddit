@@ -181,15 +181,21 @@ RUN CPATH=/usr/local/cuda/include:$CPATH \
     && DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
     && pip install torch-sparse==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
     && pip install torch-cluster==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
     && pip install torch-spline-conv==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.5.0.html \
 =======
+=======
+>>>>>>> parent of 7a4f6d3... update docker
 RUN pip install torch-scatter==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
     && pip install torch-sparse==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
     && pip install torch-cluster==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
     && pip install torch-spline-conv==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.4.0.html \
+<<<<<<< HEAD
+>>>>>>> parent of 7a4f6d3... update docker
+=======
 >>>>>>> parent of 7a4f6d3... update docker
     && pip install torch-geometric
 
