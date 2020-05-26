@@ -158,5 +158,5 @@ def create_graph(fp):
     res['post_indx'] = post_indx.reshape(-1,)
     res['user_indx'] = user_indx.reshape(-1,)
     io.savemat(osp.join(fp, OUT_DIR, 'graph_2.mat'), res)
-    print('graph constructed, with N shape: {}, N edges: {}, PU shape: {}'.format(N.shape, N_edge.shape[1], PU.shape),)
+    print('graph constructed, with N shape: {}'.format(N.shape))
 
