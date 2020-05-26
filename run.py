@@ -58,8 +58,6 @@ def main(targets):
         node2vec_g2(DATADIR, DATA_NODE2VEC)
     if 'infomax' in targets:
         infomax(DATADIR, DATA_INFOMAX)
-    if 'node2vecg2' in targets:
-        node2vec_g2(DATADIR, DATA_NODE2VEC)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
