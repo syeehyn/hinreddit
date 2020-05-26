@@ -25,7 +25,7 @@ def create_graph(fp):
     comm = osp.join(fp, COMM_DIR)
     post = osp.join(fp, POST_DIR)
     labl = osp.join(fp, LABL_DIR)
-    comm = pd.concat([pd.read_csv(i, usecols = ['id', 'author', 'parent_id']
+    comm = pd.concat([pd.read_csv(i, usecols = ['id', 'author', 'parent_id', 'link_id']
                         ) for i in glob(comm)])
     post = pd.concat([pd.read_csv(i, usecols = ['id', 'author', 'subreddit']
                         ) for i in glob(post)])
@@ -35,12 +35,14 @@ def create_graph(fp):
     post.subreddit = post.subreddit.str.lower()
     post = post[(post.author != '[deleted]')&(post.author != 'automoderator')& (post.author != 'snapshillbot')]
     comm['parent_id'] = comm.parent_id.str[3:]
-    comm = comm[['id','author', 'parent_id']]
+    comm['link_id'] = comm.link_id.str[3:]
+    comm = comm[['id','author', 'parent_id', 'link_id']]
     comm.author = comm.author.str.lower()
     comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
     comm = comm.dropna()
-    post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.parent_id))]
-    comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id))]
+    post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.link_id))]
+    comm = comm[comm.link_id.isin(post.id)]
+    comm = comm[(comm.parent_id.isin(post.id)) | (comm.parent_id.isin(comm.id)) | (comm.link_id.isin(post.id))]
     comm_root = comm[comm.parent_id.str.len() == 6]
     comm_nest = comm[comm.parent_id.str.len() == 7]
     print('start preprocessing: (edges)')
