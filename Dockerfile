@@ -155,13 +155,14 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 
 RUN ln -s $(which python3) /usr/local/bin/python
 
-RUN conda install -c anaconda --yes  \
-                cudatoolkit=10.1 \
-                cudnn nccl \
-        && conda install -c pytorch --yes \
-                pytorch=1.5.0 \
-                torchvision=0.6.0 \
-        && conda clean -afy && fix-permissions $CONDA_DIR
+
+# RUN conda install -c anaconda --yes  \
+#                 cudatoolkit=10.1 \
+#                 cudnn nccl \
+#         && conda install -c pytorch --yes \
+#                 pytorch=1.5.0 \
+#                 torchvision=0.6.0 \
+#         && conda clean -afy && fix-permissions $CONDA_DIR
 # Install tensorboard plugin for Jupyter notebooks
 
 #tf
@@ -177,6 +178,8 @@ RUN pip install --no-cache-dir jupyter-tensorboard && \
 COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt  && \
 	fix-permissions $CONDA_DIR
+
+RUN pip install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
 
 # Install PyTorch Geometric.
 RUN CPATH=/usr/local/cuda/include:$CPATH \
