@@ -1,7 +1,0 @@
-{
-    "HIDDEN_CHANNELS": 64,
-    "SUMMARY": 64,
-    "LEARNING_RATE": 0.01,
-    "NUM_EPOCH": 10,
-    "CUDA": true
-    }

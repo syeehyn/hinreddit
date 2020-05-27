@@ -16,10 +16,14 @@ TESTDIR = TESTPARAMS['META_ARGS']['filepath']
 EDADIR = EDAPARAMS['META_ARGS']['filepath']
 DATADIR = DATAPARAMS['META_ARGS']['filepath']
 MODELDIR = 'config/nlp_model.zip'
-DATA_NODE2VEC = json.load(open('config/embedding/node2vec.json'))
-TEST_NODE2VEC = json.load(open('config/embedding/test-node2vec.json'))
-DATA_INFOMAX = json.load(open('config/embedding/infomax.json'))
-TEST_INFOMAX = json.load(open('config/embedding/test-infomax.json'))
+G1_NODE2VEC = json.load(open('config/embedding/graph_1/node2vec.json'))
+G2_NODE2VEC = json.load(open('config/embedding/graph_2/node2vec.json'))
+G1_TEST_NODE2VEC = json.load(open('config/embedding/graph_1/test-node2vec.json'))
+G2_TEST_NODE2VEC = json.load(open('config/embedding/graph_2/test-node2vec.json'))
+G1_INFOMAX = json.load(open('config/embedding/graph_1/infomax.json'))
+G2_INFOMAX = json.load(open('config/embedding/graph_2/infomax.json'))
+G1_TEST_INFOMAX = json.load(open('config/embedding/graph_1/test-infomax.json'))
+G2_TEST_INFOMAX = json.load(open('config/embedding/graph_2/test-infomax.json'))
 
 def env(fp):
     os.makedirs(os.path.join(fp, 'raw', 'posts'), exist_ok=True)
@@ -54,10 +58,11 @@ def main(targets):
         g1(DATADIR)
         g2(DATADIR)
     if 'node2vec' in targets:
-        node2vec_g1(DATADIR, DATA_NODE2VEC)
-        node2vec_g2(DATADIR, DATA_NODE2VEC)
+        node2vec(DATADIR, G1_NODE2VEC)
+        node2vec(DATADIR, G2_NODE2VEC)
     if 'infomax' in targets:
-        infomax(DATADIR, DATA_INFOMAX)
+        infomax(DATADIR, G1_INFOMAX)
+        infomax(DATADIR, G2_INFOMAX)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
@@ -76,10 +81,11 @@ def main(targets):
         g1(TESTDIR)
         g2(TESTDIR)
     if 'node2vec-test' in targets:
-        node2vec_g1(TESTDIR, TEST_NODE2VEC)
-        node2vec_g2(TESTDIR, TEST_NODE2VEC)
+        node2vec(TESTDIR, G1_TEST_NODE2VEC)
+        node2vec(TESTDIR, G2_TEST_NODE2VEC)
     if 'infomax-test' in targets:
-        infomax(TESTDIR, TEST_INFOMAX)
+        infomax(TESTDIR, G1_TEST_INFOMAX)
+        infomax(TESTDIR, G2_TEST_INFOMAX)
     if 'test-project' in targets:
         ##
         fetch_submissions(**TESTPARAMS)
@@ -94,9 +100,10 @@ def main(targets):
         g1(TESTDIR)
         g2(TESTDIR)
         ##
-        node2vec_g1(TESTDIR, TEST_NODE2VEC)
-        node2vec_g2(TESTDIR, TEST_NODE2VEC)
-        infomax(TESTDIR, TEST_INFOMAX)
+        node2vec(TESTDIR, G1_TEST_NODE2VEC)
+        node2vec(TESTDIR, G2_TEST_NODE2VEC)
+        infomax(TESTDIR, G1_TEST_INFOMAX)
+        infomax(TESTDIR, G2_TEST_INFOMAX)
 
 
 
