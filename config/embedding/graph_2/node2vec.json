@@ -1,5 +1,5 @@
 {
-"GRAPH_NAME": "graph_1.mat",
+"GRAPH_NAME": "graph_2.mat",
 "BATCH_SIZE": 256,
 "EMBEDDING_DIM": 128,
 "WALK_LENGTH": 100,
