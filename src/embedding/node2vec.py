@@ -52,7 +52,7 @@ def node2vec(fp, PARAMS):
         z = model()
     if not os.path.exists(os.path.join(fp, 'processed', 'node2vec')):
         os.makedirs(os.path.join(fp, 'processed', 'node2vec'), exist_ok=True)
-    with open(osp.join(fp, 'processed', 'node2vec', 'log_1.json'), 'w') as f:
+    with open(osp.join(fp, 'processed', 'node2vec', PARAMS['EMBEDDING_NAME'] + 'log.json'), 'w') as f:
         json.dump({'loss': losses}, f)
     z = z.detach().cpu().numpy()[post_indx, :]
     np.save(osp.join(fp, 'processed', 'node2vec', PARAMS['EMBEDDING_NAME']), z)
