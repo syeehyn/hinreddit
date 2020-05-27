@@ -8,7 +8,6 @@ from sklearn.preprocessing import OneHotEncoder
 import json
 from scipy import sparse
 import shutil
-from .utils import create_dataset
 import scipy.io as io
 
 COMM_DIR = osp.join('raw', 'comments', '*.csv')
