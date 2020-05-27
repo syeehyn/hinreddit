@@ -27,9 +27,9 @@ def node2vec(fp, PARAMS):
     else:
         device = 'cpu'
     model = Node2Vec(data.edge_index, embedding_dim=PARAMS['EMBEDDING_DIM'], walk_length=PARAMS['WALK_LENGTH'],
-                    context_size=PARAMS['CONTEXT_SIZE'], walks_per_node=PARAMS['WALKS_PER_NODE'], p = PARAMS['P'], q = PARAMS['Q'])
+                    context_size=PARAMS['CONTEXT_SIZE'], walks_per_node=PARAMS['WALKS_PER_NODE'], p = PARAMS['P'], q = PARAMS['Q'], sparse=True)
     model, data = model.to(device), data.to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
+    optimizer = torch.optim.SparseAdam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
     def train():
         model.train()
         total_loss = 0
