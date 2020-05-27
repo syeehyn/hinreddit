@@ -24,6 +24,10 @@ def metapath2vec(fp, PARAMS):
         ('user', 'replied by', 'user') : user_user[0],
         ('user', 'wrote', 'post') : author_post[0],
         ('post', 'commented by', 'user') : post_user[0],
+    },
+        num_nodes_dict = {
+        'post': g['post_indx'].shape[1],
+        'user' : g['user_indx'].shape[1]
     }
     )
     if PARAMS['CUDA']:
@@ -36,7 +40,7 @@ def metapath2vec(fp, PARAMS):
                     sparse=True).to(device)
     loader = model.loader(batch_size=PARAMS['BATCH_SIZE'], shuffle=False, num_workers=8)
     optimizer = torch.optim.SparseAdam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
-    def train(epoch, log_steps=1000):
+    def train(epoch, log_steps=100):
         model.train()
         total_loss = 0
         store = []
