@@ -24,6 +24,8 @@ G1_INFOMAX = json.load(open('config/embedding/graph_1/infomax.json'))
 G2_INFOMAX = json.load(open('config/embedding/graph_2/infomax.json'))
 G1_TEST_INFOMAX = json.load(open('config/embedding/graph_1/test-infomax.json'))
 G2_TEST_INFOMAX = json.load(open('config/embedding/graph_2/test-infomax.json'))
+G1_METAPATH = json.load(open('config/embedding/graph_1/metapath2vec.json'))
+G2_METAPATH = json.load(open('config/embedding/graph_2/metapath2vec.json'))
 
 def env(fp):
     os.makedirs(os.path.join(fp, 'raw', 'posts'), exist_ok=True)
@@ -63,6 +65,9 @@ def main(targets):
     if 'infomax' in targets:
         infomax(DATADIR, G1_INFOMAX)
         infomax(DATADIR, G2_INFOMAX)
+    if 'metapath2vec' in targets:
+        metapath2vec(DATADIR, G1_METAPATH)
+        metapath2vec(DATADIR, G2_METAPATH)
     if 'debug' in targets:
         infomax(DATADIR, G1_INFOMAX)
         # node2vec(DATADIR, G2_NODE2VEC)
