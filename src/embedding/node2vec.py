@@ -32,7 +32,7 @@ def node2vec(fp, PARAMS):
     def train():
         model.train()
         total_loss = 0
-        for pow_rw, neg_rw in tqdm(loader):
+        for pos_rw, neg_rw in tqdm(loader):
             optimizer.zero_grad()
             loss = model.loss(pos_rw.to(device), neg_rw.to(device))
             loss.backward()
