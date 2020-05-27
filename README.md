@@ -36,16 +36,14 @@ The project is mainly built upon following packages:
 - Data Preprocessing & Feature Extraction
 
   - [Pandas](https://pandas.pydata.org/)
-
-  - [Spark](https://spark.apache.org/)
+  
 
 - Labeling & ML Deployment
 
-  - [Pytorch = 1.4](https://pytorch.org/)
+  - [Pytorch = 1.5](https://pytorch.org/)
   
   - [PyTorch Geometric](https://github.com/rusty1s/pytorch_geometric)
 
-  - [Fast-Bert](https://github.com/kaushaltrivedi/fast-bert)
 
 #### Use Dockerfile
 
