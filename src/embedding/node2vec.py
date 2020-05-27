@@ -21,6 +21,7 @@ def node2vec(fp, PARAMS):
         x = x,
         edge_index = edge_idx
     )
+    data.num_nodes = x.shape[0]
     loader = DataLoader(post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
