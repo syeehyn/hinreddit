@@ -28,7 +28,7 @@ def node2vec(fp, PARAMS):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:
         device = 'cpu'
-    model = Node2Vec(data.num_nodes, embedding_dim=PARAMS['EMBEDDING_DIM'], walk_length=PARAMS['WALK_LENGTH'],
+    model = Node2Vec(data.edge_index, embedding_dim=PARAMS['EMBEDDING_DIM'], walk_length=PARAMS['WALK_LENGTH'],
                     context_size=PARAMS['CONTEXT_SIZE'], walks_per_node=PARAMS['WALKS_PER_NODE'], p = PARAMS['P'], q = PARAMS['Q'], sparse=True)
     model, data = model.to(device), data.to(device)
     optimizer = torch.optim.SparseAdam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
