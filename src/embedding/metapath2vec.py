@@ -8,6 +8,12 @@ from torch_geometric.data import Data
 import numpy as np
 import json
 
+metapath = [
+    ('post', 'commented by', 'user'),
+    ('user', 'replied by', 'user'),
+    ('user', 'wrote', 'post')
+]
+
 def metapath2vec(fp, PARAMS):
     g = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))
     user_user = from_scipy_sparse_matrix(g['U'])
@@ -30,7 +36,6 @@ def metapath2vec(fp, PARAMS):
         'post': torch.from_numpy(g['post_cate']).float()
     }
     )
-    metapath = PARAMS['METAPATH']
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:

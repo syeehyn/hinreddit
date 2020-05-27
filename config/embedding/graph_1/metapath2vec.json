@@ -1,8 +1,5 @@
 {
 "GRAPH_NAME": "graph_1.mat",
-"METAPATH": [["post", "commented by", "user"],
-            ["user", "replied by", "user"],
-            ["user", "wrote", "post"]],
 "NUM_NEG_SAMPLES": 5,
 "BATCH_SIZE": 16,
 "EMBEDDING_DIM": 128,
