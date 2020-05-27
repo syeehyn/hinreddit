@@ -18,7 +18,7 @@ def node2vec(fp, PARAMS):
     post_indx = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))['post_indx']
     post_indx = torch.from_numpy(post_indx.reshape(-1,))
     data = Data(
-        x = x.view(-1, 1),
+        x = x,
         edge_index = edge_idx
     )
     loader = DataLoader(post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
