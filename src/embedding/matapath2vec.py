@@ -16,6 +16,7 @@ def metapath2vec(fp, PARAMS):
     data = Data(
     edge_index_dict = {
         ('user', 'replied by', 'user') : user_user[0],
+        ('user', 'replies', 'user'): user_user[0].T,
         ('user', 'wrote', 'post') : author_post[0],
         ('post', 'commented by', 'user') : post_user[0],
     },

@@ -2,6 +2,7 @@
 "GRAPH_NAME": "graph_2.mat",
 "METAPATH": [["post", "commented by", "user"],
             ["user", "replied by", "user"],
+            ["user", "repliess", "user"],
             ["user", "wrote", "post"]],
 "NUM_NEG_SAMPLES": 5,
 "BATCH_SIZE": 16,
