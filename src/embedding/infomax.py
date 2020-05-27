@@ -44,7 +44,6 @@ def infomax(fp, PARAMS):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     else:
         device = 'cpu'
-    shutil.rmtree(osp.join(fp, 'processed', 'infomax'), ignore_errors = True)
     data = data.to(device)
     model = DeepGraphInfomax(
         hidden_channels=PARAMS['HIDDEN_CHANNELS'], encoder=Encoder(data.x.shape[1], PARAMS['SUMMARY']),
