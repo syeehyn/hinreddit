@@ -18,10 +18,9 @@ def node2vec(fp, PARAMS):
     post_indx = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))['post_indx']
     post_indx = torch.from_numpy(post_indx.reshape(-1,))
     data = Data(
-        x = x,
+        x = x.view(-1, 1),
         edge_index = edge_idx
     )
-    data.num_nodes = x.shape[0]
     loader = DataLoader(post_indx, batch_size=PARAMS['BATCH_SIZE'], shuffle=False)
     if PARAMS['CUDA']:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
