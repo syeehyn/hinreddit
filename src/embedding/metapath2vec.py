@@ -16,7 +16,6 @@ def metapath2vec(fp, PARAMS):
     data = Data(
     edge_index_dict = {
         ('user', 'replied by', 'user') : user_user[0],
-        ('user', 'replies', 'user'): user_user[0].T,
         ('user', 'wrote', 'post') : author_post[0],
         ('post', 'commented by', 'user') : post_user[0],
     },
@@ -29,11 +28,6 @@ def metapath2vec(fp, PARAMS):
     },
     x_dict = {
         'post': torch.from_numpy(g['post_cate']).float()
-    },
-    edge_attr_dict = {
-        ('user', 'replied by', 'user') : user_user[1],
-        ('user', 'wrote', 'post') : author_post[1],
-        ('post', 'commented by', 'user') : post_user[1],
     }
     )
     metapath = PARAMS['METAPATH']
