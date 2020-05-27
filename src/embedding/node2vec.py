@@ -13,9 +13,9 @@ from tqdm import tqdm
 import json
 import shutil
 def node2vec(fp, PARAMS):
-    N = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME.mat']))['N']
+    N = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))['N']
     edge_idx, x =from_scipy_sparse_matrix(N)
-    post_indx = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME.mat']))['post_indx']
+    post_indx = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))['post_indx']
     post_indx = torch.from_numpy(post_indx.reshape(-1,))
     data = Data(
         x = x,
