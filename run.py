@@ -53,8 +53,7 @@ def main(targets):
         label_posts(DATADIR, model, tokenizer)
         labeling(DATADIR)
     if 'baseline' in targets:
-        posts = extract_feat(os.path.join(DATADIR, 'raw', 'posts'),\
-                            os.path.join(DATADIR, 'interim', 'label', 'label.csv'))
+        posts = extract_feat(DATADIR)
         baseline_model(posts)
     if 'graph' in targets:
         g1(DATADIR)
@@ -82,8 +81,7 @@ def main(targets):
         label_posts(TESTDIR, model, tokenizer)
         labeling(TESTDIR)
     if 'baseline-test' in targets:
-        posts = extract_feat(os.path.join(TESTDIR, 'raw', 'posts'),\
-                            os.path.join(TESTDIR, 'interim', 'label', 'label.csv'))
+        posts = extract_feat(TESTDIR)
         baseline_model(posts)
     if 'graph-test' in targets:
         g1(TESTDIR)

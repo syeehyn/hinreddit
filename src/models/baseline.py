@@ -1,5 +1,6 @@
 import re
 import glob, os, shutil
+import os.path as osp
 import gzip
 import numpy as np
 import pandas as pd
@@ -14,13 +15,15 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import confusion_matrix, auc, roc_curve
 from sklearn.model_selection import train_test_split
-
+COMM_DIR = osp.join('raw', 'comments', '*.csv')
+LABL_DIR = osp.join('interim', 'label', '*.csv')
+POST_DIR = osp.join('raw', 'posts', '*.csv')
 import warnings
 warnings.filterwarnings("ignore")
 
 def get_csvs(dir_path):
-    posts = glob.glob(dir_path+'*.csv')
-    return pd.concat([pd.read_csv(i) for i in posts], ignore_index = True)
+    post = glob.glob(dir_path+'*.csv')
+    return pd.concat([pd.read_csv(i) for i in post], ignore_index = True)
 
 def clean_tweet(tweet): 
     return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split()) 
@@ -33,11 +36,25 @@ def sensitive_word(text):
     else:
         return 0
 
-def extract_feat(p_dir, l_path):
+def extract_feat(fp):
     
-    posts = get_csvs(p_dir)
-    labels = pd.read_csv(l_path)
-    post_labeldf = pd.merge(labels,posts,left_on = 'post_id',right_on = 'id',how = 'inner').drop_duplicates()
+    comm = osp.join(fp, COMM_DIR)
+    post = osp.join(fp, POST_DIR)
+    labl = osp.join(fp, LABL_DIR)
+
+    labl = labl[labl.label != -1]
+    post.author = post.author.str.lower()
+    post.subreddit = post.subreddit.str.lower()
+    post = post[(post.author != '[deleted]')&(post.author != 'automoderator')& (post.author != 'snapshillbot')]
+    comm['parent_id'] = comm.parent_id.str[3:]
+    comm['link_id'] = comm.link_id.str[3:]
+    comm = comm[['id','author', 'parent_id', 'link_id']]
+    comm.author = comm.author.str.lower()
+    comm = comm[(comm.author != '[deleted]')&(comm.author != 'automoderator') & (comm.author != 'snapshillbot')]
+    comm = comm.dropna()
+    post = post[(post.id.isin(labl.post_id)) & (post.id.isin(comm.link_id))]
+
+    post_labeldf = pd.merge(labl,post,left_on = 'post_id',right_on = 'id',how = 'inner').drop_duplicates()
     hate_benign_post = post_labeldf[(post_labeldf.label == 1) | (post_labeldf.label == 0)]
     hate_benign_post['selftext'] = hate_benign_post.selftext.fillna("")
     
@@ -79,7 +96,7 @@ def result_LR(df_train, df_test, pre, y_column = 'label'):
         df_train - dataframe for training set
         df_test - dataframe for test set
         pre - column transformer
-        y_column - the column name of labels, default malware
+        y_column - the column name of labl, default malware
         
     """
     X = df_train.drop(y_column, 1)
@@ -103,7 +120,7 @@ def result_RF(df_train, df_test, pre, y_column = 'label'):
         df_train - dataframe for training set
         df_test - dataframe for test set
         pre - column transformer
-        y_column - the column name of labels, default malware
+        y_column - the column name of labl, default malware
         
     """
     X = df_train.drop(y_column, 1)
@@ -127,7 +144,7 @@ def result_GBT(df_train, df_test, pre, y_column = 'label'):
         df_train - dataframe for training set
         df_test - dataframe for test set
         pre - column transformer
-        y_column - the column name of labels, default malware
+        y_column - the column name of labl, default malware
         
     """
     X = df_train.drop(y_column, 1)
@@ -172,7 +189,7 @@ def baseline_model(df, y_col = 'label', test_size=0.3):
     
     Args:
         df - dataframe of simple features
-        y_col - column name for labels, default malware
+        y_col - column name for labl, default malware
         test_size - test size for train-test split, default 0.33
         
     """
