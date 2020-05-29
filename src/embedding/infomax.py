@@ -13,6 +13,8 @@ from tqdm import tqdm
 import json
 from torch import nn
 import shutil
+sys.path.append('../')
+from models import *
 class Encoder(nn.Module):
     def __init__(self, in_channels, hidden_channels):
         super(Encoder, self).__init__()
@@ -28,7 +30,7 @@ def corruption(x, edge_index):
 
 def infomax(fp, PARAMS):
     g = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))
-    N = g['N']
+    N = get_baseline_feature(fp)
     p_cate = g['post_cate']
     post_indx = g['post_indx']
     edge_idx, x =from_scipy_sparse_matrix(N)

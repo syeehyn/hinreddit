@@ -221,3 +221,7 @@ def baseline_model(df, y_col = 'label', test_size=0.3):
     baseline_result = save_baseline_result(lr, rf, gbt)
     print('baseline test result saved to output directory')
     return baseline_result
+
+def get_baseline_feature(fp):
+    X = extract_feat(fp)
+    return preprocess(X).fit_transform(X).toarray()
