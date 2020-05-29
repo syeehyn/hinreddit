@@ -43,7 +43,7 @@ def extract_feat(fp):
     labl = osp.join(fp, LABL_DIR)
     comm = pd.concat([pd.read_csv(i, usecols = ['id', 'author', 'parent_id', 'link_id']
                         ) for i in glob.glob(comm)])
-    post = pd.concat([pd.read_csv(i, usecols = ['id', 'author', 'subreddit', 'selftext']
+    post = pd.concat([pd.read_csv(i, usecols = ['id', 'author', 'subreddit', 'selftext', 'score', 'num_comments']
                         ) for i in glob.glob(post)])
     labl = pd.concat([pd.read_csv(i) for i in glob.glob(labl)])
     labl = labl[labl.label != -1]
