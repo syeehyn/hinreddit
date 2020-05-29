@@ -62,14 +62,12 @@ def main(targets):
         node2vec(DATADIR, G1_NODE2VEC)
         node2vec(DATADIR, G2_NODE2VEC)
     if 'infomax' in targets:
-        infomax(DATADIR, G1_INFOMAX)
-        infomax(DATADIR, G2_INFOMAX)
+        feature = get_baseline_feature(DATADIR)
+        infomax(DATADIR, G1_INFOMAX, feature)
+        infomax(DATADIR, G2_INFOMAX, feature)
     if 'metapath2vec' in targets:
         metapath2vec(DATADIR, G1_METAPATH)
         metapath2vec(DATADIR, G2_METAPATH)
-    if 'debug' in targets:
-        infomax(DATADIR, G1_INFOMAX)
-        # node2vec(DATADIR, G2_NODE2VEC)
 #=================For test============================#
     if 'data-test' in targets:
         fetch_submissions(**TESTPARAMS)
@@ -90,8 +88,9 @@ def main(targets):
         node2vec(TESTDIR, G1_TEST_NODE2VEC)
         node2vec(TESTDIR, G2_TEST_NODE2VEC)
     if 'infomax-test' in targets:
-        infomax(TESTDIR, G1_TEST_INFOMAX)
-        infomax(TESTDIR, G2_TEST_INFOMAX)
+        feature = get_baseline_feature(TESTDIR)
+        infomax(TESTDIR, G1_TEST_INFOMAX, feature)
+        infomax(TESTDIR, G2_TEST_INFOMAX, feature)
     if 'test-project' in targets:
         ##
         fetch_submissions(**TESTPARAMS)
@@ -106,10 +105,11 @@ def main(targets):
         g1(TESTDIR)
         g2(TESTDIR)
         ##
+        feature = get_baseline_feature(TESTDIR)
         node2vec(TESTDIR, G1_TEST_NODE2VEC)
         node2vec(TESTDIR, G2_TEST_NODE2VEC)
-        infomax(TESTDIR, G1_TEST_INFOMAX)
-        infomax(TESTDIR, G2_TEST_INFOMAX)
+        infomax(TESTDIR, G1_TEST_INFOMAX, feature)
+        infomax(TESTDIR, G2_TEST_INFOMAX, feature)
 
 
 
