@@ -5,7 +5,7 @@ Project|build Status
 ETL | Finished
 Labeling | Finished
 Feature Extraction| Finished
-ML Deployment | In Progress
+ML Deployment | Finished
 
 [Development Timeline](./writeups/DEVTIMELINE.md)
 
