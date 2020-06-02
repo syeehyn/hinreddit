@@ -1,138 +1,697 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 	<head>
-		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-		<title>Hinreddit</title>
+		<title>Hinreddit: Reddit in Heterogeneous Information Network</title>
+		<meta name="description" content="袁 水犇洋 Yuan Shuibenyang">
 
-		<link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/grid/">
-
-		<!-- Bootstrap core CSS -->
-		<link href="./src/visualization/bootstrap.min.css" rel="stylesheet">
-
-		<!-- Custom styles for this template -->
-		<link href="./src/visualization/main.css" rel="stylesheet">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.2.min.js"></script>
-		<script src="./src/visualization/main.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:300,400,900,400italic' rel='stylesheet' type='text/css'>
+		<link href="./src/visualization/main.css" rel="stylesheet" type="text/css">
 	</head>
-
 	<body>
-		<div class="mx-auto body">
-			<h1>Hinreddit</h1>
-			<p style="text-align: center; margin-top: -0.5em; margin-bottom: -1em;">Reddit in Heterogeneous Information Network</p>
+		<main class="u-container">
+			<header class="c-page__header">
+				<div class="c-page"> 
+					<h1 class="home-h1">Hinreddit: Reddit in Heterogeneous Information Network</h1>
+					<p class="title-p">This project meants to analysis the finding of graph network of Reddit community and hateful post with our neural network models.</p>
+				</div>
+			</header>
 			<hr>
-			<p id='contribution'>
-					by <a href="https://github.com/anniechen0127">Chengyu Chen</a>,
+			<div class="c-article__main">
+				<h2>table of contents</h2>
+				<ul>
+					<li><a href="#hinreddit">HinReddit</a><br /></li>
+					<li><a href="#1-hateful-post-classification">1. Hateful Post Classification</a><br /></li>
+					<li><p><a href="#2-related-works">2. Related Works</a></p></li>
+					<li><p><a href="#3-the-data">3. The Data</a></p></li>
+					<li><a href="#4-labeling-updated">4. Labeling</a><br /></li>
+					<li><p><a href="#5-graph-extraction-new">5. Graph Extraction</a></p></li>
+					<li><p><a href="#6-eda-updated">6. EDA</a></p></li>
+					<li><p><a href="#7-ml-deployment-new">7. ML Deployment</a></p></li>
+					<li><p><a href="#8-experimental-result-new">8. Experimental Result</a></p></li>
+					<li><a href="#9-discussion-new">9. Discussion</a><br /></li>
+				</ul>
+				<hr>
+					<h2 id="hateful-post-classification">1. Hateful Post Classification</h2>
+					<p>As countless social platforms are developed and become accessible nowadays, more and more people get used to posting opinions on various topics online. The existence of nagetive online behaviors such as hateful comments is also unavoidable. These platforms thus become prolific sources for hate detection, which motivates large numbers of scholars to apply various techniques in order to detect hateful users or hateful speeches.</p>
+					<p>In our project, we plan to investigate contents from Reddit, which is a popular social network that focuses on aggregating American social news, rating web content and website discussion, that carries rich potential information of contents and their authors. Our goal is to classify hateful posts from the normal ones. Being able to identify hateful posts not only enables platforms to improve user experiences, but also helps to maintain a positive online environment. <strong>We would like to stress that the boundary of 'hate' is vague and there is no correct nor consolidated definition of 'hatefulness,' our classification of hateful posts depends only on a unified definition within our team, which we divide into the categories of <code>severe_toxic</code>,<code>threat</code>, <code>insult</code>, and <code>identity_hate</code>.</strong> We all agree that other people's recognition of &quot;hate&quot; may be but not limited to these four categories, and our labeling method allows full freedom of other definition of &quot;hatefulness.&quot;</p>
+					<p>We plan to use Bidirectional Encoder Representations from Transformers (BERT), a neural network architecture transforming natural language processing (NLP) techniques, in our data ingestion pipeline for data labeling. However, instead of using NLP in attempts to solve classification problems, we will be using graph embedding methods. Specifically, we will create a heterogeneous information network to capture the relationships among Reddit posts, which is then used as our features.</p>
+					<p>If our project is successful, we will have built an application, <em>hinReddit</em>, which helps identify hateful posts for Reddit. Similarly, others can apply our process on different social platforms. In addition, we will create a blog post including an EDA on the data we extracted and detailed description of the process we will complete to ingest data. We will perform feature engineering, develop a neural network model, and finally a summary of the test result of our model.</p>
+					<hr>
+					<h2 id="related-works">2. Related Works</h2>
+					<h3 id="hindroid">Hindroid</h3>
+					<p>Detecting hateful posts on Reddit is similar to our domain problem of detecting Android malware both conceptually and technically. Despite using different platforms, these two case studies both aim at identifying the malicious units from the benign units, and the goals are to produce a healthier and more positive environment to users. As we did in our replication using graph embedding techniques, here in our study, we will also pay attention to the connections as well as the communities of our object and construct heterogeneous information network (HIN) upon those connections that enables further training and classifications.</p>
+					<p>Specifically, in our HIN graph, we will have Reddit post nodes equivalent to App nodes in the replication project and user-interaction nodes equivalent to API nodes in the replication. While Hindroid investigates more of the relationships among API calls, for instance, having three out of four matrices developing different interactions of APIs, and thus focuses less on relationships among Apps themselves, we plan to add to our HIN the relationship among Reddit post nodes themselves to further diversify our network graph.</p>
+					<h3 id="social-network-based-problems">Social Network Based Problems</h3>
+					<p>Studies regarding the detection of hateful speech, content, and user in Online Social Networks have been manifold. In the report Characterizing and Detecting Hateful Users on Twitter, the authors present an approach to characterize and detect hate on Twitter at a user-level granularity. Their methodology consists of obtaining a generic sample of Twitter’s retweet graph, finding potential hateful users who employed words in a lexicon of hate-related words and running a diffusion process to sample more hateful users who are closely related in the neighborhood to those potential ones. However, there are still limitations to their approach. Their characterization has behavioral considerations of users only on Twitter, which lacks generality to be applied to other Online Social Networks platforms. Also, with ethical concerns, instead of labeling hate on a user-level, we want to avoid tagging individuals and believe that detecting hate on a content-level will be more impartial.</p>
+					<hr>
+					<h2 id="the-data">3. The Data</h2>
+					<h3 id="dataset">Dataset</h3>
+					<p>Our project includes two datasets:</p>
+					<ol>
+					<li>Main dataset used for our project analysis<br /> This is a dataset we will obtain from Reddit through a couple APIs. We use the API called <a href="https://github.com/pushshift/api">PushShift</a> to obtain Reddit post information, including post text, title, and user ids who reply to either the post itself or any of the reply below the post and the comments that it provided. We use <code>PushShift</code> because it offers a specific API to obtain the flattened list of repliers' ids and takes considerably less time than doing the same with <a href="https://praw.readthedocs.io/en/latest/">PRAW</a>. After a brief EDA on the most popular 124 subreddits, we select 50 subreddits in which the proportion of valid text posts of the posts are the highest and then sample a number of newest posts in each of the 50 subreddits. By doing this, our data will represent a population of newer posts in subreddits whose posts have higher text-proportion. We want to eliminate image/meme posts and deleted posts so we can better apply NLP model for our supervised learning.</li>
+					</ol>
+					<ul>
+					<li><p>advantages:</p>
+					<ul>
+					<li>This dataset is obtained from the actual social platform, and thus we obtain real-world perspective when training.<br /></li>
+					<li>Reddit has a couple APIs for us to suit our different needs.<br /></li>
+					<li>limitations:<br /></li>
+					<li>There are no ground-truth labels we can use for the data we collect, and thus need the assistance of other well-defined and pre-trained models to first label our data.<br /></li>
+					<li>We are not certain of the level of hatefulness from Reddit posts we obtain, and may lead to an unbalanced number of posts in benign and hateful categories.<br /></li>
+					<li>Our dataset will include newest posts in each subreddit, and may not apply well for older posts.</li>
+					</ul></li>
+					</ul>
+					<ol>
+					<li>Kaggle Toxic Comment Classification Dataset<br /> This is a dataset provided on <a href="https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge/data">https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge/data</a>, including information of hundreds of thousands of wikipedia comments along with multiple negative labels. We will be mainly using this dataset to train a nlp pretrained BERT classifier model to label our reddit post data before we use it for HIN learning.</li>
+					</ol>
+					<ul>
+					<li><p>advantages:</p>
+					<ul>
+					<li>This dataset is labeled, allowing us to perform supervised learning to train a nlp classifier model.<br /></li>
+					<li>The dataset include several labels, including <code>severe_toxic</code>, <code>obscene</code>, <code>threat</code>, <code>insult</code>, <code>identity_hate</code>, thus giving us some space to define what constructs a hateful post.<br /></li>
+					<li>limitations:<br /></li>
+					<li>We are not certain if labels for wikipedia comments can be applied to posts from Reddit or other social platforms.</li>
+					</ul></li>
+					</ul>
+					<h3 id="data-ingestion-process">Data Ingestion Process</h3>
+					<h4 id="data-origination-and-legality">Data Origination and Legality</h4>
+					<ol>
+					<li><p>Our data entirely originates from <a href="https://www.reddit.com">Reddit</a>. We will be using the Reddit APIs to obtain the data from the website. As stated in Reddit's <a href="https://www.reddit.com/wiki/api-terms">API Terms of Use</a>, in order to legally use the Reddit API, it is necessary for us to agree with all the applicable policies and guidelines listed in the Terms of Use. With a careful review of the document, we understand that we have satisfied all requirements and grant consent on all Terms. Moreover, since we have registered Reddit accounts agreeing with all terms and conditions, we believe our usage of the Reddit API is legal.</p></li>
+					<li><p>The Kaggle Toxic Comment Classification data originates from the comments of Wikipedia’s talk page edits and is distributed through a closed Kaggle competition. According to the <a href="https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge/rules">Competition Rules</a>, for the specific &quot;competition data&quot;, or the datasets available from the the Competition Page for the purpose of use in the Competition, users are allowed to access or use the data for academic research and education, or non-commercial purposes. Our usage of the data will not violate the rules.</p></li>
+					</ol>
+					<h4 id="privacy-concerns">Privacy Concerns</h4>
+					<p>As <a href="https://www.reddit.com">Reddit</a> is an online public social platform and all posts and replies are open to viewers, we will not get into issues regarding privacy. Nevertheless, we will encrypt all users' personal information if involved and eliminate sensitive posts or replies in case of any information leakage.</p>
+					<h4 id="schema-updated">Schema (updated)</h4>
+					<p>The data schema is shown below</p>
+					<pre class="source">
+<code>
+	./data
+	├── interim
+	│   ├── graph
+	│   │   ├── graph.mat
+	│   │   └── processed
+	│   │       ├── graph.pt
+	│   │       ├── pre_filter.pt
+	│   │       └── pre_transform.pt
+	│   └── label
+	│       ├── comment
+	│       │   ├── buildapc.csv
+	│       │   ├── legaladvice.csv
+	│       │   └── ...
+	│       ├── label.csv
+	│       └── post
+	│           └── post_sentimental.csv
+	├── processed
+	│   └── node2vec
+	│       ├── data.pt
+	│       ├── embedding.pt
+	│       └── log.json
+	└── raw
+		├── comments
+		│   ├── buildapc.csv
+		│   ├── legaladvice.csv
+		│   ├── log.json
+		│   └── ...
+		├── posts
+		│   ├── buildapc.csv
+		│   ├── legaladvice.csv
+		│   ├── log.json
+		│   └── ...
+		└── posts_detail
+			├── buildapc.json
+			├── legaladvice.json
+			└── ...
+
+</code></pre>
+					<h5 id="raw">Raw</h5>
+					<h6 id="first-layer-posts">First Layer: Posts</h6>
+					<p>The csv file contains the information of each post in a dataframe where the unit of observation is the individual post.</p>
+					<ul>
+					<li><code>id</code>: post_id<br /></li>
+					<li><code>author</code>: username of the author who make the post<br /></li>
+					<li><code>title</code>: title of the post<br /></li>
+					<li><code>selftext</code>: the content of the post<br /></li>
+					<li><code>num_comments</code>: number of comments<br /></li>
+					<li><code>created_utc</code>: the epoch date for which the post is created<br /></li>
+					<li><code>full_link</code>: the link to the reddit post<br /></li>
+					<li><code>subreddit</code>: subreddit it belongs to<br /></li>
+					<li><code>score</code>: number of upvote - number of downvote</li>
+					</ul>
+					<h6 id="second-layer-post-detail">Second Layer: Post detail</h6>
+					<p>The file contains certain number of posts id and all of its comments id under a certain subrredit.</p>
+					<ul>
+					<li><code>submission_id</code> : id of the post<br /></li>
+					<li><code>comment_ids</code>: id of each comment</li>
+					</ul>
+					<pre class="sourceCode json"><code class="sourceCode json">
+[{<span class="dt">&quot;submission_id&quot;</span>:<span class="st">&quot;fsoala&quot;</span>,<span class="dt">&quot;comment_ids&quot;</span>:[]},
+{<span class="dt">&quot;submission_id&quot;</span>: <span class="st">&quot;fsnmj4&quot;</span>, <span class="dt">&quot;comment_ids&quot;</span>: [<span class="st">&quot;fm2fd48&quot;</span>, <span class="st">&quot;fm2hrmh&quot;</span>, <span class="st">&quot;fm2k37i&quot;</span>, <span class="st">&quot;fm2k8p4&quot;</span>, <span class="st">&quot;fm2kuot&quot;</span>, <span class="st">&quot;fm2lces&quot;</span>, <span class="st">&quot;fm2lsao&quot;</span>, <span class="st">&quot;fm2lu4n&quot;</span>, <span class="st">&quot;fm2m5at&quot;</span>, <span class="st">&quot;fm3trkl&quot;</span>, <span class="st">&quot;fm4c7i6&quot;</span>]}]</code></pre>
+					<h6 id="third-layer-comments">Third Layer: Comments</h6>
+					<p>The csv file contains the information of each specific post in a dataframe where the unit of observation is the individual comment.</p>
+					<ul>
+					<li><code>id</code>: comment id<br /></li>
+					<li><code>author</code> : username of the author who make the comment<br /></li>
+					<li><code>created_utc</code> : the epoch date for which the comment is made<br /></li>
+					<li><code>is_submitter</code>: whether that person post the original post<br /></li>
+					<li><code>subreddit</code>: the subreddit it belongs to<br /></li>
+					<li><code>link_id</code>: the post id for which this comment is made for</li>
+					</ul>
+					<h5 id="interim">Interim</h5>
+					<h6 id="graph">Graph</h6>
+					<ul>
+					<li><code>graph.mat</code> contains the sparse matrix file of N, P, U, A matrices<br /></li>
+					<li><code>processed</code> directory contains the pytorch datasets of <code>graph.mat</code>.</li>
+					</ul>
+					<h6 id="label">Label</h6>
+					<ul>
+					<li><code>label.csv</code> contains the label of posts after taking in to account comment labels.<br /></li>
+					<li><code>comment</code> directory conatians sentimental analysis over comments by different subreddits.<br /></li>
+					<li><code>post</code> directory contains sentimental analysis over posts.</li>
+					</ul>
+					<h5 id="processed">Processed</h5>
+					<ul>
+					<li><code>node2vec</code> directory contains the pytorch embedding layer of node2vec algorithm.</li>
+					</ul>
+					<h4 id="data-cleaning">Data Cleaning</h4>
+					<p>Since we are directly using the Pushshift API, it has taken care most of the data cleaning parts. Since the output of the result is in .json format, thus the only transformation we have to make is to use pandas to output the result in .csv format.</p>
+					<h4 id="applicability">Applicability</h4>
+					<p>The above data ingestion pipeline can be used to obtain data as long as the data originates from Reddit. Our pipeline has limited applicability depending on data sources. Possible data sources include other online social platforms such as Twitter, Facebook, LinkedIn, and Instagram. Platforms have similar overall structure but differ in detailed construction and API calls, thus our pipeline may only be helpful for general data ingestion framework reference when applying to other online social platforms. Also, it is important to check the policies and guidelines of each platform before employing our pipeline to avoid the raise of legal issues or privacy concerns.</p>
+					<hr>
+					<h2 id="labeling-updated">4. Labeling</h2>
+					<p>Since the original data obtained from Reddit is not labeled, we will be using a RNN and bidirectional layers, through python library <code>keras</code>, as well as pre-trained word representation vectors from <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a>, to label the Reddit posts before we use it for our project main analysis.</p>
+					<p>By following a <a href="https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/">tutorial</a> of using <code>keras</code> and the pretrained word vectors, we will train a multi-label NLP model with kaggle labeled dataset of wikipedia comments detailed in <a href="#4-datasets">Datasets</a>. We will save this model in directory <code>interim</code>. This multi-label model then can be used to calculate each Reddit post or comment a score between 0 to 1 for each of the label <code>toxic</code>, <code>severe_toxic</code>, <code>threat</code>, <code>insult</code>, <code>identity_hate</code>.</p>
+					<p>The labeling process for a single post is as follows: We first obtain scores for the post itself if it has textual content. Then, we also obtain scores for all of its comments to compute an average of all five labels. We then compute total scores for the post by adding scores of post content and its comments. We then compute the max of all five total scores, and if the max value is greater than the threshold, we classify the post as 'hateful'. In our project, we set the threshold to 0.5. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA.</p>
+					<p>In this way, we can also label those posts which are missing textual content by making use of its comment data. Moreover, with this labeling process, we are defining hateful posts so that they not only include those that demonstrate hatefulness in its content, but also those that stir up negative discussions in comments and replies.</p>
+					<h2 id="graph-extraction-new">5. Graph Extraction (new)</h2>
+					<h3 id="graph-structure">Graph Structure</h3>
+					<p>the graph structure is shown as below:</p>
+					<p><img src="./writeups/graph.jpeg" alt="Graph Structure" /></p>
+					<p>The graph consists two kind of nodes:</p>
+					<ul>
+					<li>Post Node: the post group<br /></li>
+					<li>User Node: the user group<br /></li>
+					<li>Author Node: author of the post<br /></li>
+					<li>Commentor Node: commentors who answer the post or comments under the posts<br /></li>
+					<li>Note: Author Nodes and Commentor Nodes can be overlapped</li>
+					</ul>
+					<p>The graph rule is explained as following:</p>
+					<ul>
+					<li>Post Nodes can go to all User Nodes under them directly (both Author and Commentor).<br /></li>
+					<li>Author Nodes can only go to Post Nodes they associate with.<br /></li>
+					<li>Commentor Nodes can only go to User Nodes who reply them.</li>
+					</ul>
+					<h3 id="adjacency-matrix">Adjacency Matrix</h3>
+					<p>We will represent our Graph into following Adjacency matrix form:</p>
+					<pre class="math">
+<code>
+	- U matrix
+		- if user i has been replied by user j, then i,j entry of U will be added 1
+
+	- P matrix
+		- if post i has author or commentor j, then i,j entry of P will be added 1
+
+	- A matrix
+		- if author i writes post j, then i,j entry of A will be 1
+
+	- N matrix
+		- N matrix will be the homogeneous representaion of hetergeneous graph above
+		- U | A
+		P | 0
+					</code></pre>
+					<h3 id="graph-example">Graph Example</h3>
+					<pre class="text">
+<code>
+	we have two reddit posts with id 1 and 2 shown below
+
+	post_id: 1
+	author_user_id: 1
+		commentor_user_id: 2
+		commentor_user_id: 3
+	post_id: 2
+	author_user_id: 2
+		commentor_user_id:4
+		commentor_user_id:2
+
+	The Matrices will be:
+
+	U:  0|0|0|0
+		0|0|1|0
+		0|0|0|0
+		0|1|0|0
+
+	P:  1|1|1|0
+		0|1|0|1
+
+	A:  1|0
+		0|1
+		0|0
+		0|0
+
+	N:  0|0|0|0|1|0
+		0|0|1|0|0|1
+		0|0|0|0|0|0
+		0|1|0|0|0|0
+		1|1|1|0|0|0
+		0|1|0|1|0|0
+					</code></pre>
+					<h2 id="eda-updated">6. EDA</h2>
+					<h3 id="tabular-data-eda">Tabular Data EDA</h3>
+					<p>As you may know, Reddit has already banned lots of subreddit that contained explicit or controversial materials. Thus in order to discover more hateful speech, we researched online and find out a <a href="https://www.reddit.com/r/GoldTesting/comments/3fxs3q/list_of_quarantined_subreddits/">list</a> contained both banned and quarantined subreddits. Quarantined subreddits are subs that host no advertisement, and Reddit doesn't generate any revenue off toxic content. People can still acess those subs, but there will be a prompt warns telling people about the content on the sub. We have selected around 37 qurantined subreddit along with 10 normal subreddits. </br><br />By using the data ingestion pipeline, we have successfully extracted 5,000 posts from each of the 47 subreddits which is 235,000 posts in total. For each of the subreddit we have calculated <strong>total_comment</strong>: the total number of comments recieved for the posts contained in that subreddit, <strong>avg_comment</strong>: average number of comments received for the posts contained in that subreddit, <strong>top_num_comment</strong>: the maximum number of comments recieved by a post in that subreddit. The statistics for the top 5 subreddits that have the most total comments are shown in the table below. From the table, we can observe that the subreddit with higher number of total_comments also has higher number of average_comment. And we also want to figure out whether those hot subreddit also tend to contain more hateful speech.<br />|subreddit|total_comment|avg_comment|top_num_comment|<br />|---------|-------------|-----------|---------------|<br />|Politics (r/politics)|374,963|74|12,837|<br />|Pussy Pass Denied (r/pussypassdenied)|352,941|70|2,202|<br />|TumblrInAction: O Toucan, Where Art Thou? (r/TumblrInAction)|311,407|62|1,571|<br />|conspiracy (r/conspiracy)|223,516|44|949|<br />|KotakuInAction: The almost-official GamerGate subreddit! (r/KotakuInAction)|158,596|31|2,331|</p>
+					<p>Thus we looked at the subreddit that has the most hateful posts. Below shows the top 5 subreddits.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left">subreddit</th>
+					<th align="left">deleted</th>
+					<th align="left">benign</th>
+					<th align="left">hateful</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">Incest</td>
+					<td align="left">1,067</td>
+					<td align="left">3,295</td>
+					<td align="left">609</td>
+					</tr>
+					<tr class="even">
+					<td align="left">Today I Fucked up(r/tifu)</td>
+					<td align="left">771</td>
+					<td align="left">3,708</td>
+					<td align="left">487</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">TheRedPill</td>
+					<td align="left">1,564</td>
+					<td align="left">2,565</td>
+					<td align="left">452</td>
+					</tr>
+					<tr class="even">
+					<td align="left">Jokes</td>
+					<td align="left">766</td>
+					<td align="left">3,758</td>
+					<td align="left">405</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">Unpopularopinion</td>
+					<td align="left">1,590</td>
+					<td align="left">2,855</td>
+					<td align="left">404</td>
+					</tr>
+					</tbody>
+					</table>
+					<p>We then look at the labels at a higher level without group them into different subreddits. The table below shows the distribution of the labels among posts.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left">label</th>
+					<th align="left">% post</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">deleted</td>
+					<td align="left">10.8%</td>
+					</tr>
+					<tr class="even">
+					<td align="left">benign</td>
+					<td align="left">84%</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">hateful</td>
+					<td align="left">4.7%</td>
+					</tr>
+					</tbody>
+					</table>
+					<p>Dig deeper into the content of the posts for different labeling groups, we investigate on the length of the content. From the table below, it shows that even though the min and max of the length of content in each group is around the same, the average length of content for posts that are labled hateful is more than double of the average length of content for posts that are labled benign. Thus we can add this as one of our feature.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left">label</th>
+					<th align="left">mean</th>
+					<th align="left">min</th>
+					<th align="left">max</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">benign</td>
+					<td align="left">82.87</td>
+					<td align="left">1</td>
+					<td align="left">7549</td>
+					</tr>
+					<tr class="even">
+					<td align="left">hateful</td>
+					<td align="left">176</td>
+					<td align="left">1</td>
+					<td align="left">7048</td>
+					</tr>
+					</tbody>
+					</table>
+					<p>Another feture could be the number of comments under each post.<br />The average length of comment for posts labeled hateful is relatively smaller than that for posts labeled as benign.<br />|label|min|max|mean|<br />|-----|---|---|----|<br />|benign|0|9,783|24|<br />|hateful|0|2,043|16|</p>
+					<p>Moreover we also find difference in score for the two groups, the mean score of benign posts are generally higher than those of hateful posts.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left">label</th>
+					<th align="left">mean_score</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">benign</td>
+					<td align="left">32</td>
+					</tr>
+					<tr class="even">
+					<td align="left">hateful</td>
+					<td align="left">11</td>
+					</tr>
+					</tbody>
+					</table>
+					<p>Moreover, in order to evaluate the quality of the label, we have also done some textual analysis. We find out the top 30 words in posts after removing stop words for each of the groups. However, we have also removed about 20 words that appeared in both groups. Those should be the common words that appeared in the conversation and thus is not helpful as a feature for our classification.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left">malign_word</th>
+					<th align="left">count</th>
+					<th align="left">benign_word</th>
+					<th align="left">count</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">fuck</td>
+					<td align="left">5,835</td>
+					<td align="left">amp</td>
+					<td align="left">13,155</td>
+					</tr>
+					<tr class="even">
+					<td align="left">nigger</td>
+					<td align="left">4,078</td>
+					<td align="left">work</td>
+					<td align="left">12,508</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">fucking</td>
+					<td align="left">3,233</td>
+					<td align="left">feel</td>
+					<td align="left">12,388</td>
+					</tr>
+					<tr class="even">
+					<td align="left">shit</td>
+					<td align="left">2,907</td>
+					<td align="left">right</td>
+					<td align="left">12,208</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">place</td>
+					<td align="left">2,713</td>
+					<td align="left">gt</td>
+					<td align="left">11,256</td>
+					</tr>
+					<tr class="even">
+					<td align="left">sex</td>
+					<td align="left">2,200</td>
+					<td align="left">things</td>
+					<td align="left">11,244</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">started</td>
+					<td align="left">1,840</td>
+					<td align="left">new</td>
+					<td align="left">11,002</td>
+					</tr>
+					<tr class="even">
+					<td align="left">ass</td>
+					<td align="left">1,800</td>
+					<td align="left">need</td>
+					<td align="left">10,629</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">went</td>
+					<td align="left">1,717</td>
+					<td align="left">years</td>
+					<td align="left">10,374</td>
+					</tr>
+					</tbody>
+					</table>
+					<h3 id="graph-data-eda">Graph Data EDA</h3>
+					<p>In order to maximize the model performance in later machine learning deployment, we restrict the type of users to active users only in our ingested data by removing users who never post, deactivated authors, auto-moderators and SnapshillBot. We also drop all posts authored by these removed users. With our cleaned data, we constructed heterogeneous graphs according to <a href="#adjacency-matrix">adjacency matrice definition</a>.</p>
+					<p>We have 99,004 benign posts and 4,409 hateful posts in total after cleaning. Due to the imbalance between the spread of post labels, we will be weighing correspondingly in model constructions.</p>
+					<p>In our assumption, we hypothesize association between certain users who post hateful speech and the posts they interact with, thus we aim at investigating users' posting behaviors within subreddits.</p>
+					<p>We have 483,173 unique users in our data. 7% of users in our data have been involved with hateful posts. Among them, 44.26% of users have themselves create posts/comments labeled as hateful.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left">Percentage of users only post once</th>
+					<th align="left">Proportion of users post only in 1 subreddit</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">44.95%</td>
+					<td align="left">85.24%</td>
+					</tr>
+					</tbody>
+					</table>
+					<p>We can observe that nearly half of the users post only once and are not active authors on Reddit. Most of them are only involved within one subreddit, thus their behavioral movements are representative of that subreddit.</p>
+					<p>In addition to general user, we also investigate hateful post users' behaviors specifically.<br />|Proportion of users engaged in hateful post, only post once in a subreddit|Proportion of users engaged in hateful post, post only in 1 subreddit|<br />|-----------|-----|<br />|20.01%|70.03%|</p>
+					<p>We can observe that users who engage in hateful post are more active authors compare to general users.</p>
+					<p>Some users engage in both benign and hateful posts, and we found that among users who have engaged in hateful posts, 14% of there authored posts and comments are classified as hateful.</p>
+					<p>|Proportion of speech for users engaged in hateful posts|<br />|-----------|<br />|28.15%|</p>
+					<h2 id="ml-deployment-new">7. ML Deployment (new)</h2>
+					<h3 id="metrics">Metrics</h3>
+					<p>Since we are performing binary classification, <code>True Positive, True Negative</code> plays a more crutial role in our classification model. Also, our label is extremely unblanced with few positive labels and much more negative labels. Becuse graph technique will be significantly influenced (invalided) by traditional balancing data technique like over-sampling and under-sampling, we will be evaluate our model with fowllowing metrics: <code>Recall, and Precision</code>. To catch more potential hateful posts, we favor Racall over Precision.</p>
+					<h3 id="baseline-model">Baseline Model</h3>
+					<p>Based on our tabular data EDA, we have determined a few features that maybe helpful in defining our baseline model, including number of comments, subreddit it belongs to, upvote score, length of the text body, and some sensitive words that frequently appear in hateful posts shown in EDA. We use Logistic Regression, Random Forest, and Gradient Boost Classifier to train our models based on the features <code>['num_comments', 'subreddit', 'score', 'length', 'sensitive']</code> and classify whether a post is hateful.</p>
+					<ul>
+					<li><code>num_comment</code>: number of comments for each post<br /></li>
+					<li><code>subreddit</code>: the subreddit that the post belongs to<br /></li>
+					<li><code>score</code>: the upvote score that the post receives<br /></li>
+					<li><code>length</code>: the length of text body of the post<br /></li>
+					<li><code>sensitive</code>: whether the post includes any of the sensitive words: 'fuck', 'nigger', 'shit', 'sex', 'ass'.</li>
+					</ul>
+					<h3 id="hinreddit-1">Hinreddit</h3>
+					<p>Hinreddit will present methodologies over following graph techniques: <code>Node2vec</code>, <code>DGI</code>, and <code>NetMF</code></p>
+					<h4 id="node2vec">Node2vec</h4>
+					<p>The Node2vec model from the <a href="arXiv:1607.00653">&quot;node2vec:Scalable Feature Learning for Networks&quot;</a> paper where random walks of length <code>walk length</code> are sampled in a given graph, the embedding is learned by negative sampling optimization.</p>
+					<h4 id="dgi">DGI</h4>
+					<p>DGI, Deep Graph Infomax, model from the <a href="arXiv:1809.10341">&quot;Deep Graph Infomax&quot;</a> paper based on user-defined encoder and summary model $$\epsilon$$ and $$R$$ respectively, and a corruption function $$C$$</p>
+					<p>We use implementation from <code>pytorch_geometric</code> for our modeling to get the Graph embedding of latent features.</p>
+					<h4 id="netmf-not-finished">NetMF (not finished)</h4>
+					<p>NetMF, Network Embedding as Matrix Factorization, method from the <a href="arXiv:1710.02971">&quot;Network Embedding as Matrix Factorization: Unifying DeepWalk, LINE, PTE, and node2vec&quot;</a> paper, lays the theoretical foundation for skip-gram based network embedding methods, leading to a better understanding of latent network representation learning.</p>
+					<h2 id="experimental-result-new">8. Experimental Result (new)</h2>
+					<h3 id="baseline-model-result">Baseline Model Result</h3>
+					<p>Our current dataset is splited into 70% training and 30% test. We also adjust weights due to out data imabalance. The weights are inversely proportional to class frequencies, and our weights are as follows: 0.53 for benign posts and 9.30 for hateful posts. The resulting metrics for each classifier regarding the performance on the test set are listed in the table below.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left"></th>
+					<th align="left">Precision</th>
+					<th align="left">Recall</th>
+					<th align="left">AUC</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">Logistic Regression</td>
+					<td align="left">0.177778</td>
+					<td align="left">0.723241</td>
+					<td align="left">0.847873</td>
+					</tr>
+					<tr class="even">
+					<td align="left">Random Forest</td>
+					<td align="left">0.334432</td>
+					<td align="left">0.519403</td>
+					<td align="left">0.780207</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">Gradient Boost Classifier</td>
+					<td align="left">0.697987</td>
+					<td align="left">0.221748</td>
+					<td align="left">0.862229</td>
+					</tr>
+					</tbody>
+					</table>
+					<p>From the table above, we can observe that the performances logistic regression produces relatively high recall, meaning that it identifies more hateful posts from all existing ones, while producing low precision, meaning that only a small portion of posts it identifies as hateful are truly hateful. On the other hand, gradient boost classifier produces opposite results with lower recall and higher precision. Both logistic regression and gradient boost classifier have higher AUC compared to random forest, meaning that they are both better at distinguish between hateful posts and benign posts.</p>
+					<h3 id="hinreddit-result">Hinreddit Result</h3>
+					<h4 id="node2vec-1">Node2vec</h4>
+					<h5 id="small-data-result">Small Data Result</h5>
+					<p>Since the computational cost for Node2vec is large, and we have an overall large graph, we are going to limit our model to subreddit <code>incest</code>, which has 228 positive data and 1383 negative data (1611) in total.</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left"></th>
+					<th align="left">Precision</th>
+					<th align="left">Recall</th>
+					<th align="left">AUC</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">Logistic Regression</td>
+					<td align="left">0.115044</td>
+					<td align="left">0.302326</td>
+					<td align="left">0.472591</td>
+					</tr>
+					<tr class="even">
+					<td align="left">Linear SVC</td>
+					<td align="left">0.123894</td>
+					<td align="left">0.325581</td>
+					<td align="left">0.486005</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">Random Forest</td>
+					<td align="left">0.000000</td>
+					<td align="left">0.000000</td>
+					<td align="left">0.500000</td>
+					</tr>
+					</tbody>
+					</table>
+					<h4 id="dgi-1">DGI</h4>
+					<p>The result of implementing Heterogeous Deep Graph Infomax is presented below:</p>
+					<table>
+					<thead>
+					<tr class="header">
+					<th align="left"></th>
+					<th align="left">Precision</th>
+					<th align="left">Recall</th>
+					<th align="left">AUC</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="odd">
+					<td align="left">Logistic Regression</td>
+					<td align="left">0.083879</td>
+					<td align="left">0.585419</td>
+					<td align="left">0.644055</td>
+					</tr>
+					<tr class="even">
+					<td align="left">Linear SVC</td>
+					<td align="left">0.089744</td>
+					<td align="left">0.609358</td>
+					<td align="left">0.660983</td>
+					</tr>
+					<tr class="odd">
+					<td align="left">Random Forest</td>
+					<td align="left">0.103790</td>
+					<td align="left">0.262242</td>
+					<td align="left">0.578475</td>
+					</tr>
+					</tbody>
+					</table>
+					<h4 id="netmf">NetMF</h4>
+					<p>Not finished implementation</p>
+					<h2 id="discussion-new">9. Discussion</h2>
+					<h3 id="result-analysis">Result Analysis</h3>
+					<p>As seen above, we have obtained fairly low precisions and recalls with our current user-post embeddings and models. The results can be understand together with our Exploratory Data Analysis. The data has shown that only 7% of users have ever engaged in hateful posts, and among them almost half of users have themselves write posts/comments that are labeled as hateful. Moreover, for users who have engaged in hateful posts, only around 28% of their posted speeches are labeled as hateful. These numbers suggest users have a small chance of creating their own hateful posts/comments although they have engaged in any of the hateful posts. Furthermore, even if they have created any, it is not a consistent behavior. This then demonstrates that our initial hypothesis might not be accurate as mere relationships of users' reply behavior and authorship cannot provide much useful information in identifying hateful posts, which is then confirmed by our model results.</p>
+					<p>Due to the fact that our graph representation only embeds authorship and reply behavior, and as Node2vec and Deep Graph Infomax both are greedy in the training process, the models cannot clearly distinguish between hateful and benign posts, which is shown by the AUC values that are only slightly higher than, or even lower than, 0.5 and our baseline models that make use of post-related features.</p>
+					<h3 id="possible-improvement">Possible Improvement</h3>
+					<p>First possible improvement can be done in the labeling process. To label our reddit data, we have trained a NLP classifier with labeled Wikipedia comments as well as pretrained Wikipedia vocabularies. It would be better if we can obtain labeled social platform data, such as labeled tweets to be trained with pretrained Twitter vocabularies provided by <a href="https://nlp.stanford.edu/projects/glove/">Glove</a>.</p>
+					<p>Another possible improvement, which we originally would like to implement, is to include more user-to-user relations in our graph representations. Some examples include subreddit subsription lists and friends connection. We currently have a hard time including these relationships because user information features are still in development in the API we use, <code>pushift</code>. Although Reddit's own API, <code>PRAW</code>, offers related features, it unfortunately employs a different system of user ID from what pushift uses, and we are unable to connect them to obtain user information. This can be done as soon as <code>pushift</code> succesfully develops user information features.</p>
+					<p>Finally, we can also improve our algorithm to make use of the timeline data we obtain along with posts and comments. By adding a time feature, we can construct sequence nodes and feed in to Recurrent Neural Network models, such as Long Short-Term Memory.</p>
+					<h2 id="pipeline-updated">10. Pipeline</h2>
+					<h3 id="etl-process">ETL Process</h3>
+					<p>target key: <code>data[-eda/test]</code></p>
+					<ul>
+					<li>Create <code>config/data-params.json</code>, an example shown below. Information includes: POST_ARGS: parameter related to the post extraction part. META_ARGS: parameter related to the comment extraction part. The all the posts is sorted by the creation data and we extracted data prior to the date of <code>Tuesday,March 31 17:00:00 2020 PDT</code>.</li>
+					</ul>
+					<pre class="sourceCode json">
+<code class="sourceCode json">{<span class="dt">&quot;POST_ARGS&quot;</span>:
+{<span class="dt">&quot;sort_type&quot;</span>:<span class="st">&quot;created_utc&quot;</span>,
+	<span class="dt">&quot;sort&quot;</span>:<span class="st">&quot;dsc&quot;</span>,
+	<span class="dt">&quot;size&quot;</span>:<span class="st">&quot;1000&quot;</span>,
+	<span class="dt">&quot;start&quot;</span>:<span class="st">&quot;1585699200&quot;</span>},
+	<span class="dt">&quot;META_ARGS&quot;</span>:
+{<span class="dt">&quot;filepath&quot;</span>:<span class="st">&quot;.\/tests&quot;</span>,
+	<span class="dt">&quot;total&quot;</span>:<span class="st">&quot;1000&quot;</span>,
+	<span class="dt">&quot;meta&quot;</span>:[<span class="st">&quot;id&quot;</span>,<span class="st">&quot;author&quot;</span>,<span class="st">&quot;title&quot;</span>,<span class="st">&quot;selftext&quot;</span>,<span class="st">&quot;num_comments&quot;</span>,<span class="st">&quot;created_utc&quot;</span>,<span class="st">&quot;full_link&quot;</span>,<span class="st">&quot;subreddit&quot;</span>,<span class="st">&quot;score&quot;</span>],
+	<span class="dt">&quot;subreddits&quot;</span>:[<span class="st">&quot;amitheasshole&quot;</span>,<span class="st">&quot;showerthoughts&quot;</span>,<span class="st">&quot;politics&quot;</span>,<span class="st">&quot;documentaries&quot;</span>]}}
+</code></pre>
+					<ul>
+					<li><p>Sample a number of newest posts prior to a chosen daytime, the number specified in configuration file, from each subreddits specified in configuration file.</p></li>
+					<li><p>Access and obtain reddit posts, reorganize, and same them as detailed in <a href="#53-schema">schema</a></p></li>
+					</ul>
+					<h3 id="labeling-process">Labeling Process</h3>
+					<p>target key: <code>label[-test]</code></p>
+					<ul>
+					<li><p>Train a multi-label classification model using <code>Keras</code> deep learning NLP model and kaggle dataset.</p></li>
+					<li><p>Use the model to label post csv files stored in post path.</p></li>
+					<li><p>Store the label csv files in label path.</p></li>
+					</ul>
+					<h3 id="create-baseline-model">Create Baseline Model</h3>
+					<p>target key: <code>baseline[-test]</code></p>
+					<ul>
+					<li><p>Extract simple features detailed in <a href="#8-baseline-model">baseline</a> section.</p></li>
+					<li><p>Use the features to train linear regression, random forest, and gradient boost classifiers.</p></li>
+					<li><p>Use the baseline models to predict labels and store the result in output directory.</p></li>
+					</ul>
+					<h3 id="extracting-graph-data">Extracting Graph Data</h3>
+					<p>target key: <code>graph[-test]</code></p>
+					<ul>
+					<li><p>Extract Graph specified in <a href="#5-graph-extraction-new">Graph Extraction</a> section.</p></li>
+					<li><p>Combing post and user relationship and labeled data with <code>pandas</code>.</p></li>
+					</ul>
+					<h3 id="graph-embedding">Graph Embedding</h3>
+					<h4 id="node2vec-embedding">Node2vec Embedding</h4>
+					<p>target key: <code>node2vec[-test]</code></p>
+					<ul>
+					<li><p>create embedding from graph nodes into nodes' embedding vector for node2vec algorithm specified in <a href="#node2vec">Node2vec</a> section.</p></li>
+					<li><p>The parameter file is under <code>./config/node2vec.json</code>. With <code>-test</code> flag, the parameter file is under <code>./config/test-node2vec.json</code>.</p></li>
+					<li><p>using Node2vec implementation in Pytorch Geometric to perform embedding (both random walk and word2vec) process.</p></li>
+					<li><p>Parameters</p></li>
+					</ul>
+					<p><code>json     {       &quot;BATCH_SIZE&quot;: 128,       &quot;EMBEDDING_DIM&quot;: 64,       &quot;WALK_LENGTH&quot;: 100,       &quot;CONTEXT_SIZE&quot;: 10,       &quot;WALKS_PER_NODE&quot;: 10,       &quot;LEARNING_RATE&quot;: 0.001,       &quot;NUM_EPOCH&quot;: 1,       &quot;P&quot;: 1,       &quot;Q&quot;: 1,       &quot;CUDA&quot;: true     }</code></p>
+					<p><code>BATCH_SIZE</code>: the number of row to be trained in each batch.</p>
+					<p><code>EMBEDDING_DIM</code>: the output embedding dimension.</p>
+					<p><code>WALK_LENGTH</code>: the walk length of random walk.</p>
+					<p><code>CONTEXT_SIZE</code>: the number of positive sample &amp; negative sample in each walk.</p>
+					<p><code>WALKS_PER_NODE</code>: the number of walks to be performed per node.</p>
+					<p><code>LEARNING_RATE</code>: the learning rate of SGD optimization in loss function.</p>
+					<p><code>NUM_EPOCH</code>: the number of epoch to perform embedding.</p>
+					<p><code>P</code>: the parameter to control probability of walk to go back.</p>
+					<p><code>Q</code>: the parameter to control probability of walk to go towards the end.</p>
+					<p><code>CUDA</code>: True if use GPU for embedding.</p>
+					<h4 id="dgi-embedding">DGI Embedding</h4>
+					<p>target key: <code>infomax[-test]</code></p>
+					<ul>
+					<li>create embedding from graph nodes into nodes' embedding vector for DGI algorithm specified in <a href="#dgi-embedding">DGI</a> section.<br /></li>
+					<li>the parameter file is under <code>./config/infomax.json</code>. With <code>-test</code> flag, the parameter file is under <code>./config/test-infomax.json</code>.<br /></li>
+					<li>using Node2vec implementation in Pytorch Geometric to perform embedding process.<br /></li>
+					<li>Parameters</li>
+					</ul>
+					<pre class="sourceCode json">
+<code class="sourceCode json">{
+	<span class="dt">&quot;HIDDEN_CHANNELS&quot;</span>: <span class="dv">64</span>,
+	<span class="dt">&quot;SUMMARY&quot;</span>: <span class="dv">64</span>,
+	<span class="dt">&quot;LEARNING_RATE&quot;</span>: <span class="fl">0.01</span>,
+	<span class="dt">&quot;NUM_EPOCH&quot;</span>: <span class="dv">300</span>,
+	<span class="dt">&quot;CUDA&quot;</span>: <span class="dv">true</span>
+}</code></pre>
+					<p><code>HIDDEN_CHANNELS</code>: the hidden layer's dimension.</p>
+					<p><code>SUMMARY</code>: the output embedding layer's dimension.</p>
+					<p><code>LEARNING_RATE</code>: the learning rate of SGD optimization in loss function.</p>
+					<p><code>NUM_EPOCH</code>: the number of epoch to perform embedding.</p>
+					<p><code>CUDA</code>: True if use GPU for embedding.</p>
+					
+			</div>
+			<br>
+			<br>
+			<footer class="c-page__footer">    
+				<p>© hinreddit 
+					developped by
+					<a href="https://github.com/anniechen0127">Chengyu Chen</a>,
 					<a href="https://github.com/yuc330">Yu-chun Chen</a>,
 					<a href="https://github.com/lilytaoyy">Yanyu Tao</a>, and
-					<a href="https://github.com/shy166">Shuibenyang Yuan</a>.
-					<br>
-			</p>
-
-			<h2 class='background'>Background</h2>
-			<p>
-				
-				As countless social platforms are developed and become accessible nowadays, 
-				more and more people get used to posting opinions on various topics online. 
-			</p>
-			<p>
-				The existence of nagetive online behaviors such as hateful comments is also unavoidable. 
-				These platforms thus become prolific sources for hate detection, 
-				which motivates large numbers of scholars to apply various techniques in order to detect hateful users or hateful speeches.
-			</p>
-			<h3>Abstract </h3>
-			<p>
-				In this project, we plan to investigate contents from Reddit, which is a popular social network that focuses on aggregating American social news, 
-				rating web content and website discussion, 
-				that carries rich potential information of contents and their authors. 
-			</p>
-			<p>
-				Our goal is to classify hateful posts from the normal ones. 
-				Being able to identify hateful posts not only enables platforms to improve user experiences, but also helps to maintain a positive online environment.
-			</p>
-			<p>
-				We plan to use Bidirectional Encoder Representations from Transformers (BERT), a neural network architecture transforming natural language processing (NLP) techniques, 
-				in our data ingestion pipeline for data labeling.
-			</p>
-			<p>
-				However, instead of using NLP in attempts to solve classification problems, we will be using graph neural network techniques. 
-				Specifically, we will create a heterogeneous information network (HIN) to capture the relationships among Reddit posts, which is then used as our features.
-			</p>
-			<p>
-				This project meants to analysis the finding of graph network of Reddit community and hateful post with our neural network models.
-			</p>
-			<p>
-				For anyone curious about any of the steps throughout this project, the original data ingestion tool and 
-				code we used to do all this analysis is available here on <a href="https://github.com/syeehyn/hinreddit">GitHub</a>. 
-			</p>
-			<p>
-				For anyone who are interested in the throughout result regarding to our deep learning models, the full report
-				can be found here in format of <a href="">PDF</a>.
-			</p>
-			<h3>Hateful Post </h3>
-			<p>
-				What is "Hateful Post" ?
-			</p>
-			<p>
-				We would like to stress that the boundary of 'hate' is vague and there is no correct nor consolidated definition of 'hatefulness,' 
-				our classification of hateful posts depends only on a unified definition within our team, which we divide into the categories of 
-				<strong>
-					severe_toxic
-				</strong>,
-				<strong>
-					threat
-				</strong>,
-				<strong>
-					insult
-				</strong>, and 
-				<strong>
-					identity hate
-				</strong>. We all agree that other people's recognition of "hate" may be but not limited to these four categories, 
-				and our labeling method allows full freedom of other definition of "hatefulness."
-			</p>
-			<h3>Heterogeneous Information Network</h3>
-			<p>
-				...
-			</p>
-			<h3>Past Works</h3>
-			<p>
-				...
-			</p>
-			<hr>
-			<h2>The Data</h2>
-			<p>
-				Our project is based on following sources:
-			</p>
-			<p>
-				1. The Reddit Posts and Comments Data Fetched by <a href="pushshift.io">pushshift.io</a> <br>
-				2. Toxic Comment Classification Dataset on Kaggle (<a href="https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge/data,">Link</a>)
-			</p>
-			<h3>Sampling</h3>
-			<p>
-				Because of the massive scale of Reddit data, we will study a relative smaller sample of reddit posts and comments data. <br>
-				We will choose 47 subreddits with 5000 posts each start from Tuesday, March 31 17:00:00 2020 PDT to the past.
-			</p>
-			<div class="bk-root" id="09b0e182-5d18-44d9-8e48-04f67583c274" data-root-id="5784"></div>
-			<div class="bk-root" id="09577532-a7a2-4bc2-8ea0-c8b1f3afddd2" data-root-id="5934"></div>
-			<div class="bk-root" id="4c1762d5-a26a-4354-a813-be15fbd19e3f" data-root-id="6084"></div>
-			<div class="bk-root" id="8d09a463-1087-4a4d-a559-592741cd382c" data-root-id="7805"></div>
-			<div class="bk-root" id="8ab0ee25-8d68-49b3-a67e-674949ea3c60" data-root-id="1758"></div>
-			<!-- <div class="bk-root" id="56980d1f-c39b-40ff-828b-ca8fbc223555" data-root-id="7608"></div> -->
-			<div class="bk-root" id="42e7ee91-dd4c-4c90-b56b-738ccf1847dc" data-root-id="6876"></div>
-			<div class="bk-root" id="199a9165-0851-47f8-9c1f-843b1cc914c1" data-root-id="7242"></div>
-			<div class="bk-root" id="b6d76df2-f275-4fb7-9ebd-6b212e428d80" data-root-id="7439"></div>
-
-			<hr>
-			<h2>The Network</h2>
-			<hr>
-			<h2>Finding</h2>
-			<hr>
-		</div> 
+					<a href="https://github.com/syeehyn">Shuibenyang Yuan</a>.</p>
+				<p>Source code on <a href="https://github.com/syeehyn/hinreddit">Github</a></p>
+			</footer>
+		</main>
 	</body>
-
 </html>
