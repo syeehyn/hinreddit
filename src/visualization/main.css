@@ -107,7 +107,7 @@ overflow: auto;
 max-width: 80rem;
 margin-right: auto;
 margin-left: auto;
-padding-top: 10rem;
+padding-top: 5rem;
 padding-right: 1rem;
 padding-left: 1rem;
 }
@@ -219,6 +219,7 @@ margin-bottom: 1.8rem;
 .c-article__main h2 {
 line-height: 1.5;
 font-size: 2.4rem;
+padding-top: 3rem;
 }
 .c-article__main h3 {
 line-height: 1.5;
@@ -618,8 +619,8 @@ table {
 	width: 100%;
 }
 .tsne_container {
-	margin-left: -45%;
-	margin-right: -45%;
+	margin-left: -20%;
+	margin-right: -20%;
 	display: flex;
 }
 .tsne_plot {
@@ -627,4 +628,8 @@ table {
 }
 .ref code {
 	color: #5c6e74 !important;
+}
+figcaption {
+	text-align: center;
+	font-size: 0.8em;
 }

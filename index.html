@@ -305,8 +305,11 @@
 				</table>
 				<p>From the table above, we can observe that the performances logistic regression produces relatively high recall, meaning that it identifies more hateful posts from all existing ones, while producing low precision, meaning that only a small portion of posts it identifies as hateful are truly hateful. On the other hand, gradient boost classifier produces opposite results with lower recall and higher precision. Both logistic regression and gradient boost classifier have higher AUC compared to random forest, meaning that they are both better at distinguish between hateful posts and benign posts.</p>
 				<h3 id="hinreddit-result">Hinreddit Result</h3>
+				<p>
+					Besides classifying a single post as hateful or not, we also tried identifying controversial subreddit, or which subreddits should be quarantined, based on the ground truth labels given by Reddit. The controversial subreddit detection shows a better performance in terms of all the metrics we use, and implies the possibility that our model may suit this purpose better.
+				</p>
 				<h4 id="embedding-analysis">Embedding Analysis</h4>
-				<p>We will analysis graph embedding feature by fitting in Logistic Regression in <code>hateful post detection</code>, <code>controversial community detection</code>, and <code>subreddit community detection</code>, and we will see the TSNE of the embedding.</p>
+				<p>We will analyze graph embedding feature by fitting in Logistic Regression in <code>hateful post detection</code>, <code>controversial community detection</code>, and <code>subreddit community detection</code>, and we will see the TSNE of the embedding.</p>
 				<ul>
 				<li>Graph 1</li>
 				</ul>
@@ -380,15 +383,30 @@
 					</tr>
 					</tbody>
 				</table>
+				<br>
+				<p>In the following graphs, each dot represents a single post.</p>
 				<div class="tsne_container">
-					<img class="tsne_plot" src="src/visualization/assets/g1n2v.png">
-					<img class="tsne_plot" src="src/visualization/assets/g1n2v_s.png">
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g1n2v.png">
+						<figcaption><i>Graph 1 Node2vec Noraml Posts vs. Hateful Posts</i></figcaption>
+					</figure>
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g1n2v_s.png">
+						<figcaption><i>Graph 1 Node2vec Subreddits</i></figcaption>
+					</figure>
 				</div>
 				<div class="tsne_container">
-					<img class="tsne_plot" src="src/visualization/assets/g1m2v.png">
-					<img class="tsne_plot" src="src/visualization/assets/g1m2v_s.png">
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g1m2v.png">
+						<figcaption><i>Graph 1 Metapath2vec Noraml Posts vs. Hateful Posts</i></figcaption>
+					</figure>
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g1m2v_s.png">
+						<figcaption><i>Graph 1 Metapath2vec Subreddits</i></figcaption>
+					</figure>
 				</div>
 				<ul>
+				<br>
 				<li>Graph 2</li>
 				</ul>
 				<table>
@@ -462,13 +480,26 @@
 				</tbody>
 				</table>
 				<div class="tsne_container">
-					<img class="tsne_plot" src="src/visualization/assets/g2n2v.png">
-					<img class="tsne_plot" src="src/visualization/assets/g2n2v_s.png">
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g2n2v.png">
+						<figcaption><i>Graph 2 Node2vec Noraml Posts vs. Hateful Posts</i></figcaption>
+					</figure>
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g2n2v_s.png">
+						<figcaption><i>Graph 2 Node2vec Subreddits</i></figcaption>
+					</figure>
 				</div>
 				<div class="tsne_container">
-					<img class="tsne_plot" src="src/visualization/assets/g2m2v.png">
-					<img class="tsne_plot" src="src/visualization/assets/g2m2v_s.png">
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g2m2v.png">
+						<figcaption><i>Graph 2 Metapath2vec Noraml Posts vs. Hateful Posts</i></figcaption>
+					</figure>
+					<figure class="tsne_plot">
+						<img src="src/visualization/assets/g2m2v_s.png">
+						<figcaption><i>Graph 2 Metapath2vec Subreddits</i></figcaption>
+					</figure>
 				</div>
+				<br>
 				<h4 id="embedding-baseline-feature-hateful-post-result">Embedding + Baseline Feature Hateful Post Result</h4>
 				<ul>
 				<li>Graph 1</li>
@@ -650,7 +681,7 @@
 				</table>
 				<h2 id="discussion">9. Discussion</h2>
 				<p><strong>Result Analysis</strong></p>
-				<p>As seen above, we have obtained fairly low precisions and recalls with our current user-post embeddings and models. The results can be understand together with our Exploratory Data Analysis. The data has shown that only 7% of users have ever engaged in hateful posts, and among them almost half of users have themselves write posts/comments that are labeled as hateful. Moreover, for users who have engaged in hateful posts, only around 28% of their posted speeches are labeled as hateful. These numbers suggest users have a small chance of creating their own hateful posts/comments although they have engaged in any of the hateful posts. Furthermore, even if they have created any, it is not a consistent behavior. This then demonstrates that our initial hypothesis might not be accurate as mere relationships of users' reply behavior and authorship cannot provide much useful information in identifying hateful posts, which is then confirmed by our model results.</p>
+				<p>As seen above, we have obtained fairly low precisions and recalls with our current user-post embeddings and models. In terms of all the metrics, our graph embedded network of posts and users does not improve much from what the baseline model already provide. The results can be understand together with our Exploratory Data Analysis. The data has shown that only 7% of users have ever engaged in hateful posts, and among them almost half of users have themselves write posts/comments that are labeled as hateful. Moreover, for users who have engaged in hateful posts, only around 28% of their posted speeches are labeled as hateful. These numbers suggest users have a small chance of creating their own hateful posts/comments although they have engaged in any of the hateful posts. Furthermore, even if they have created any, it is not a consistent behavior. This then demonstrates that our initial hypothesis might not be accurate as mere relationships of users' reply behavior and authorship cannot provide much useful information in identifying hateful posts, which is then confirmed by our model results.</p>
 				<p>Due to the fact that our graph representation only embeds authorship and reply behavior, and as Node2vec and Deep Graph Infomax both are greedy in the training process, the models cannot clearly distinguish between hateful and benign posts, which is shown by the AUC values that are only slightly higher than, or even lower than, 0.5 and our baseline models that make use of post-related features.</p>
 				<p><strong>Possible Improvement</strong></p>
 				<p>First possible improvement can be done in the labeling process. To label our reddit data, we have trained a NLP classifier with labeled Wikipedia comments as well as pretrained Wikipedia vocabularies. It would be better if we can obtain labeled social platform data, such as labeled tweets to be trained with pretrained Twitter vocabularies provided by <a href="https://nlp.stanford.edu/projects/glove/">Glove</a>.</p>
