@@ -30,6 +30,7 @@
 					<li><a href="#machine-learning-deployment">Machine Learning Deployment</a></li>
 					<li><a href="#experimental-result">Experimental Result</a></li>
 					<li><a href="#discussion">Discussion</a></li>
+					<li><a href="#miscellaneous">Miscellaneous</a></li>
 				</ul>
 				<hr>
 			</div>
@@ -653,15 +654,57 @@
 				<p>First possible improvement can be done in the labeling process. To label our reddit data, we have trained a NLP classifier with labeled Wikipedia comments as well as pretrained Wikipedia vocabularies. It would be better if we can obtain labeled social platform data, such as labeled tweets to be trained with pretrained Twitter vocabularies provided by <a href="https://nlp.stanford.edu/projects/glove/">Glove</a>.</p>
 				<p>Another possible improvement, which we originally would like to implement, is to include more user-to-user relations in our graph representations. Some examples include subreddit subsription lists and friends connection. We currently have a hard time including these relationships because user information features are still in development in the API we use, <code>pushift</code>. Although Reddit's own API, <code>PRAW</code>, offers related features, it unfortunately employs a different system of user ID from what pushift uses, and we are unable to connect them to obtain user information. This can be done as soon as <code>pushift</code> succesfully develops user information features.</p>
 				<p>Finally, we can also improve our algorithm to make use of the timeline data we obtain along with posts and comments. By adding a time feature, we can construct sequence nodes and feed in to Recurrent Neural Network models, such as Long Short-Term Memory.</p>
-			</div>
-			<footer class="c-page__footer">    
-				<p>© hinreddit<br>
-					developped by
+				<h2 id="miscellaneous">Miscellaneous</h2>
+				<h3>
+					Reference
+				</h3>
+				<div class="ref">
+					<code>@paper{Hou/Ye/2017,
+						title={HinDroid: {An Intelligent Android Malware Detection System Based on Structured Heterogeneous Information Network}},
+						author={Hou, Ye, Song, Abdulhayoglu}
+						year={2017}
+					}</code><br>
+					<code>@inproceedings{Fey/Lenssen/2019,
+					title={Fast Graph Representation Learning with {PyTorch Geometric}},
+					author={Fey, Matthias and Lenssen, Jan E.},
+					booktitle={ICLR Workshop on Representation Learning on Graphs and Manifolds},
+					year={2019},
+					}</code><br>
+					<code>@article{turc2019,
+					title={Well-Read Students Learn Better: On the Importance of Pre-training Compact Models},
+					author={Turc, Iulia and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+					journal={arXiv preprint arXiv:1908.08962v2 },
+					year={2019}
+					}</code><br>
+					<code>@course{Koutra/2018,
+					title={Mining Large-scale Graph Data},
+					author={Danai Koutra},
+					link={http://web.eecs.umich.edu/~dkoutra/courses/W18_598/},
+					year={2018}
+					}</code><br>
+					<code>@collection{src-d/2019,
+					title={Awesome Machine Learning On Source Code},
+					author={src-d},
+					link={https://github.com/src-d/awesome-machine-learning-on-source-code},
+					year={2019}
+					}</code><br>
+				</p></div>
+				<h3>Credits</h3>
+				<p>
+					Hinreddit is developped by
 					<a href="https://github.com/anniechen0127">Chengyu Chen</a>,
 					<a href="https://github.com/yuc330">Yu-chun Chen</a>,
 					<a href="https://github.com/lilytaoyy">Yanyu Tao</a>, and
-					<a href="https://github.com/syeehyn">Shuibenyang Yuan</a>.</p>
-				<p>Source code on <a href="https://github.com/syeehyn/hinreddit">Github</a></p>
+					<a href="https://github.com/syeehyn">Shuibenyang Yuan</a>.
+				</p>
+				<p>For anyone who are interested in through anlysis of our project you may find
+					a through report <a href="./writeups/report.pdf">Here</a> and the implementation source code
+					in our <a href="https://github.com/syeehyn/hinreddit">Github Repository</a>
+				</p>
+			</div>
+			<footer class="c-page__footer">    
+				<p>© hinreddit</p><br>
+				<p><a href="https://github.com/syeehyn/hinreddit">Github</a></p>
 			</footer>
 		</main>
 	</body>

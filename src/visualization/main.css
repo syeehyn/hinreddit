@@ -625,3 +625,6 @@ table {
 .tsne_plot {
 	width:50%
 }
+.ref code {
+	color: #5c6e74 !important;
+}
