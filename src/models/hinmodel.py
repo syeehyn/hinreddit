@@ -9,6 +9,8 @@ from src import *
 MAT_DIR = 'interim/hinembed'
 
 class hinmodel():
+    """[hindroid svm model]
+    """
     def __init__(self, method = 'AA'):
         self.clf = SVC(kernel='precomputed')
         if method == 'AA':

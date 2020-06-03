@@ -3,6 +3,11 @@ from glob import glob
 import os.path as osp
 
 def labeling(fp):
+    """[labeling the data]
+
+    Args:
+        fp ([string]): [file path to store the label]
+    """
     POST_SENT = osp.join(fp, 'interim', 'label', 'post','post_sentimental.csv')
     COMMENT_SENT = osp.join(fp, 'interim', 'label', 'comment','*.csv')
     post = pd.read_csv(POST_SENT)

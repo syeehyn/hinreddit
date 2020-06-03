@@ -14,6 +14,8 @@ import json
 from torch import nn
 import shutil
 class Encoder(nn.Module):
+    """[GCN Conv based encoder w/ prelu activation]
+    """
     def __init__(self, in_channels, hidden_channels):
         super(Encoder, self).__init__()
         self.conv = GCNConv(in_channels, hidden_channels, cached=True)
@@ -27,6 +29,25 @@ def corruption(x, edge_index):
     return x[torch.randperm(x.size(0))], edge_index
 
 def infomax(fp, PARAMS, feature):
+    """[generate DGI embedding]
+
+    Args:
+        fp ([string]): [file path of the root of the data]
+        PARAMS ([dict]): [the parameters of the node2vec model,
+                        KEYS: {
+                                GRAPH_NAME: the name of the graph file
+                                SUMMARY: dimension of embedding,
+                                HIDDENCHANNELS: the hidden channel of encoder
+                                LEARNING_RATE: learning rate, 
+                                BATCH_SIZE: batch size of each batch, 
+                                NUM_EPOCH: number of epoch to be trained,
+                                CUDA: use GPU
+                                }]
+        feature ([np.array]): [the node features]
+
+    Returns:
+        [np.array]: [numpy array format of the DGI embedding]
+    """
     g = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))
     N = g['N']
     p_cate = feature
@@ -72,4 +93,5 @@ def infomax(fp, PARAMS, feature):
         json.dump({'loss': losses}, f)
     z = z.detach().cpu().numpy()[post_indx.reshape(-1,), :]
     np.save(osp.join(fp, 'processed', 'infomax', PARAMS['EMBEDDING_NAME']), z)
-    return 'embedding infomax created'
+    print('embedding infomax created')
+    return z

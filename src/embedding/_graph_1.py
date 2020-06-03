@@ -15,6 +15,7 @@ LABL_DIR = osp.join('interim', 'label', '*.csv')
 POST_DIR = osp.join('raw', 'posts', '*.csv')
 OUT_DIR = osp.join('interim', 'graph', 'graph_1.mat')
 
+#the subreddit defined as controversial
 community = ["KotakuInAction",
     "TumblrInAction",
     "pussypassdenied",
@@ -66,6 +67,11 @@ community = ["KotakuInAction",
     "unpopularopinion"]
 
 def create_graph(fp):
+    """[create the graph]
+
+    Args:
+        fp ([string]): [the file path of the root of the data]
+    """
     print('start preprocessing: (filtering)')
     try:
         os.remove(osp.join(fp, OUT_DIR))

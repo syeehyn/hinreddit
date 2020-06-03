@@ -15,6 +15,26 @@ metapath = [
 ]
 
 def metapath2vec(fp, PARAMS):
+    """[function to generate metapath2vec]
+
+    Args:
+        fp ([string]): [the file path of the root of the data]
+        PARAMS ([dict]): [the parameters of the node2vec model,
+                        KEYS:{
+                                GRAPH_NAME: the name of the graph file
+                                EMBEDDING_DIM: dimension of embedding, 
+                                WALK_LENGTH: random walk length, 
+                                CONTEXT_SIZE: context size, 
+                                WALKS_PER_NODE: number of walks per node, 
+                                NUM_NEG_SAMPLES: number of negative samples,
+                                LEARNING_RATE: learning rate, 
+                                BATCH_SIZE: batch size of each batch, 
+                                NUM_EPOCH: number of epoch to be trained,
+                                CUDA: use GPU
+                                }]
+    Returns:
+        [np.array]: [numpy array format of the metapath2vec embedding]
+    """
     g = io.loadmat(osp.join(fp, 'interim', 'graph', PARAMS['GRAPH_NAME']))
     user_user = from_scipy_sparse_matrix(g['U'])
     author_post = from_scipy_sparse_matrix(g['A'])
@@ -77,3 +97,4 @@ def metapath2vec(fp, PARAMS):
         json.dump({'loss': losses}, f)
     np.save(osp.join(fp, 'processed', 'metapath2vec', PARAMS['EMBEDDING_NAME']), z)
     print('successfully saved embedding')
+    return z

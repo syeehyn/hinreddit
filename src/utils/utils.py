@@ -9,6 +9,16 @@ from src.models import hinmodel
 MAT_DIR = 'interim/hinembed'
 
 def evaluate(test_size, method, datapath):
+    """[evaluate the model]
+
+    Args:
+        test_size ([float]): [the proportion of test data]
+        method ([string]): [which method to be evaluated]
+        datapath ([string]): [the the root of the file path of the data]
+
+    Returns:
+        [type]: [description]
+    """
     X = sparse.load_npz(os.path.join(datapath ,MAT_DIR, 'A.npz'))
     y = pd.read_csv(os.path.join(datapath, MAT_DIR, 'A_post_ref.csv')).sort_values('post_id_ind')['label'].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size)

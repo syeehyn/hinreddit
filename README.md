@@ -7,8 +7,6 @@ Labeling | Finished
 Feature Extraction| Finished
 ML Deployment | Finished
 
-[Development Timeline](./writeups/DEVTIMELINE.md)
-
 This project aimes to investigate contents from Reddit by detecting positive or negative comments with technique of Heterogeneous Information Network rather than traditional approach of test processing.
 
 [Overview](./writeups/OVERVIEW.md)
