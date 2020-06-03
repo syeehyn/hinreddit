@@ -56,7 +56,6 @@ template {
 display: none;
 }
 img {
-
 max-width: 100%;
 font-style: italic;
 vertical-align: middle;
@@ -166,10 +165,11 @@ font-size: 1.8rem;
 color: #5c6e74;
 }
 .c-page__navigation {
+margin-top: -3rem;
 line-height: 1.5;
 font-size: 1.8rem;
 margin-bottom: 4rem;
-display: flex;
+/* display: flex; */
 justify-content: space-between;
 }
 .c-article {
@@ -585,9 +585,6 @@ margin-bottom: 20px;
 .post-description ul {
 margin-bottom: 20px;
 }
-main a:hover {
-text-decoration:line-through
-}
 pre,
 code {
 font-family: "Roboto Mono", monospace;
@@ -602,10 +599,29 @@ pre {
 pre code {
 	color: white;
 }
-img {
-	margin-left: -20%;
-	margin-right: -20%;
-}
 table, th, td {
 	border: 1px solid black;
+	text-align: center;
+}
+ul {
+	list-style-type: none;
+	margin-left: 2.1rem;
+}
+img {
+	width: 100%
+}
+code {
+	color: rgb(206, 143, 8);
+}
+table {
+	margin: 0 auto;  
+	width: 100%;
+}
+.tsne_container {
+	margin-left: -45%;
+	margin-right: -45%;
+	display: flex;
+}
+.tsne_plot {
+	width:50%
 }
