@@ -253,11 +253,11 @@
 				<h2 id="graph-extraction">6. Graph Extraction</h2>
 				<p>the graph structure is shown as below:</p>
 				<h3 id="graph-1">Graph 1</h3>
-				<img src="/src/visualization/assets/graph_1.png">
+				<img src="./src/visualization/assets/graph_1.png">
 				<p>The graph 1 consists two kind of nodes: post nodes and user nodes, and represnets three kinds of relationships: authorship, involvement, and reply. The matrices are A, P, and U.</p>
 				<p>The P matrix represents involvement. there’re arrows pointing to user nodes from a post node for users who either writes or comment below the post. The A matrix represents authorship. there’re arrows pointing to post nodes from a user node for posts that are written by the user. The U matrix represents reply. there’re arrows pointing to user node a from another user node b if a has replied to b under any post</p>
 				<h3 id="graph-2">Graph 2</h3>
-				<img src="/src/visualization/assets/graph_2.png">
+				<img src="./src/visualization/assets/graph_2.png">
 				<p>The graph 2 also consists two node types: post nodes and user nodes with similar relationship with graph 1. The matrices are also represented as A, P, U.</p>
 				<p>The P matrix in graph 2 only express the relationship between Post and Author: whenever author writes the post, the post will point to the user. The A matrix represents Author, User, and Post's interactions: whenver author writes the post, the author will point to the user, and whenever user replies author under the posts, the user will point to the Post. The U matrix represents user interactions: author will point to user when the author is replied by user, and user will point to user when the user is replied by user.</p>
 				<h2 id="machine-learning-deployment">7. Machine Learning Deployment</h2>
