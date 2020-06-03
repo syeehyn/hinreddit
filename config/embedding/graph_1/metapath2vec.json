@@ -9,5 +9,6 @@
 "LEARNING_RATE": 0.01,
 "NUM_EPOCH": 5,
 "CUDA": true,
-"EMBEDDING_NAME": "graph_1.npy"
+"EMBEDDING_NAME": "graph_1.npy",
+"TEST": false
 }

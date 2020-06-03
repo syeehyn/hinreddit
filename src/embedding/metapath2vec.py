@@ -58,36 +58,37 @@ def metapath2vec(fp, PARAMS):
                     metapath=metapath, walk_length=PARAMS['WALK_LENGTH'], context_size=PARAMS['CONTEXT_SIZE'],
                     walks_per_node=PARAMS['WALKS_PER_NODE'], num_negative_samples=PARAMS['NUM_NEG_SAMPLES'],
                     sparse=True).to(device)
-    loader = model.loader(batch_size=PARAMS['BATCH_SIZE'], shuffle=True, num_workers=8)
-    optimizer = torch.optim.SparseAdam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
-    def train(epoch, log_steps=100):
-        model.train()
-        total_loss = 0
-        store = []
-        i = 1
-        loading = iter(loader)
-        while loading != None:
-            try:
-                pos_rw, neg_rw = next(loading)
-            except IndexError:
-                continue
-            except StopIteration:
-                loading = None
-            optimizer.zero_grad()
-            loss = model.loss(pos_rw.to(device), neg_rw.to(device))
-            loss.backward()
-            optimizer.step()
-            total_loss += loss.item()
-            if (i + 1) % log_steps == 0:
-                print((f'Epoch: {epoch}, Step: {i + 1:05d}/{len(loader)}, '
-                    f'Loss: {total_loss / log_steps:.4f}'))
-                store.append(total_loss / log_steps)
-                total_loss = 0
-            i += 1
-        return store
     losses = []
-    for epoch in range(1, PARAMS['NUM_EPOCH'] + 1):
-        losses.append(train(epoch))
+    if not PARAMS["TEST":]:
+        loader = model.loader(batch_size=PARAMS['BATCH_SIZE'], shuffle=True, num_workers=8)
+        optimizer = torch.optim.SparseAdam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
+        def train(epoch, log_steps=100):
+            model.train()
+            total_loss = 0
+            store = []
+            i = 1
+            loading = iter(loader)
+            while loading != None:
+                try:
+                    pos_rw, neg_rw = next(loading)
+                except IndexError:
+                    continue
+                except StopIteration:
+                    loading = None
+                optimizer.zero_grad()
+                loss = model.loss(pos_rw.to(device), neg_rw.to(device))
+                loss.backward()
+                optimizer.step()
+                total_loss += loss.item()
+                if (i + 1) % log_steps == 0:
+                    print((f'Epoch: {epoch}, Step: {i + 1:05d}/{len(loader)}, '
+                        f'Loss: {total_loss / log_steps:.4f}'))
+                    store.append(total_loss / log_steps)
+                    total_loss = 0
+                i += 1
+            return store
+        for epoch in range(1, PARAMS['NUM_EPOCH'] + 1):
+            losses.append(train(epoch))
     model.eval()
     with torch.no_grad():
         z = model('post').detach().cpu().numpy()
