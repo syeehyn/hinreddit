@@ -51,6 +51,8 @@
       - [DGI](#dgi-1)
       - [NetMF](#netmf)
   - [9. Discussion (new)](#9-discussion-new)
+    - [Result Analysis](#result-analysis)
+    - [Possible Improvement](#possible-improvement)
   - [10. Pipeline (updated)](#10-pipeline-updated)
     - [ETL Process](#etl-process)
     - [Labeling Process](#labeling-process)
@@ -174,7 +176,7 @@ The data schema is shown below
 
 ###### First Layer: Posts
 
-The csv file contains the information of each post in a dataframe where the unit of observation is the individual post. 
+The csv file contains the information of each post in a dataframe where the unit of observation is the individual post.
 
 - `id`: post_id
 - `author`: username of the author who make the post

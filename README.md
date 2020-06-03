@@ -6,8 +6,6 @@ As social platforms become accessible nowadays, more and more people get used to
 
 This project investigates contents from Reddit. its goal is to classify hateful posts from the normal ones. This not only enables platforms to improve user experiences, but also helps to maintain a positive online environment.
 
-[Overview](./writeups/OVERVIEW.md)
-
 - [Hinreddit](#hinreddit)
   - [Getting Started](#getting-started)
     - [Prerequisite](#prerequisite)
@@ -16,7 +14,7 @@ This project investigates contents from Reddit. its goal is to classify hateful 
       - [etl](#etl)
       - [graph](#graph)
       - [embedding](#embedding)
-  - [Description of Contents](#description-of-contents)
+  - [For Developers](#for-developers)
   - [Contribution](#contribution)
     - [Authors](#authors)
     - [Advisors](#advisors)
@@ -85,18 +83,13 @@ Modify the config files located in `config/embedding/graph_<1/2>/[test-]<informa
 - `metapath2vec[-test]`: for metapath2vec embedding.
 - `infomax[-test]`: for deep graph infomax (DGI) embedding.
 
+<sup> You may found a detailed explaination arguments [here](./writeups/PARAMS.md)</sup>
+
 ----
 
-## Description of Contents
+## For Developers
 
-``` bash
-├── LICENSE
-├── README.md
-├── config
-├── notebooks
-├── src
-└── tests
-```
+[Development Guide](./writeups/DEVGUIDE.md) is provided and under `./writeups/DEVGUIDE.md`
 
 ----
 
