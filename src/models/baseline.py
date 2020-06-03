@@ -15,6 +15,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import confusion_matrix, auc, roc_curve
 from sklearn.model_selection import train_test_split
+from scipy import sparse
 COMM_DIR = osp.join('raw', 'comments', '*.csv')
 LABL_DIR = osp.join('interim', 'label', '*.csv')
 POST_DIR = osp.join('raw', 'posts', '*.csv')
@@ -224,4 +225,7 @@ def baseline_model(df, y_col = 'label', test_size=0.3):
 
 def get_baseline_feature(fp):
     X = extract_feat(fp)
-    return preprocess(X).fit_transform(X).toarray()
+    X = preprocess(X).fit_transform(X)
+    if sparse.issparse(X):
+        X = X.toarray()
+    return X
