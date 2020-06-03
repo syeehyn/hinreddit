@@ -19,7 +19,7 @@
 				</div>
 			</header>
 			<div class="c-page__navigation">
-				<p><em>Table of Content</em></p>
+				<p><i>Table of Content</i></p>
 				<ul>
 					<li><a href="#hateful-post-classification">Hateful Post Classification</a></li>
 					<li><a href="#related-works">Related Works</a></li>
@@ -35,7 +35,10 @@
 				<hr>
 			</div>
 			<div class="c-article__main">
-				<img src="./src/visualization/assets/titlle_page.png">
+				<figure>
+					<img src="./src/visualization/assets/titlle_page.png">
+					<figcaption><i>Project Snapshot</i></figcaption>
+				</figure>
 				<h2 id="hateful-post-classification">1. Hateful Post Classification</h2>
 				<p>As countless social platforms are developed and become accessible nowadays, more and more people get used to posting opinions on various topics online. The existence of nagetive online behaviors such as hateful comments is also unavoidable. These platforms thus become prolific sources for hate detection, which motivates large numbers of scholars to apply various techniques in order to detect hateful users or hateful speeches.</p>
 				<p>In our project, we plan to investigate contents from Reddit, which is a popular social network that focuses on aggregating American social news, rating web content and website discussion, that carries rich potential information of contents and their authors. Our goal is to classify hateful posts from the normal ones. Being able to identify hateful posts not only enables platforms to improve user experiences, but also helps to maintain a positive online environment. <strong>We would like to stress that the boundary of 'hate' is vague and there is no correct nor consolidated definition of 'hatefulness,' our classification of hateful posts depends only on a unified definition within our team, which we divide into the categories of <code>severe_toxic</code>, <code>toxic</code> ,<code>threat</code>, <code>insult</code>, and <code>identity_hate</code>.</strong> We all agree that other people's recognition of &quot;hate&quot; may be but not limited to these four categories, and our labeling method allows full freedom of other definition of &quot;hatefulness.&quot;</p>
@@ -52,7 +55,10 @@
 				<h2 id="labeling">4. Labeling</h2>
 				<p>Since the original data obtained from Reddit is not labeled, we will be using a RNN and bidirectional layers, through python library <code>keras</code>, as well as pre-trained word representation vectors from <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a>, to label the Reddit posts before we use it for our project main analysis.</p>
 				<p>By following a <a href="https://androidkt.com/multi-label-text-classification-in-tensorflow-keras/">tutorial</a> of using <code>keras</code> and the pretrained word vectors, we will train a multi-label NLP model with kaggle labeled dataset of wikipedia comments detailed in <a href="#4-datasets">Datasets</a>. We will save this model in directory <code>interim</code>. This multi-label model then can be used to calculate each Reddit post or comment a score between 0 to 1 for each of the label <code>toxic</code>, <code>severe_toxic</code>, <code>threat</code>, <code>insult</code>, <code>identity_hate</code>.</p>
-				<img src="src/visualization/assets/labeling.png">
+				<figure>
+					<img src="src/visualization/assets/labeling.png">
+					<figcaption><i>Labeling Process</i></figcaption>
+				</figure>
 				<p>The labeling process for a single post is shown above and explained as follows: We first obtain scores for the post itself if it has textual content. Then, we also obtain scores for all of its comments to compute an average of all five labels. We then compute total scores for the post by adding scores of post content and its comments. We then compute the max of all five total scores, and if the max value is greater than the threshold, we classify the post as 'hateful'. In our project, we set the threshold to 0.5. If the post is removed it will be labeled as deleted and the NA post will also be labeled as NA.</p>
 				<p>In this way, we can also label those posts which are missing textual content by making use of its comment data. Moreover, with this labeling process, we are defining hateful posts so that they not only include those that demonstrate hatefulness in its content, but also those that stir up negative discussions in comments and replies.</p>
 				<h2 id="exploratory-data-analysis">5. Exploratory Data Analysis</h2>
@@ -62,6 +68,7 @@
 				<h4 id="proportion-of-each-label">Proportion of Each Label</h4>
 				<p>We then look at the labels at a higher level without grouping them into different subreddits. The table below shows the distribution of the labels among posts.</p>
 				<table>
+				<caption><i>Proportion of Each Label</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">label</th>
@@ -86,6 +93,7 @@
 				<h4 id="number-of-comments">Number of Comments</h4>
 				<p>Another feature could be the number of comments under each post. The average length of comment for posts labeled hateful is relatively smaller than that for posts labeled as benign.</p>
 				<table>
+				<caption><i>Number of Comment</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">label</th>
@@ -112,6 +120,7 @@
 				<h4 id="length-of-text-content">Length of Text Content</h4>
 				<p>Dig deeper into the content of the posts for different labeling groups, we investigate on the length of the content. From the table below, it shows that even though the min and max of the length of content in each group is around the same, the average length of content for posts that are labled hateful is more than double of the average length of content for posts that are labled benign. Thus we can add this as one of our feature.</p>
 				<table>
+				<caption><i>Length of Text Content</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">label</th>
@@ -138,6 +147,7 @@
 				<h4 id="upvote-score">Upvote Score</h4>
 				<p>Moreover we also find difference in score for the two groups, the mean score of benign posts are generally higher than those of hateful posts.</p>
 				<table>
+				<caption><i>Upvote Score</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">label</th>
@@ -158,6 +168,7 @@
 				<h4 id="vocabulary">Vocabulary</h4>
 				<p>Moreover, in order to evaluate the quality of the label, we have also done some textual analysis. We find out the top 30 words in posts after removing stop words for each of the groups. However, we have also removed about 20 words that appeared in both groups. Those should be the common words that appeared in the conversation and thus is not helpful as a feature for our classification.</p>
 				<table>
+				<caption><i>Vocabulary</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">malign_word</th>
@@ -220,6 +231,7 @@
 				<h3 id="interaction-bw-posts-users">Interaction b/w Posts &amp; Users</h3>
 				<p>We have 483,173 unique users in our data. 7% of users in our data have been involved with hateful posts. Among them, 44.26% of users have themselves create posts/comments labeled as hateful.</p>
 				<table>
+				<caption><i>Interaction b/w Posts &amp; Users</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">Percentage of users only post once</th>
@@ -236,6 +248,7 @@
 				<p>We can observe that nearly half of the users post only once and are not active authors on Reddit. Most of them are only involved within one subreddit, thus their behavioral movements are representative of that subreddit.</p>
 				<p>In addition to general user, we also investigate hateful post users' behaviors specifically.</p>
 				<table>
+					<caption><i>Post-User Engagement</i></caption>
 					<thead>
 						<tr class="header">
 						<th align="left">Proportion of users who only post once among all users engaged in hateful post</th>
@@ -254,12 +267,18 @@
 				<h2 id="graph-extraction">6. Graph Extraction</h2>
 				<p>the graph structure is shown as below:</p>
 				<h3 id="graph-1">Graph 1</h3>
-				<img src="./src/visualization/assets/graph_1.png">
+				<figure>
+					<img src="./src/visualization/assets/graph_1.png">
+					<figcaption><i>Graph 1</i></figcaption>
+				</figure>
 				<p>The graph 1 consists two kind of nodes: post nodes and user nodes, and represnets three kinds of relationships: authorship, involvement, and reply. The matrices are A, P, and U.</p>
 				<p>The P matrix represents involvement. there’re arrows pointing to user nodes from a post node for users who either writes or comment below the post. The A matrix represents authorship. there’re arrows pointing to post nodes from a user node for posts that are written by the user. The U matrix represents reply. there’re arrows pointing to user node a from another user node b if a has replied to b under any post</p>
 				<p>The advantage of this graph embedding is that posts nodes are very close if they are written by the same users. On the other hand, even if posts are written by different users, their nodes are still connected through involving users in common, and the closeness of the posts in our graph is based on the similarity between the group of users that interact with each of them.</p>
 				<h3 id="graph-2">Graph 2</h3>
-				<img src="./src/visualization/assets/graph_2.png">
+				<figure>
+					<img src="./src/visualization/assets/graph_2.png">
+					<figcaption><i>Graph 2</i></figcaption>
+				</figure>
 				<p>The graph 2 also consists two node types: post nodes and user nodes with similar relationship with graph 1. The matrices are also represented as A, P, U.</p>
 				<p>The P matrix in graph 2 only express the relationship between Post and Author: whenever author writes the post, the post will point to the user. The A matrix represents Author, User, and Post's interactions: whenver author writes the post, the author will point to the user, and whenever user replies author under the posts, the user will point to the Post. The U matrix represents user interactions: author will point to user when the author is replied by user, and user will point to user when the user is replied by user.</p>
 				<p>The difference between these two graphs is that the second one adds weights to users of first level replies who directly comment below the main post by adding extra arrows. For this specific embedding, post nodes are still close if they are written by the same users. On the other hand, they are also close because they have many first-level repliers in common.</p>
@@ -270,6 +289,7 @@
 				<h3 id="baseline-model-result">Baseline Model Result</h3>
 				<p>Our baseline model is built based on our investigation of label statistics, and include features: length of text, number of comments, subreddit, upvote score, and a boolean feature of whether it includes some sensitive words.</p>
 				<table>
+					<caption><i>Baseline Model Result</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">Estimator</th>
@@ -314,6 +334,7 @@
 				<li>Graph 1</li>
 				</ul>
 				<table>
+					<caption><i>Graph 1 Embedding Performance</i></caption>
 					<thead>
 					<tr class="header">
 					<th align="left">Task</th>
@@ -410,6 +431,7 @@
 				<li>Graph 2</li>
 				</ul>
 				<table>
+					<caption><i>Graph 2 Embedding Performance</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">Task</th>
@@ -505,6 +527,7 @@
 				<li>Graph 1</li>
 				</ul>
 				<table>
+					<caption><i>Graph 1 Embedding + Baseline Feature Performance</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">Estimator</th>
@@ -594,6 +617,7 @@
 				<li>Graph 2</li>
 				</ul>
 				<table>
+					<caption><i>Graph 2 Embedding + Baseline Feature Performance</i></caption>
 				<thead>
 				<tr class="header">
 				<th align="left">Estimator</th>
