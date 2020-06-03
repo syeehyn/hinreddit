@@ -59,7 +59,7 @@ def metapath2vec(fp, PARAMS):
                     walks_per_node=PARAMS['WALKS_PER_NODE'], num_negative_samples=PARAMS['NUM_NEG_SAMPLES'],
                     sparse=True).to(device)
     losses = []
-    if not PARAMS["TEST":]:
+    if not PARAMS["TEST"]:
         loader = model.loader(batch_size=PARAMS['BATCH_SIZE'], shuffle=True, num_workers=8)
         optimizer = torch.optim.SparseAdam(model.parameters(), lr=PARAMS['LEARNING_RATE'])
         def train(epoch, log_steps=100):
