@@ -14,6 +14,7 @@ This project investigates contents from Reddit. its goal is to classify hateful 
       - [etl](#etl)
       - [graph](#graph)
       - [embedding](#embedding)
+      - [pipeline](#pipeline)
   - [For Developers](#for-developers)
   - [Contribution](#contribution)
     - [Authors](#authors)
@@ -82,6 +83,10 @@ Modify the config files located in `config/embedding/graph_<1/2>/[test-]<informa
 - `node2vec[-test]`: for node2vec embedding.
 - `metapath2vec[-test]`: for metapath2vec embedding.
 - `infomax[-test]`: for deep graph infomax (DGI) embedding.
+
+#### pipeline
+
+`python run.py data[-test] graph[-test] node2vec[-test] metapath2vec[-test] infomax[-test]`
 
 <sup> You may found a detailed explaination arguments [here](./writeups/PARAMS.md)</sup>
 
