@@ -58,15 +58,16 @@ def main(targets):
     else:
         env(DATADIR)
     if 'data' in targets:
+    #==============raw================================#
         fetch_submissions(**DATAPARAMS)
         submissions_detail(DATADIR)
         comments_detail(DATADIR)
-    if 'label' in targets:
+    #==============label==============================#
         model, tokenizer = load_nlp('config/nlp_model.zip', DATADIR)
         label_comments(DATADIR, model, tokenizer)
         label_posts(DATADIR, model, tokenizer)
         labeling(DATADIR)
-    if 'baseline' in targets:
+    #==============baseline===========================#
         posts = extract_feat(DATADIR)
         baseline_model(posts)
     if 'graph' in targets:
@@ -82,17 +83,18 @@ def main(targets):
     if 'metapath2vec' in targets:
         metapath2vec(DATADIR, G1_METAPATH)
         metapath2vec(DATADIR, G2_METAPATH)
-    #=================For test============================#
+#=================================For test=======================================#
     if 'data-test' in targets:
+    #==============raw================================#
         fetch_submissions(**TESTPARAMS)
         submissions_detail(TESTDIR)
         comments_detail(TESTDIR)
-    if 'label-test' in targets:
+    #==============label==============================#
         model, tokenizer = load_nlp('config/nlp_model.zip', TESTDIR)
         label_comments(TESTDIR, model, tokenizer)
         label_posts(TESTDIR, model, tokenizer)
         labeling(TESTDIR)
-    if 'baseline-test' in targets:
+    #==============baseline===========================#
         posts = extract_feat(TESTDIR)
         baseline_model(posts)
     if 'graph-test' in targets:
