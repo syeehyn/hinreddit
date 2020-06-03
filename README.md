@@ -88,7 +88,7 @@ Modify the config files located in `config/embedding/graph_<1/2>/[test-]<informa
 
 `python run.py data[-test] graph[-test] node2vec[-test] metapath2vec[-test] infomax[-test]`
 
-<sup> You may found a detailed explaination arguments [here](./writeups/PARAMS.md)</sup>
+You can find a detailed explaination of configuration arguments [here](./writeups/PARAMS.md)
 
 ----
 
