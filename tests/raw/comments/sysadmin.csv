@@ -91,6 +91,29 @@ fm3xmw1,jrmarshall512,1585740646,True,sysadmin,t3_fsn5au,Sounds like an attacker
 fm3xu26,Tatermen,1585740829,False,sysadmin,t3_fsn5au,"Liability nightmare too. What if there had been a fire or a medical emergency? 
 
 Our doors are all setup with a break-glass that's wired directly into the magnetic lock or the electric latch, so that in the worst case scenario it can be broken to completely bypass the door controller.",t1_fm3xmw1,True
+fm3ykp9,ZAFJB,1585741509,False,sysadmin,t3_fsoar7,Rule 2: do not expressly advertise your product,t3_fsoar7,True
+fm3yn3t,bad0seed,1585741568,False,sysadmin,t3_fsoar7,"Sorry, it seems this comment or thread has violated a sub-reddit rule and has been removed by a moderator.  
+
+**Inappropriate use of, or expectation of the Community.**
+
+* There are many reddit communities that exist that may be more catered to/dedicated your topic.  
+ - Consider posting (or cross posting) there with specific niche questions.  
+* Requests for assistance are expected to contain basic situational information. 
+ - They should also contain evidence of basic troubleshooting &amp; Googling for self-help.  
+ - Keep topics/questions related to technology/people/practices/etc within a business environment.  
+* When asking a question or requesting advice, please update your original post with any new information, or solution (if found).  
+ - This will make things easier for anyone else who may have the same issue or question in the future.
+
+-----  
+
+*If you wish to appeal this action please don't hesitate to [message the moderation team](https://www.reddit.com/message/compose?to=%2Fr%2Fsysadmin).*",t3_fsoar7,True
+fm4108r,dubnetworks,1585743611,True,sysadmin,t3_fsoar7,"???
+
+What product?
+
+Not a big loss, didn't think this would apply so much to this sub anyways.",t1_fm3ykp9,True
+fm4133j,ZAFJB,1585743676,False,sysadmin,t3_fsoar7,https://www.reddit.com/r/sysadmin/wiki/posting_rules,t1_fm4108r,True
+fm41tdg,dubnetworks,1585744277,True,sysadmin,t3_fsoar7,"Have posted blogs here before. That's okay, will be unsubscribing. /r/syadmin is the home of the helpdesk and lone admin at small mom and pop shops. Other subs appreciate content, I'll continue posting there.",t1_fm4133j,True
 fm460xc,the_bananalord,1585747357,False,sysadmin,t3_fsn5au,"Paxton user here, too. It's good stuff.",t1_fm3najr,True
 fm46yio,DISP-er,1585747988,False,sysadmin,t3_fsn5au,\+1 for Genetec,t1_fm2pfqd,True
 fm47mi0,DISP-er,1585748427,False,sysadmin,t3_fsn5au,"Can I add, if you're using this on any exterior doors (or doors accessible from a public space, a lobby of a shared building etc.) then you really need to make sure you're not using decades old 125 kHz ""prox"" card technology. I can clone just about any of those cards from 5 feet away. Look for 13.56 MHz cards with encryption.
@@ -126,3 +149,4 @@ folu310,imfromthebay415,1587870500,True,sysadmin,t3_fsnoqf,"UPDATE: Google has o
 foqh9rj,daquelenipe,1587993533,False,sysadmin,t3_fsnoqf,where did you see that?,t1_folu310,True
 fow1acc,imfromthebay415,1588111176,True,sysadmin,t3_fsnoqf,"It popped up for us in our meeting settings during a recent call, users actually showed me this before I noticed it myself",t1_foqh9rj,True
 fpnwqct,bit-man,1588774127,False,sysadmin,t3_fsnoqf,It has been retired. Any replacement for this addon? Some hope that it will be available again for Firefox?,t1_fmb03jj,True
+fqwpv37,Brewster345,1589713490,False,sysadmin,t3_fsnoqf,"Doesn't work on our meetings still, sadly (the official version)",t1_fow1acc,True
