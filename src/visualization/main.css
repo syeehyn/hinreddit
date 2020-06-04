@@ -626,17 +626,15 @@ table {
 	margin-right: -20%;
 	display: flex;
 }
-.tsne_plot {
-	width:50%
-}
 .ref code {
 	color: #5c6e74 !important;
-}
-figcaption {
-	text-align: center;
-	font-size: 0.8em;
 }
 caption {
 	font-size: 0.8em;
 	caption-side: bottom;
+}
+.tsne_caption {
+	width: 50%;
+	font-size: 0.8em;
+	text-align: center;
 }
