@@ -1,6 +1,6 @@
 # Hinreddit
 
-[project website] (https://syeehyn.github.io/hinreddit/)
+[project website](https://syeehyn.github.io/hinreddit/)
 
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/syeehyn/hinreddit)
 
