@@ -8,6 +8,8 @@
 		<meta name="description" content="This project meants to analysis the finding of graph network of Reddit community and hateful post with our neural network models">
 		<link href='https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:300,400,900,400italic' rel='stylesheet' type='text/css'>
 		<link href="./src/visualization/main.css" rel="stylesheet" type="text/css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.2.min.js"></script>
 	</head>
 	<body>
 		<main class="u-container">
@@ -405,26 +407,22 @@
 					</tbody>
 				</table>
 				<br>
-				<p>In the following graphs, each dot represents a single post.</p>
+				<p>In the following graphs, each dot's color represents dominant corresponding category.</p>
 				<div class="tsne_container">
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g1n2v.png">
-						<figcaption><i>Graph 1 Node2vec Noraml Posts vs. Hateful Posts</i></figcaption>
-					</figure>
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g1n2v_s.png">
-						<figcaption><i>Graph 1 Node2vec Subreddits</i></figcaption>
-					</figure>
+					<div id="g1n2v"></div>
+					<div id="g1n2v_s"></div>
 				</div>
 				<div class="tsne_container">
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g1m2v.png">
-						<figcaption><i>Graph 1 Metapath2vec Noraml Posts vs. Hateful Posts</i></figcaption>
-					</figure>
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g1m2v_s.png">
-						<figcaption><i>Graph 1 Metapath2vec Subreddits</i></figcaption>
-					</figure>
+					<p class="tsne_caption"><i>Graph 1 Node2vec Noraml Posts vs. Hateful Posts</i></p>
+					<p class="tsne_caption"><i>Graph 1 Node2vec Subreddits</i></p>
+				</div>
+				<div class="tsne_container">
+					<div id="g1m2v"></div>
+					<div id="g1m2v_s"></div>
+				</div>
+				<div class="tsne_container">
+					<p class="tsne_caption"><i>Graph 1 Metapath2vec Noraml Posts vs. Hateful Posts</i></p>
+					<p class="tsne_caption"><i>Graph 1 Metapath2vec Subreddits</i></p>
 				</div>
 				<ul>
 				<br>
@@ -501,25 +499,22 @@
 				</tr>
 				</tbody>
 				</table>
+				<p>In the following graphs, each dot's color represents dominant corresponding category.</p>
 				<div class="tsne_container">
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g2n2v.png">
-						<figcaption><i>Graph 2 Node2vec Noraml Posts vs. Hateful Posts</i></figcaption>
-					</figure>
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g2n2v_s.png">
-						<figcaption><i>Graph 2 Node2vec Subreddits</i></figcaption>
-					</figure>
+					<div id="g2n2v"></div>
+					<div id="g2n2v_s"></div>
 				</div>
 				<div class="tsne_container">
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g2m2v.png">
-						<figcaption><i>Graph 2 Metapath2vec Noraml Posts vs. Hateful Posts</i></figcaption>
-					</figure>
-					<figure class="tsne_plot">
-						<img src="src/visualization/assets/g2m2v_s.png">
-						<figcaption><i>Graph 2 Metapath2vec Subreddits</i></figcaption>
-					</figure>
+					<p class="tsne_caption"><i>Graph 2 Node2vec Noraml Posts vs. Hateful Posts</i></p>
+					<p class="tsne_caption"><i>Graph 2 Node2vec Subreddits</i></p>
+				</div>
+				<div class="tsne_container">
+					<div id="g2m2v"></div>
+					<div id="g2m2v_s"></div>
+				</div>
+				<div class="tsne_container">
+					<p class="tsne_caption"><i>Graph 2 Metapath2vec Noraml Posts vs. Hateful Posts</i></p>
+					<p class="tsne_caption"><i>Graph 2 Metapath2vec Subreddits</i></p>
 				</div>
 				<br>
 				<h4 id="embedding-baseline-feature-hateful-post-result">Embedding + Baseline Feature Hateful Post Result</h4>
@@ -748,7 +743,7 @@
 				</p></div>
 				<h3>Credits</h3>
 				<p>
-					Hinreddit is developped by
+					Hinreddit is developed by
 					<a href="https://github.com/anniechen0127">Chengyu Chen</a>,
 					<a href="https://github.com/yuc330">Yu-chun Chen</a>,
 					<a href="https://github.com/lilytaoyy">Yanyu Tao</a>, and
@@ -763,6 +758,19 @@
 				<p>© hinreddit</p><br>
 				<p><a href="https://github.com/syeehyn/hinreddit">Github</a></p>
 			</footer>
+			<<script>
+				    $(function(){
+					$("#g1n2v").load("./src/visualization/assets/g1n2v.html");
+					$("#g1n2v_s").load("./src/visualization/assets/g1n2v_s.html");
+					$("#g1m2v").load("./src/visualization/assets/g1m2v.html");
+					$("#g1m2v_s").load("./src/visualization/assets/g1m2v_s.html");
+					$("#g2n2v").load("./src/visualization/assets/g2n2v.html");
+					$("#g2n2v_s").load("./src/visualization/assets/g2n2v_s.html");
+					$("#g2m2v").load("./src/visualization/assets/g2m2v.html");
+					$("#g2m2v_s").load("./src/visualization/assets/g2m2v_s.html");
+					});
+					</script> 
+			</script>
 		</main>
 	</body>
 </html>
