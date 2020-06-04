@@ -1,5 +1,7 @@
 # Hinreddit
 
+[project website] (https://syeehyn.github.io/hinreddit/)
+
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/syeehyn/hinreddit)
 
 As social platforms become accessible nowadays, more and more people get used to posting opinions on various topics online. The existence of nagetive online behaviors such as hateful comments is also unavoidable. These platforms thus become prolific sources for hate detection, which motivates many people to apply various techniques in order to detect hateful users or hateful speeches.
