@@ -331,7 +331,7 @@
 					Besides classifying a single post as hateful or not, we also tried identifying controversial subreddit, or which subreddits should be quarantined, based on the ground truth labels given by Reddit. The controversial subreddit detection shows a better performance in terms of all the metrics we use, and implies the possibility that our model may suit this purpose better.
 				</p>
 				<h4 id="embedding-analysis">Embedding Analysis</h4>
-				<p>We will analyze graph embedding feature by fitting in Logistic Regression in <code>hateful post detection</code>, <code>controversial community detection</code>, and <code>subreddit community detection</code>, and we will see the TSNE of the embedding.</p>
+				<p>We will analyze graph embedding feature by fitting in Logistic Regression in <code>hateful post detection</code>, <code>controversial community detection</code>, and <code>subreddit community detection</code>, and we will see the TSNE of the embedding. In the following TSNE graphs, the left side presents network of normal and hateful posts, and the more hateful clusters will be in darker red. The right side presents network of posts in different subreddits, and different colors represent corresponding subreddits.</p>
 				<ul>
 				<li>Graph 1</li>
 				</ul>
@@ -407,7 +407,6 @@
 					</tbody>
 				</table>
 				<br>
-				<p>In the following graphs, each dot's color represents dominant corresponding category.</p>
 				<div class="tsne_container">
 					<div id="g1n2v" class="tsne_left"></div>
 					<div id="g1n2v_s" class="tsne_right"></div>
@@ -505,7 +504,6 @@
 				</tr>
 				</tbody>
 				</table>
-				<p>In the following graphs, each dot's color represents dominant corresponding category.</p>
 				<div class="tsne_container">
 					<div id="g2n2v" class="tsne_left"></div>
 					<div id="g2n2v_s" class="tsne_right"></div>
