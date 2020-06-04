@@ -628,7 +628,11 @@ table {
 	margin-left: -20%;
 	margin-right: -20%;
 	display: flex;
-    text-align: center;
+}
+.tsne_left {
+}
+.tsne_right {
+    margin-left: 20%;
 }
 .ref code {
 	color: #5c6e74 !important;
