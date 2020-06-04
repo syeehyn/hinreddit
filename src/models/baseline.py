@@ -23,14 +23,30 @@ import warnings
 warnings.filterwarnings("ignore")
 
 def get_csvs(dir_path):
+    """[get all csv files in a directory and create one dataframe]
+
+    Args:
+        path ([string]): [where the csv files are stored]
+    """
     post = glob.glob(dir_path+'*.csv')
     return pd.concat([pd.read_csv(i) for i in post], ignore_index = True)
 
 def clean_tweet(tweet): 
+    """[clean a paragraph to keep only words and numbers]
+
+    Args:
+        tweet ([string]): [the text paragraph to be cleaned]
+    """
     return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split()) 
 
-def sensitive_word(text):
-    sen_lst = ['fuck', 'nigger', 'fucking', 'shit', 'sex', 'ass', 'asshole']
+def sensitive_word(text, sen_lst = ['fuck', 'nigger', 'fucking', 'shit', 'sex', 'ass', 'asshole']):
+    """[check if the text includes some sensitive words]
+
+    Args:
+        text ([string]): [text to be checked]
+        sen_lst ([list]): [list of sensitive words to be checked against]
+    """
+    
     lst = text.split()
     if any(word in lst for word in sen_lst):
         return 1
@@ -38,7 +54,11 @@ def sensitive_word(text):
         return 0
 
 def extract_feat(fp):
-    
+    """[given a file path of posts, extract all baseline features of posts]
+
+    Args:
+        fp ([string]): [path where all the post data is stored]
+    """
     comm = osp.join(fp, COMM_DIR)
     post = osp.join(fp, POST_DIR)
     labl = osp.join(fp, LABL_DIR)
@@ -72,11 +92,12 @@ def extract_feat(fp):
     return hate_benign_post[['num_comments', 'subreddit', 'score', 'len_content', 'sensitive', 'label']]
 
 def preprocess(X, cat_feat = ['subreddit', 'sensitive'], num_feat = ['num_comments','len_content','score']):
-    """
-    provide the column transformer for the dataframe of simple features
+    """[create the column transformer for the dataframe of simple features]
     
     Args:
-        X - dataframe of the apps w/ simple feature to create column transformer
+        X ([DataFrame]): [dataframe of the apps w/ simple feature to create column transformer]
+        cat_feat ([list]): [list of categorical columns]
+        num_feat ([list]): [list of numerical columns]
         
     """
     cat_trans = Pipeline(steps=[
@@ -88,20 +109,26 @@ def preprocess(X, cat_feat = ['subreddit', 'sensitive'], num_feat = ['num_commen
     return ColumnTransformer(transformers=[('cat', cat_trans,cat_feat), ('num', num_trans, num_feat)])
 
 def calc_auc(model, X_test, y_test):
+    """[compute AUC values]
+
+    Args:
+        model ([Model]): [the model to be used]
+        X_test ([list]): [matrix of test set X]
+        y_test([list]): [list of true labels for test set]
+    """
     probs = model.predict_proba(X_test)
     preds = probs[:,1]
     fpr, tpr, threshold = roc_curve(y_test, preds)
     return auc(fpr, tpr)
 
 def result_LR(df_train, df_test, pre, y_column = 'label'):
-    """
-    output the testing confusion matrix after feeding simple features into logistic regression models
+    """[output the testing confusion matrix after feeding simple features into logistic regression models]
     
     Args:
-        df_train - dataframe for training set
-        df_test - dataframe for test set
-        pre - column transformer
-        y_column - the column name of labl, default malware
+        df_train ([DataFrame]): [dataframe for training set]
+        df_test ([DataFrame]): [dataframe for test set]
+        pre ([ColumnTransformer]): [column transformer]
+        y_column ([string]): [the column name of label, default malware]
         
     """
     X = df_train.drop(y_column, 1)
@@ -118,14 +145,13 @@ def result_LR(df_train, df_test, pre, y_column = 'label'):
     return [tn, fp, fn, tp, auc]
 
 def result_RF(df_train, df_test, pre, y_column = 'label'):
-    """
-    output the testing confusion matrix after feeding simple features into random forest models
+    """[output the testing confusion matrix after feeding simple features into random forest models]
     
     Args:
-        df_train - dataframe for training set
-        df_test - dataframe for test set
-        pre - column transformer
-        y_column - the column name of labl, default malware
+        df_train ([DataFrame]): [dataframe for training set]
+        df_test ([DataFrame]): [dataframe for test set]
+        pre ([ColumnTransformer]): [column transformer]
+        y_column ([string]): [the column name of label, default malware]
         
     """
     X = df_train.drop(y_column, 1)
@@ -142,14 +168,13 @@ def result_RF(df_train, df_test, pre, y_column = 'label'):
     return [tn, fp, fn, tp, auc]
 
 def result_GBT(df_train, df_test, pre, y_column = 'label'):
-    """
-    output the testing confusion matrix after feeding simple features into gradient boost classifier models
+    """[output the testing confusion matrix after feeding simple features into gradient boost classifier models]
     
     Args:
-        df_train - dataframe for training set
-        df_test - dataframe for test set
-        pre - column transformer
-        y_column - the column name of labl, default malware
+        df_train ([DataFrame]): [dataframe for training set]
+        df_test ([DataFrame]): [dataframe for test set]
+        pre ([ColumnTransformer]): [column transformer]
+        y_column ([string]): [the column name of label, default malware]
         
     """
     X = df_train.drop(y_column, 1)
@@ -165,37 +190,34 @@ def result_GBT(df_train, df_test, pre, y_column = 'label'):
     auc = calc_auc(pipe, X_te, y_te)
     return [tn, fp, fn, tp, auc]
 def compute_metrics(mat):
-    """
-    output metrics including precision, recall, and AUC
+    """[output metrics including precision, recall, and AUC]
 
     Args:
-       mat - confustion matrix 
+       mat ([list]): [confustion matrix]
         
     """
     tn, fp, fn, tp = mat[0], mat[1], mat[2], mat[3]
     return tp/(tp+fp), tp/(tp+fn), mat[4]
 
 def save_baseline_result(lr, rf, gbt):
-    """
-    given results of the baseline models, save them to file
+    """[given results of the baseline models, save them to file]
     
     Args:
-        lr - test result of logistic regression
-        rf - test result of random forest
-        gbt - test result of gradient boost classifier
+        lr ([list]): [test result of logistic regression]
+        rf ([list]): [test result of random forest]
+        gbt ([list]): [test result of gradient boost classifier]
         
     """
     baseline_result = pd.DataFrame([lr, rf, gbt], columns=['precision', 'recall', 'AUC'], index = np.array(['logistic regression', 'random forest', 'gradient boost']))
     #baseline_result.to_csv(os.path.join('output', 'baseline_result.csv'))
     return baseline_result
 def baseline_model(df, y_col = 'label', test_size=0.3):
-    """
-    the whole process of training baseline model to saveing the result to file
+    """[the whole process of training baseline model to saveing the result to file]
     
     Args:
-        df - dataframe of simple features
-        y_col - column name for labl, default malware
-        test_size - test size for train-test split, default 0.33
+        df ([DataFrame]): [dataframe of simple features]
+        y_col ([list]): [column name for labl, default malware]
+        test_size ([float]) - [test size for train-test split, default 0.3]
         
     """
     X = df.drop(y_col, 1)
@@ -224,6 +246,12 @@ def baseline_model(df, y_col = 'label', test_size=0.3):
     return baseline_result
 
 def get_baseline_feature(fp):
+    """[get feature values after preprocess]
+    
+    Args:
+        fp ([string]): [path where all the post data is stored]
+        
+    """
     X = extract_feat(fp)
     X = preprocess(X).fit_transform(X)
     if sparse.issparse(X):
