@@ -636,7 +636,7 @@ table {
 }
 .tsne_right {
     display: inline-block;
-    margin: 10px;
+    margin-left: 10px;
 }
 .ref code {
 	color: #5c6e74 !important;
