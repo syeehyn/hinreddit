@@ -20,7 +20,6 @@ font-weight: 400;
 }
 article,
 aside,
-figcaption,
 figure,
 footer,
 header,
@@ -30,6 +29,10 @@ menu,
 nav,
 section {
 display: block;
+}
+figcaption {
+display: block;
+text-align: center;
 }
 h1 {
 font-weight:700;
